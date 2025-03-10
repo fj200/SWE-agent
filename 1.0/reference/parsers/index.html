@@ -2833,6 +2833,7 @@ ls -l
 
 
 
+
   <div class="doc doc-children">
 
 
@@ -2854,10 +2855,51 @@ ls -l
   </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">ParseFunction</span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.ActionParser" href="#sweagent.tools.parsing.ActionParser">ActionParser</a></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.ThoughtActionParser" href="#sweagent.tools.parsing.ThoughtActionParser">ThoughtActionParser</a></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.ActionOnlyParser" href="#sweagent.tools.parsing.ActionOnlyParser">ActionOnlyParser</a></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.XMLThoughtActionParser" href="#sweagent.tools.parsing.XMLThoughtActionParser">XMLThoughtActionParser</a></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.FunctionCallingParser" href="#sweagent.tools.parsing.FunctionCallingParser">FunctionCallingParser</a></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.EditFormat" href="#sweagent.tools.parsing.EditFormat">EditFormat</a></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.Identity" href="#sweagent.tools.parsing.Identity">Identity</a></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.JsonParser" href="#sweagent.tools.parsing.JsonParser">JsonParser</a></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">ParseFunction</span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            ActionParser
+
+
+  
+      pydantic-model
+   (sweagent.tools.parsing.ActionParser)" href="#sweagent.tools.parsing.ActionParser">ActionParser</a></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            ThoughtActionParser
+
+
+  
+      pydantic-model
+   (sweagent.tools.parsing.ThoughtActionParser)" href="#sweagent.tools.parsing.ThoughtActionParser">ThoughtActionParser</a></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            ActionOnlyParser
+
+
+  
+      pydantic-model
+   (sweagent.tools.parsing.ActionOnlyParser)" href="#sweagent.tools.parsing.ActionOnlyParser">ActionOnlyParser</a></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            XMLThoughtActionParser
+
+
+  
+      pydantic-model
+   (sweagent.tools.parsing.XMLThoughtActionParser)" href="#sweagent.tools.parsing.XMLThoughtActionParser">XMLThoughtActionParser</a></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            FunctionCallingParser
+
+
+  
+      pydantic-model
+   (sweagent.tools.parsing.FunctionCallingParser)" href="#sweagent.tools.parsing.FunctionCallingParser">FunctionCallingParser</a></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            EditFormat
+
+
+  
+      pydantic-model
+   (sweagent.tools.parsing.EditFormat)" href="#sweagent.tools.parsing.EditFormat">EditFormat</a></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            Identity
+
+
+  
+      pydantic-model
+   (sweagent.tools.parsing.Identity)" href="#sweagent.tools.parsing.Identity">Identity</a></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            JsonParser
+
+
+  
+      pydantic-model
+   (sweagent.tools.parsing.JsonParser)" href="#sweagent.tools.parsing.JsonParser">JsonParser</a></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -2881,6 +2923,7 @@ ls -l
 
         <p>Abstract class for parsing functions.
 We use get to generate the right parser based on the name of the parser.</p>
+
 
 
 
@@ -2915,6 +2958,7 @@ We use get to generate the right parser based on the name of the parser.</p>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -2936,6 +2980,7 @@ We use get to generate the right parser based on the name of the parser.</p>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -2967,7 +3012,7 @@ We use get to generate the right parser based on the name of the parser.</p>
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.AbstractParseFunction" href="#sweagent.tools.parsing.AbstractParseFunction">AbstractParseFunction</a></code>, <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="            AbstractParseFunction (sweagent.tools.parsing.AbstractParseFunction)" href="#sweagent.tools.parsing.AbstractParseFunction">AbstractParseFunction</a></code>, <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
         <p>Expects the model response to be a single command.</p>
 
@@ -2976,11 +3021,21 @@ We use get to generate the right parser based on the name of the parser.</p>
         <p>Fields:</p>
         <ul>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.ActionOnlyParser.error_message" href="#sweagent.tools.parsing.ActionOnlyParser.error_message">error_message</a></code>
+              <code><a class="autorefs autorefs-internal" title="            error_message
+
+
+  
+      pydantic-field
+   (sweagent.tools.parsing.ActionOnlyParser.error_message)" href="#sweagent.tools.parsing.ActionOnlyParser.error_message">error_message</a></code>
                 (<code><span title="str">str</span></code>)
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.ActionOnlyParser.type" href="#sweagent.tools.parsing.ActionOnlyParser.type">type</a></code>
+              <code><a class="autorefs autorefs-internal" title="            type
+
+
+  
+      pydantic-field
+   (sweagent.tools.parsing.ActionOnlyParser.type)" href="#sweagent.tools.parsing.ActionOnlyParser.type">type</a></code>
                 (<code><span title="typing.Literal">Literal</span>[&#39;action_only&#39;]</code>)
             </li>
         </ul>
@@ -3013,6 +3068,7 @@ We use get to generate the right parser based on the name of the parser.</p>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3036,6 +3092,7 @@ We use get to generate the right parser based on the name of the parser.</p>
     <div class="doc doc-contents ">
 
         <p>Type for (de)serialization. Do not change.</p>
+
     </div>
 
 </div>
@@ -3067,7 +3124,7 @@ We use get to generate the right parser based on the name of the parser.</p>
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.AbstractParseFunction" href="#sweagent.tools.parsing.AbstractParseFunction">AbstractParseFunction</a></code>, <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="            AbstractParseFunction (sweagent.tools.parsing.AbstractParseFunction)" href="#sweagent.tools.parsing.AbstractParseFunction">AbstractParseFunction</a></code>, <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
         <p>Expects the model response to be a single command.
 Example: "ls -l"</p>
@@ -3077,11 +3134,21 @@ Example: "ls -l"</p>
         <p>Fields:</p>
         <ul>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.ActionParser.error_message" href="#sweagent.tools.parsing.ActionParser.error_message">error_message</a></code>
+              <code><a class="autorefs autorefs-internal" title="            error_message
+
+
+  
+      pydantic-field
+   (sweagent.tools.parsing.ActionParser.error_message)" href="#sweagent.tools.parsing.ActionParser.error_message">error_message</a></code>
                 (<code><span title="str">str</span></code>)
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.ActionParser.type" href="#sweagent.tools.parsing.ActionParser.type">type</a></code>
+              <code><a class="autorefs autorefs-internal" title="            type
+
+
+  
+      pydantic-field
+   (sweagent.tools.parsing.ActionParser.type)" href="#sweagent.tools.parsing.ActionParser.type">type</a></code>
                 (<code><span title="typing.Literal">Literal</span>[&#39;action&#39;]</code>)
             </li>
         </ul>
@@ -3114,6 +3181,7 @@ Example: "ls -l"</p>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3137,6 +3205,7 @@ Example: "ls -l"</p>
     <div class="doc doc-contents ">
 
         <p>Type for (de)serialization. Do not change.</p>
+
     </div>
 
 </div>
@@ -3168,7 +3237,12 @@ Example: "ls -l"</p>
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.ThoughtActionParser" href="#sweagent.tools.parsing.ThoughtActionParser">ThoughtActionParser</a></code>, <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="            ThoughtActionParser
+
+
+  
+      pydantic-model
+   (sweagent.tools.parsing.ThoughtActionParser)" href="#sweagent.tools.parsing.ThoughtActionParser">ThoughtActionParser</a></code>, <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
         <p>Expects the model response to be a discussion followed by a command wrapped in backticks.
 Example:
@@ -3182,11 +3256,21 @@ os.listdir()
         <p>Fields:</p>
         <ul>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.EditFormat.error_message" href="#sweagent.tools.parsing.EditFormat.error_message">error_message</a></code>
+              <code><a class="autorefs autorefs-internal" title="            error_message
+
+
+  
+      pydantic-field
+   (sweagent.tools.parsing.EditFormat.error_message)" href="#sweagent.tools.parsing.EditFormat.error_message">error_message</a></code>
                 (<code><span title="str">str</span></code>)
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.EditFormat.type" href="#sweagent.tools.parsing.EditFormat.type">type</a></code>
+              <code><a class="autorefs autorefs-internal" title="            type
+
+
+  
+      pydantic-field
+   (sweagent.tools.parsing.EditFormat.type)" href="#sweagent.tools.parsing.EditFormat.type">type</a></code>
                 (<code><span title="typing.Literal">Literal</span>[&#39;edit_format&#39;]</code>)
             </li>
         </ul>
@@ -3219,6 +3303,7 @@ os.listdir()
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3242,6 +3327,7 @@ os.listdir()
     <div class="doc doc-contents ">
 
         <p>Type for (de)serialization. Do not change.</p>
+
     </div>
 
 </div>
@@ -3273,7 +3359,7 @@ os.listdir()
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.AbstractParseFunction" href="#sweagent.tools.parsing.AbstractParseFunction">AbstractParseFunction</a></code>, <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="            AbstractParseFunction (sweagent.tools.parsing.AbstractParseFunction)" href="#sweagent.tools.parsing.AbstractParseFunction">AbstractParseFunction</a></code>, <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
         <p>Expects the model response to be a LiteLLM tool call.</p>
 
@@ -3282,11 +3368,21 @@ os.listdir()
         <p>Fields:</p>
         <ul>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.FunctionCallingParser.error_message" href="#sweagent.tools.parsing.FunctionCallingParser.error_message">error_message</a></code>
+              <code><a class="autorefs autorefs-internal" title="            error_message
+
+
+  
+      pydantic-field
+   (sweagent.tools.parsing.FunctionCallingParser.error_message)" href="#sweagent.tools.parsing.FunctionCallingParser.error_message">error_message</a></code>
                 (<code><span title="str">str</span></code>)
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.FunctionCallingParser.type" href="#sweagent.tools.parsing.FunctionCallingParser.type">type</a></code>
+              <code><a class="autorefs autorefs-internal" title="            type
+
+
+  
+      pydantic-field
+   (sweagent.tools.parsing.FunctionCallingParser.type)" href="#sweagent.tools.parsing.FunctionCallingParser.type">type</a></code>
                 (<code><span title="typing.Literal">Literal</span>[&#39;function_calling&#39;]</code>)
             </li>
         </ul>
@@ -3319,6 +3415,7 @@ os.listdir()
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3342,6 +3439,7 @@ os.listdir()
     <div class="doc doc-contents ">
 
         <p>Type for (de)serialization. Do not change.</p>
+
     </div>
 
 </div>
@@ -3373,7 +3471,7 @@ os.listdir()
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.AbstractParseFunction" href="#sweagent.tools.parsing.AbstractParseFunction">AbstractParseFunction</a></code>, <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="            AbstractParseFunction (sweagent.tools.parsing.AbstractParseFunction)" href="#sweagent.tools.parsing.AbstractParseFunction">AbstractParseFunction</a></code>, <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
         <p>This parser does not do any parsing. It just returns the model response as both the thought and action.</p>
 
@@ -3382,11 +3480,21 @@ os.listdir()
         <p>Fields:</p>
         <ul>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.Identity.error_message" href="#sweagent.tools.parsing.Identity.error_message">error_message</a></code>
+              <code><a class="autorefs autorefs-internal" title="            error_message
+
+
+  
+      pydantic-field
+   (sweagent.tools.parsing.Identity.error_message)" href="#sweagent.tools.parsing.Identity.error_message">error_message</a></code>
                 (<code><span title="str">str</span></code>)
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.Identity.type" href="#sweagent.tools.parsing.Identity.type">type</a></code>
+              <code><a class="autorefs autorefs-internal" title="            type
+
+
+  
+      pydantic-field
+   (sweagent.tools.parsing.Identity.type)" href="#sweagent.tools.parsing.Identity.type">type</a></code>
                 (<code><span title="typing.Literal">Literal</span>[&#39;identity&#39;]</code>)
             </li>
         </ul>
@@ -3419,6 +3527,7 @@ os.listdir()
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3442,6 +3551,7 @@ os.listdir()
     <div class="doc doc-contents ">
 
         <p>Type for (de)serialization. Do not change.</p>
+
     </div>
 
 </div>
@@ -3473,7 +3583,7 @@ os.listdir()
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.AbstractParseFunction" href="#sweagent.tools.parsing.AbstractParseFunction">AbstractParseFunction</a></code>, <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="            AbstractParseFunction (sweagent.tools.parsing.AbstractParseFunction)" href="#sweagent.tools.parsing.AbstractParseFunction">AbstractParseFunction</a></code>, <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
         <p>Expects the model response to be a JSON object.</p>
 
@@ -3482,11 +3592,21 @@ os.listdir()
         <p>Fields:</p>
         <ul>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.JsonParser.error_message" href="#sweagent.tools.parsing.JsonParser.error_message">error_message</a></code>
+              <code><a class="autorefs autorefs-internal" title="            error_message
+
+
+  
+      pydantic-field
+   (sweagent.tools.parsing.JsonParser.error_message)" href="#sweagent.tools.parsing.JsonParser.error_message">error_message</a></code>
                 (<code><span title="str">str</span></code>)
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.JsonParser.type" href="#sweagent.tools.parsing.JsonParser.type">type</a></code>
+              <code><a class="autorefs autorefs-internal" title="            type
+
+
+  
+      pydantic-field
+   (sweagent.tools.parsing.JsonParser.type)" href="#sweagent.tools.parsing.JsonParser.type">type</a></code>
                 (<code><span title="typing.Literal">Literal</span>[&#39;json&#39;]</code>)
             </li>
         </ul>
@@ -3519,6 +3639,7 @@ os.listdir()
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3542,6 +3663,7 @@ os.listdir()
     <div class="doc doc-contents ">
 
         <p>Type for (de)serialization. Do not change.</p>
+
     </div>
 
 </div>
@@ -3573,7 +3695,7 @@ os.listdir()
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.AbstractParseFunction" href="#sweagent.tools.parsing.AbstractParseFunction">AbstractParseFunction</a></code>, <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="            AbstractParseFunction (sweagent.tools.parsing.AbstractParseFunction)" href="#sweagent.tools.parsing.AbstractParseFunction">AbstractParseFunction</a></code>, <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
         <p>Expects the model response to be a discussion followed by a command wrapped in backticks.
 Example:
@@ -3586,11 +3708,21 @@ Let's look at the files in the current directory.
         <p>Fields:</p>
         <ul>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.ThoughtActionParser.error_message" href="#sweagent.tools.parsing.ThoughtActionParser.error_message">error_message</a></code>
+              <code><a class="autorefs autorefs-internal" title="            error_message
+
+
+  
+      pydantic-field
+   (sweagent.tools.parsing.ThoughtActionParser.error_message)" href="#sweagent.tools.parsing.ThoughtActionParser.error_message">error_message</a></code>
                 (<code><span title="str">str</span></code>)
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.ThoughtActionParser.type" href="#sweagent.tools.parsing.ThoughtActionParser.type">type</a></code>
+              <code><a class="autorefs autorefs-internal" title="            type
+
+
+  
+      pydantic-field
+   (sweagent.tools.parsing.ThoughtActionParser.type)" href="#sweagent.tools.parsing.ThoughtActionParser.type">type</a></code>
                 (<code><span title="typing.Literal">Literal</span>[&#39;thought_action&#39;]</code>)
             </li>
         </ul>
@@ -3623,6 +3755,7 @@ Let's look at the files in the current directory.
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3646,6 +3779,7 @@ Let's look at the files in the current directory.
     <div class="doc doc-contents ">
 
         <p>Type for (de)serialization. Do not change.</p>
+
     </div>
 
 </div>
@@ -3677,7 +3811,7 @@ Let's look at the files in the current directory.
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.AbstractParseFunction" href="#sweagent.tools.parsing.AbstractParseFunction">AbstractParseFunction</a></code>, <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="            AbstractParseFunction (sweagent.tools.parsing.AbstractParseFunction)" href="#sweagent.tools.parsing.AbstractParseFunction">AbstractParseFunction</a></code>, <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
         <p>Expects the model response to be a discussion followed by a command wrapped in XML tags.
 Example:
@@ -3691,11 +3825,21 @@ ls -l
         <p>Fields:</p>
         <ul>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.XMLThoughtActionParser.error_message" href="#sweagent.tools.parsing.XMLThoughtActionParser.error_message">error_message</a></code>
+              <code><a class="autorefs autorefs-internal" title="            error_message
+
+
+  
+      pydantic-field
+   (sweagent.tools.parsing.XMLThoughtActionParser.error_message)" href="#sweagent.tools.parsing.XMLThoughtActionParser.error_message">error_message</a></code>
                 (<code><span title="str">str</span></code>)
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.tools.parsing.XMLThoughtActionParser.type" href="#sweagent.tools.parsing.XMLThoughtActionParser.type">type</a></code>
+              <code><a class="autorefs autorefs-internal" title="            type
+
+
+  
+      pydantic-field
+   (sweagent.tools.parsing.XMLThoughtActionParser.type)" href="#sweagent.tools.parsing.XMLThoughtActionParser.type">type</a></code>
                 (<code><span title="typing.Literal">Literal</span>[&#39;xml_thought_action&#39;]</code>)
             </li>
         </ul>
@@ -3728,6 +3872,7 @@ ls -l
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3751,6 +3896,7 @@ ls -l
     <div class="doc doc-contents ">
 
         <p>Type for (de)serialization. Do not change.</p>
+
     </div>
 
 </div>

@@ -2625,6 +2625,7 @@ Equivalent to calling <code>add_hook</code> for each hook after initialization.<
 
 
 
+
                   <details class="quote">
                     <summary>Source code in <code>sweagent/environment/swe_env.py</code></summary>
                     <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">52</span>
@@ -2718,6 +2719,7 @@ Equivalent to calling <code>add_hook</code> for each hook after initialization.<
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -2739,6 +2741,7 @@ Equivalent to calling <code>add_hook</code> for each hook after initialization.<
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -2760,6 +2763,7 @@ Equivalent to calling <code>add_hook</code> for each hook after initialization.<
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -2781,6 +2785,7 @@ Equivalent to calling <code>add_hook</code> for each hook after initialization.<
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -2802,6 +2807,7 @@ Equivalent to calling <code>add_hook</code> for each hook after initialization.<
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -2823,6 +2829,7 @@ Equivalent to calling <code>add_hook</code> for each hook after initialization.<
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -2845,6 +2852,7 @@ Equivalent to calling <code>add_hook</code> for each hook after initialization.<
         <p>Add <code>EnvHook</code> to the environment.</p>
 <p>This allows to inject custom functionality at different stages of the environment
 lifecycle, in particular to connect SWE-agent to a new interface (like a GUI).</p>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/swe_env.py</code></summary>
@@ -2883,6 +2891,7 @@ lifecycle, in particular to connect SWE-agent to a new interface (like a GUI).</
     <div class="doc doc-contents ">
 
         <p>Shutdown SWE-ReX deployment etc.</p>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/swe_env.py</code></summary>
@@ -3019,6 +3028,7 @@ exit code is non-zero, <code>raise</code>: raise error if exit code is non-zero<
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/swe_env.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">194</span>
@@ -3113,6 +3123,7 @@ exit code is non-zero, <code>raise</code>: raise error if exit code is non-zero<
 
         <p>Execute a command in the environment independent of the session (i.e., as a subprocess)</p>
 
+
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/swe_env.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">262</span>
@@ -3156,7 +3167,12 @@ exit code is non-zero, <code>raise</code>: raise error if exit code is non-zero<
   </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="sweagent.environment.swe_env.EnvironmentConfig" href="../env_config/#sweagent.environment.swe_env.EnvironmentConfig">EnvironmentConfig</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="typing.Self">Self</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            sweagent.environment.swe_env.EnvironmentConfig
+
+
+  
+      pydantic-model
+  " href="../env_config/#sweagent.environment.swe_env.EnvironmentConfig">EnvironmentConfig</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="typing.Self">Self</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3164,6 +3180,7 @@ exit code is non-zero, <code>raise</code>: raise error if exit code is non-zero<
         <p>Create an environment instance from a configuration object.
 This is the recommended way to create an environment instance, unless you need
 more flexibility.</p>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/swe_env.py</code></summary>
@@ -3218,6 +3235,7 @@ more flexibility.</p>
         <p>Resets the environment and deployment, i.e., completely restarts the
 deployment.</p>
 
+
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/swe_env.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">128</span>
@@ -3249,6 +3267,7 @@ deployment.</p>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/swe_env.py</code></summary>
@@ -3366,6 +3385,7 @@ This is the same as the <code>errors</code> argument of <code>Path.read_text()</
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/swe_env.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">231</span>
@@ -3455,6 +3475,7 @@ environment to a clean state before a new attempt.</p>
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/swe_env.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">135</span>
@@ -3503,6 +3524,7 @@ environment to a clean state before a new attempt.</p>
 
         <p>Set environment variables in the environment.</p>
 
+
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/swe_env.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">253</span>
@@ -3541,6 +3563,7 @@ environment to a clean state before a new attempt.</p>
 
         <p>Start the environment and reset it to a clean state.</p>
 
+
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/swe_env.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">109</span>
@@ -3574,6 +3597,7 @@ environment to a clean state before a new attempt.</p>
     <div class="doc doc-contents ">
 
         <p>Write content to file in container</p>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/swe_env.py</code></summary>

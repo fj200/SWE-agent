@@ -2597,15 +2597,30 @@ This is important because we need to cd to the repo before running the agent.</p
         <p>Fields:</p>
         <ul>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.environment.repo.PreExistingRepoConfig.repo_name" href="#sweagent.environment.repo.PreExistingRepoConfig.repo_name">repo_name</a></code>
+              <code><a class="autorefs autorefs-internal" title="            repo_name
+
+
+  
+      pydantic-field
+   (sweagent.environment.repo.PreExistingRepoConfig.repo_name)" href="#sweagent.environment.repo.PreExistingRepoConfig.repo_name">repo_name</a></code>
                 (<code><span title="str">str</span></code>)
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.environment.repo.PreExistingRepoConfig.base_commit" href="#sweagent.environment.repo.PreExistingRepoConfig.base_commit">base_commit</a></code>
+              <code><a class="autorefs autorefs-internal" title="            base_commit
+
+
+  
+      pydantic-field
+   (sweagent.environment.repo.PreExistingRepoConfig.base_commit)" href="#sweagent.environment.repo.PreExistingRepoConfig.base_commit">base_commit</a></code>
                 (<code><span title="str">str</span></code>)
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.environment.repo.PreExistingRepoConfig.type" href="#sweagent.environment.repo.PreExistingRepoConfig.type">type</a></code>
+              <code><a class="autorefs autorefs-internal" title="            type
+
+
+  
+      pydantic-field
+   (sweagent.environment.repo.PreExistingRepoConfig.type)" href="#sweagent.environment.repo.PreExistingRepoConfig.type">type</a></code>
                 (<code><span title="typing.Literal">Literal</span>[&#39;preexisting&#39;]</code>)
             </li>
         </ul>
@@ -2643,6 +2658,7 @@ This is important because we need to cd to the repo before running the agent.</p
 i.e., the latest commit. You can also set this to a branch name (e.g., <code>dev</code>),
 a tag (e.g., <code>v0.1.0</code>), or a commit hash (e.g., <code>a4464baca1f</code>).
 SWE-agent will then start from this commit when trying to solve the problem.</p>
+
     </div>
 
 </div>
@@ -2666,6 +2682,7 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
     <div class="doc doc-contents ">
 
         <p>The repo name (the repository must be located at the root of the deployment).</p>
+
     </div>
 
 </div>
@@ -2689,6 +2706,7 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
     <div class="doc doc-contents ">
 
         <p>Discriminator for (de)serialization/CLI. Do not change.</p>
+
     </div>
 
 </div>
@@ -2709,6 +2727,7 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
     <div class="doc doc-contents ">
 
         <p>Does nothing.</p>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/repo.py</code></summary>
@@ -2757,19 +2776,40 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
         <p>Fields:</p>
         <ul>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.environment.repo.LocalRepoConfig.path" href="#sweagent.environment.repo.LocalRepoConfig.path">path</a></code>
+              <code><a class="autorefs autorefs-internal" title="            path
+
+
+  
+      pydantic-field
+   (sweagent.environment.repo.LocalRepoConfig.path)" href="#sweagent.environment.repo.LocalRepoConfig.path">path</a></code>
                 (<code><span title="pathlib.Path">Path</span></code>)
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.environment.repo.LocalRepoConfig.base_commit" href="#sweagent.environment.repo.LocalRepoConfig.base_commit">base_commit</a></code>
+              <code><a class="autorefs autorefs-internal" title="            base_commit
+
+
+  
+      pydantic-field
+   (sweagent.environment.repo.LocalRepoConfig.base_commit)" href="#sweagent.environment.repo.LocalRepoConfig.base_commit">base_commit</a></code>
                 (<code><span title="str">str</span></code>)
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.environment.repo.LocalRepoConfig.type" href="#sweagent.environment.repo.LocalRepoConfig.type">type</a></code>
+              <code><a class="autorefs autorefs-internal" title="            type
+
+
+  
+      pydantic-field
+   (sweagent.environment.repo.LocalRepoConfig.type)" href="#sweagent.environment.repo.LocalRepoConfig.type">type</a></code>
                 (<code><span title="typing.Literal">Literal</span>[&#39;local&#39;]</code>)
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.environment.repo.LocalRepoConfig.repo_name" href="#sweagent.environment.repo.LocalRepoConfig.repo_name">repo_name</a></code>
+              <code><a class="autorefs autorefs-internal" title="            repo_name
+
+
+  
+      property
+      pydantic-field
+   (sweagent.environment.repo.LocalRepoConfig.repo_name)" href="#sweagent.environment.repo.LocalRepoConfig.repo_name">repo_name</a></code>
                 (<code><span title="str">str</span></code>)
             </li>
         </ul>
@@ -2807,6 +2847,7 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
 i.e., the latest commit. You can also set this to a branch name (e.g., <code>dev</code>),
 a tag (e.g., <code>v0.1.0</code>), or a commit hash (e.g., <code>a4464baca1f</code>).
 SWE-agent will then start from this commit when trying to solve the problem.</p>
+
     </div>
 
 </div>
@@ -2828,6 +2869,7 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -2852,6 +2894,7 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
     <div class="doc doc-contents ">
 
         <p>Set automatically based on the repository name. Cannot be set.</p>
+
     </div>
 
 </div>
@@ -2875,6 +2918,7 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
     <div class="doc doc-contents ">
 
         <p>Discriminator for (de)serialization/CLI. Do not change.</p>
+
     </div>
 
 </div>
@@ -2893,6 +2937,7 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/repo.py</code></summary>
@@ -2933,6 +2978,7 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/repo.py</code></summary>
@@ -2993,23 +3039,49 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
         <p>Fields:</p>
         <ul>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.environment.repo.GithubRepoConfig.github_url" href="#sweagent.environment.repo.GithubRepoConfig.github_url">github_url</a></code>
+              <code><a class="autorefs autorefs-internal" title="            github_url
+
+
+  
+      pydantic-field
+   (sweagent.environment.repo.GithubRepoConfig.github_url)" href="#sweagent.environment.repo.GithubRepoConfig.github_url">github_url</a></code>
                 (<code><span title="str">str</span></code>)
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.environment.repo.GithubRepoConfig.base_commit" href="#sweagent.environment.repo.GithubRepoConfig.base_commit">base_commit</a></code>
+              <code><a class="autorefs autorefs-internal" title="            base_commit
+
+
+  
+      pydantic-field
+   (sweagent.environment.repo.GithubRepoConfig.base_commit)" href="#sweagent.environment.repo.GithubRepoConfig.base_commit">base_commit</a></code>
                 (<code><span title="str">str</span></code>)
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.environment.repo.GithubRepoConfig.clone_timeout" href="#sweagent.environment.repo.GithubRepoConfig.clone_timeout">clone_timeout</a></code>
+              <code><a class="autorefs autorefs-internal" title="            clone_timeout
+
+
+  
+      pydantic-field
+   (sweagent.environment.repo.GithubRepoConfig.clone_timeout)" href="#sweagent.environment.repo.GithubRepoConfig.clone_timeout">clone_timeout</a></code>
                 (<code><span title="float">float</span></code>)
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.environment.repo.GithubRepoConfig.type" href="#sweagent.environment.repo.GithubRepoConfig.type">type</a></code>
+              <code><a class="autorefs autorefs-internal" title="            type
+
+
+  
+      pydantic-field
+   (sweagent.environment.repo.GithubRepoConfig.type)" href="#sweagent.environment.repo.GithubRepoConfig.type">type</a></code>
                 (<code><span title="typing.Literal">Literal</span>[&#39;github&#39;]</code>)
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.environment.repo.GithubRepoConfig.repo_name" href="#sweagent.environment.repo.GithubRepoConfig.repo_name">repo_name</a></code>
+              <code><a class="autorefs autorefs-internal" title="            repo_name
+
+
+  
+      property
+      pydantic-field
+   (sweagent.environment.repo.GithubRepoConfig.repo_name)" href="#sweagent.environment.repo.GithubRepoConfig.repo_name">repo_name</a></code>
                 (<code><span title="str">str</span></code>)
             </li>
         </ul>
@@ -3047,6 +3119,7 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
 i.e., the latest commit. You can also set this to a branch name (e.g., <code>dev</code>),
 a tag (e.g., <code>v0.1.0</code>), or a commit hash (e.g., <code>a4464baca1f</code>).
 SWE-agent will then start from this commit when trying to solve the problem.</p>
+
     </div>
 
 </div>
@@ -3070,6 +3143,7 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
     <div class="doc doc-contents ">
 
         <p>Timeout for git clone operation.</p>
+
     </div>
 
 </div>
@@ -3091,6 +3165,7 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3113,6 +3188,7 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3136,6 +3212,7 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
     <div class="doc doc-contents ">
 
         <p>Discriminator for (de)serialization/CLI. Do not change.</p>
+
     </div>
 
 </div>
@@ -3156,6 +3233,7 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
     <div class="doc doc-contents ">
 
         <p>Clones the repository to the sandbox.</p>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/repo.py</code></summary>
@@ -3284,6 +3362,7 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/repo.py</code></summary>

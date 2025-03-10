@@ -2945,12 +2945,18 @@ see the <a href="../agent_config/">agent configuration reference page</a>.</p>
 
 
 </h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">RetryAgent</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="sweagent.agent.agents.RetryAgentConfig" href="../agent_config/#sweagent.agent.agents.RetryAgentConfig">RetryAgentConfig</a></span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">RetryAgent</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            sweagent.agent.agents.RetryAgentConfig
+
+
+  
+      pydantic-model
+  " href="../agent_config/#sweagent.agent.agents.RetryAgentConfig">RetryAgentConfig</a></span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
               Bases: <code><span title="sweagent.agent.agents.AbstractAgent">AbstractAgent</span></code></p>
+
 
 
 
@@ -3025,6 +3031,7 @@ see the <a href="../agent_config/">agent configuration reference page</a>.</p>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3046,6 +3053,7 @@ see the <a href="../agent_config/">agent configuration reference page</a>.</p>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3064,6 +3072,7 @@ see the <a href="../agent_config/">agent configuration reference page</a>.</p>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
@@ -3090,10 +3099,16 @@ see the <a href="../agent_config/">agent configuration reference page</a>.</p>
   </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="sweagent.agent.agents.RetryAgentConfig" href="../agent_config/#sweagent.agent.agents.RetryAgentConfig">RetryAgentConfig</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="typing_extensions.Self">Self</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            sweagent.agent.agents.RetryAgentConfig
+
+
+  
+      pydantic-model
+  " href="../agent_config/#sweagent.agent.agents.RetryAgentConfig">RetryAgentConfig</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="typing_extensions.Self">Self</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
@@ -3122,6 +3137,7 @@ see the <a href="../agent_config/">agent configuration reference page</a>.</p>
     <div class="doc doc-contents ">
 
         <p>Get all data that we save in .traj files.</p>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
@@ -3190,7 +3206,7 @@ see the <a href="../agent_config/">agent configuration reference page</a>.</p>
 
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">run</span><span class="p">(</span><span class="n">env</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="sweagent.environment.swe_env.SWEEnv" href="../env/#sweagent.environment.swe_env.SWEEnv">SWEEnv</a></span><span class="p">,</span> <span class="n">problem_statement</span><span class="p">:</span> <span class="n"><span title="sweagent.agent.problem_statement.ProblemStatement">ProblemStatement</span></span> <span class="o">|</span> <span class="n"><span title="sweagent.agent.problem_statement.ProblemStatementConfig">ProblemStatementConfig</span></span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">=</span> <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n"><span title="sweagent.types.AgentRunResult">AgentRunResult</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">run</span><span class="p">(</span><span class="n">env</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            sweagent.environment.swe_env.SWEEnv" href="../env/#sweagent.environment.swe_env.SWEEnv">SWEEnv</a></span><span class="p">,</span> <span class="n">problem_statement</span><span class="p">:</span> <span class="n"><span title="sweagent.agent.problem_statement.ProblemStatement">ProblemStatement</span></span> <span class="o">|</span> <span class="n"><span title="sweagent.agent.problem_statement.ProblemStatementConfig">ProblemStatementConfig</span></span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">=</span> <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n"><span title="sweagent.types.AgentRunResult">AgentRunResult</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3215,7 +3231,7 @@ main loop that repeatedly calls <code>self._step</code> until the problem is sol
                 <code>env</code>
             </td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="sweagent.environment.swe_env.SWEEnv" href="../env/#sweagent.environment.swe_env.SWEEnv">SWEEnv</a></code>
+                  <code><a class="autorefs autorefs-internal" title="            sweagent.environment.swe_env.SWEEnv" href="../env/#sweagent.environment.swe_env.SWEEnv">SWEEnv</a></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3260,6 +3276,7 @@ main loop that repeatedly calls <code>self._step</code> until the problem is sol
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
@@ -3383,6 +3400,7 @@ main loop that repeatedly calls <code>self._step</code> until the problem is sol
 
     <div class="doc doc-contents ">
 
+
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">343</span>
@@ -3406,13 +3424,14 @@ main loop that repeatedly calls <code>self._step</code> until the problem is sol
 
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">setup</span><span class="p">(</span><span class="n">env</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="sweagent.environment.swe_env.SWEEnv" href="../env/#sweagent.environment.swe_env.SWEEnv">SWEEnv</a></span><span class="p">,</span> <span class="n">problem_statement</span><span class="p">:</span> <span class="n"><span title="sweagent.agent.problem_statement.ProblemStatement">ProblemStatement</span></span> <span class="o">|</span> <span class="n"><span title="sweagent.agent.problem_statement.ProblemStatementConfig">ProblemStatementConfig</span></span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">=</span> <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">setup</span><span class="p">(</span><span class="n">env</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            sweagent.environment.swe_env.SWEEnv" href="../env/#sweagent.environment.swe_env.SWEEnv">SWEEnv</a></span><span class="p">,</span> <span class="n">problem_statement</span><span class="p">:</span> <span class="n"><span title="sweagent.agent.problem_statement.ProblemStatement">ProblemStatement</span></span> <span class="o">|</span> <span class="n"><span title="sweagent.agent.problem_statement.ProblemStatementConfig">ProblemStatementConfig</span></span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">=</span> <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
         <p>Setup the retry agent for a new problem instance.
 This is mostly a bookkeeping step.</p>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
@@ -3460,6 +3479,7 @@ This is mostly a bookkeeping step.</p>
 
         <p>Step the agent of the current attempt.
 Attempt autosubmit if an error occurs (though all errors should already be handled by the attempt agent).</p>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
@@ -3529,7 +3549,12 @@ Attempt autosubmit if an error occurs (though all errors should already be handl
 
 
 </h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">DefaultAgent</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">templates</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="sweagent.agent.agents.TemplateConfig" href="../template_config/#sweagent.agent.agents.TemplateConfig">TemplateConfig</a></span><span class="p">,</span> <span class="n">tools</span><span class="p">:</span> <span class="n"><span title="sweagent.tools.tools.ToolHandler">ToolHandler</span></span><span class="p">,</span> <span class="n">history_processors</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="sweagent.agent.history_processors.HistoryProcessor">HistoryProcessor</span></span><span class="p">],</span> <span class="n">model</span><span class="p">:</span> <span class="n"><span title="sweagent.agent.models.AbstractModel">AbstractModel</span></span><span class="p">,</span> <span class="n">max_requeries</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">&#39;main&#39;</span><span class="p">,</span> <span class="n">_catch_errors</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">_always_require_zero_exit_code</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">action_sampler_config</span><span class="p">:</span> <span class="n"><span title="sweagent.agent.action_sampler.ActionSamplerConfig">ActionSamplerConfig</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">DefaultAgent</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">templates</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            sweagent.agent.agents.TemplateConfig
+
+
+  
+      pydantic-model
+  " href="../template_config/#sweagent.agent.agents.TemplateConfig">TemplateConfig</a></span><span class="p">,</span> <span class="n">tools</span><span class="p">:</span> <span class="n"><span title="sweagent.tools.tools.ToolHandler">ToolHandler</span></span><span class="p">,</span> <span class="n">history_processors</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="sweagent.agent.history_processors.HistoryProcessor">HistoryProcessor</span></span><span class="p">],</span> <span class="n">model</span><span class="p">:</span> <span class="n"><span title="sweagent.agent.models.AbstractModel">AbstractModel</span></span><span class="p">,</span> <span class="n">max_requeries</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">&#39;main&#39;</span><span class="p">,</span> <span class="n">_catch_errors</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">_always_require_zero_exit_code</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">action_sampler_config</span><span class="p">:</span> <span class="n"><span title="sweagent.agent.action_sampler.ActionSamplerConfig">ActionSamplerConfig</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents first">
@@ -3539,6 +3564,7 @@ Attempt autosubmit if an error occurs (though all errors should already be handl
 
         <p>The agent handles the behaviour of the model and how it interacts with the environment.</p>
 <p>To run the agent, either call <code>self.run</code> or <code>self.setup</code> and then <code>self.step</code> in a loop.</p>
+
 
 
 
@@ -3688,6 +3714,7 @@ Attempt autosubmit if an error occurs (though all errors should already be handl
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3709,6 +3736,7 @@ Attempt autosubmit if an error occurs (though all errors should already be handl
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3730,6 +3758,7 @@ Attempt autosubmit if an error occurs (though all errors should already be handl
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3751,6 +3780,7 @@ Attempt autosubmit if an error occurs (though all errors should already be handl
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3772,6 +3802,7 @@ Attempt autosubmit if an error occurs (though all errors should already be handl
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3796,6 +3827,7 @@ Attempt autosubmit if an error occurs (though all errors should already be handl
 
         <p>Return the history of the agent for this attempt since the last reset,
 processed through all history processors.</p>
+
     </div>
 
 </div>
@@ -3817,6 +3849,7 @@ processed through all history processors.</p>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3838,6 +3871,7 @@ processed through all history processors.</p>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3860,6 +3894,7 @@ processed through all history processors.</p>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3881,6 +3916,7 @@ processed through all history processors.</p>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3902,6 +3938,7 @@ processed through all history processors.</p>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3923,6 +3960,7 @@ processed through all history processors.</p>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3944,6 +3982,7 @@ processed through all history processors.</p>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -3964,6 +4003,7 @@ processed through all history processors.</p>
     <div class="doc doc-contents ">
 
         <p>Add demonstrations to history</p>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
@@ -3995,6 +4035,7 @@ processed through all history processors.</p>
 
         <p>Add hook to agent</p>
 
+
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">474</span>
@@ -4025,6 +4066,7 @@ processed through all history processors.</p>
 
         <p>Add observation to history, as well as the instance template or demonstrations if we're
 at the start of a new attempt.</p>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
@@ -4073,6 +4115,7 @@ at the start of a new attempt.</p>
     <div class="doc doc-contents ">
 
         <p>Adds a step (command that was run and output) to the model history</p>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
@@ -4160,6 +4203,7 @@ at the start of a new attempt.</p>
 
     <div class="doc doc-contents ">
 
+
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1148</span>
@@ -4210,6 +4254,7 @@ at the start of a new attempt.</p>
 
         <p>Add system message to history</p>
 
+
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">556</span>
@@ -4248,6 +4293,7 @@ at the start of a new attempt.</p>
 
         <p>For most exceptions, we attempt to still extract the patch and submit that.
 This means we send the <code>submit</code> command to the runtime and parse the output.</p>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
@@ -4418,6 +4464,7 @@ with some of the attributes set.</p>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
@@ -4603,6 +4650,7 @@ we will not execute it but requery the model for a corrected command.</p>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
@@ -4917,10 +4965,16 @@ we will not execute it but requery the model for a corrected command.</p>
   </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="sweagent.agent.agents.DefaultAgentConfig" href="../agent_config/#sweagent.agent.agents.DefaultAgentConfig">DefaultAgentConfig</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="typing_extensions.Self">Self</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            sweagent.agent.agents.DefaultAgentConfig
+
+
+  
+      pydantic-model
+  " href="../agent_config/#sweagent.agent.agents.DefaultAgentConfig">DefaultAgentConfig</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="typing_extensions.Self">Self</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
@@ -5068,6 +5122,7 @@ If the model is able to correct itself, the records of the mistakes will not be 
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">737</span>
@@ -5155,6 +5210,7 @@ If the model is able to correct itself, the records of the mistakes will not be 
     <div class="doc doc-contents ">
 
         <p>Get all data that we save in .traj files.</p>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
@@ -5277,6 +5333,7 @@ If the model is able to correct itself, the records of the mistakes will not be 
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
@@ -5511,6 +5568,7 @@ If the model is able to correct itself, the records of the mistakes will not be 
       </tbody>
     </table>
 
+
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">818</span>
@@ -5598,7 +5656,7 @@ If the model is able to correct itself, the records of the mistakes will not be 
 
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">run</span><span class="p">(</span><span class="n">env</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="sweagent.environment.swe_env.SWEEnv" href="../env/#sweagent.environment.swe_env.SWEEnv">SWEEnv</a></span><span class="p">,</span> <span class="n">problem_statement</span><span class="p">:</span> <span class="n"><span title="sweagent.agent.problem_statement.ProblemStatement">ProblemStatement</span></span> <span class="o">|</span> <span class="n"><span title="sweagent.agent.problem_statement.ProblemStatementConfig">ProblemStatementConfig</span></span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">=</span> <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n"><span title="sweagent.types.AgentRunResult">AgentRunResult</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">run</span><span class="p">(</span><span class="n">env</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            sweagent.environment.swe_env.SWEEnv" href="../env/#sweagent.environment.swe_env.SWEEnv">SWEEnv</a></span><span class="p">,</span> <span class="n">problem_statement</span><span class="p">:</span> <span class="n"><span title="sweagent.agent.problem_statement.ProblemStatement">ProblemStatement</span></span> <span class="o">|</span> <span class="n"><span title="sweagent.agent.problem_statement.ProblemStatementConfig">ProblemStatementConfig</span></span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">=</span> <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n"><span title="sweagent.types.AgentRunResult">AgentRunResult</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -5638,7 +5696,7 @@ main loop that repeatedly calls <code>self._step</code> until the problem is sol
                 <code>env</code>
             </td>
             <td>
-                  <code><a class="autorefs autorefs-internal" title="sweagent.environment.swe_env.SWEEnv" href="../env/#sweagent.environment.swe_env.SWEEnv">SWEEnv</a></code>
+                  <code><a class="autorefs autorefs-internal" title="            sweagent.environment.swe_env.SWEEnv" href="../env/#sweagent.environment.swe_env.SWEEnv">SWEEnv</a></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5666,6 +5724,7 @@ main loop that repeatedly calls <code>self._step</code> until the problem is sol
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
@@ -5750,6 +5809,7 @@ main loop that repeatedly calls <code>self._step</code> until the problem is sol
         <p>Save the trajectory to disk.
 This includes the history, the environment state, and the model stats.</p>
 
+
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">727</span>
@@ -5783,7 +5843,7 @@ This includes the history, the environment state, and the model stats.</p>
 
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">setup</span><span class="p">(</span><span class="n">env</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="sweagent.environment.swe_env.SWEEnv" href="../env/#sweagent.environment.swe_env.SWEEnv">SWEEnv</a></span><span class="p">,</span> <span class="n">problem_statement</span><span class="p">:</span> <span class="n"><span title="sweagent.agent.problem_statement.ProblemStatement">ProblemStatement</span></span> <span class="o">|</span> <span class="n"><span title="sweagent.agent.problem_statement.ProblemStatementConfig">ProblemStatementConfig</span></span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">=</span> <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">setup</span><span class="p">(</span><span class="n">env</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            sweagent.environment.swe_env.SWEEnv" href="../env/#sweagent.environment.swe_env.SWEEnv">SWEEnv</a></span><span class="p">,</span> <span class="n">problem_statement</span><span class="p">:</span> <span class="n"><span title="sweagent.agent.problem_statement.ProblemStatement">ProblemStatement</span></span> <span class="o">|</span> <span class="n"><span title="sweagent.agent.problem_statement.ProblemStatementConfig">ProblemStatementConfig</span></span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">=</span> <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -5791,6 +5851,7 @@ This includes the history, the environment state, and the model stats.</p>
         <p>Setup the agent for a new instance. This includes
 formatting the system message and adding demonstrations to the history.</p>
 <p>This method is called by <code>self.run</code>.</p>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
@@ -5914,6 +5975,7 @@ with additional bookkeeping:</p>
           </tr>
       </tbody>
     </table>
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>

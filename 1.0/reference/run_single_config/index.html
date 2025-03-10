@@ -2410,6 +2410,7 @@ SWE-agent 1.0 is the open source SOTA on SWE-bench lite! <a href="https://swe-ag
 
 
 
+
   <div class="doc doc-children">
 
 
@@ -2432,10 +2433,21 @@ SWE-agent 1.0 is the open source SOTA on SWE-bench lite! <a href="https://swe-ag
   </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">actions</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="sweagent.run.run_single.RunSingleActionConfig" href="#sweagent.run.run_single.RunSingleActionConfig">RunSingleActionConfig</a></span> <span class="o">=</span> <span class="n"><span title="pydantic.Field">Field</span></span><span class="p">(</span><span class="n"><span title="pydantic.Field(default_factory)">default_factory</span></span><span class="o">=</span><span class="n"><a class="autorefs autorefs-internal" title="sweagent.run.run_single.RunSingleActionConfig" href="#sweagent.run.run_single.RunSingleActionConfig">RunSingleActionConfig</a></span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">actions</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            sweagent.run.run_single.RunSingleActionConfig
+
+
+  
+      pydantic-model
+  " href="#sweagent.run.run_single.RunSingleActionConfig">RunSingleActionConfig</a></span> <span class="o">=</span> <span class="n"><span title="pydantic.Field">Field</span></span><span class="p">(</span><span class="n"><span title="pydantic.Field(default_factory)">default_factory</span></span><span class="o">=</span><span class="n"><a class="autorefs autorefs-internal" title="            sweagent.run.run_single.RunSingleActionConfig
+
+
+  
+      pydantic-model
+  " href="#sweagent.run.run_single.RunSingleActionConfig">RunSingleActionConfig</a></span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -2458,6 +2470,7 @@ SWE-agent 1.0 is the open source SOTA on SWE-bench lite! <a href="https://swe-ag
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -2476,10 +2489,21 @@ SWE-agent 1.0 is the open source SOTA on SWE-bench lite! <a href="https://swe-ag
   </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">env</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="sweagent.environment.swe_env.EnvironmentConfig" href="../env_config/#sweagent.environment.swe_env.EnvironmentConfig">EnvironmentConfig</a></span> <span class="o">=</span> <span class="n"><span title="pydantic.Field">Field</span></span><span class="p">(</span><span class="n"><span title="pydantic.Field(default_factory)">default_factory</span></span><span class="o">=</span><span class="n"><a class="autorefs autorefs-internal" title="sweagent.environment.swe_env.EnvironmentConfig" href="../env_config/#sweagent.environment.swe_env.EnvironmentConfig">EnvironmentConfig</a></span><span class="p">,</span> <span class="n"><span title="pydantic.Field(description)">description</span></span><span class="o">=</span><span class="s1">&#39;Environment options.&#39;</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">env</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            sweagent.environment.swe_env.EnvironmentConfig
+
+
+  
+      pydantic-model
+  " href="../env_config/#sweagent.environment.swe_env.EnvironmentConfig">EnvironmentConfig</a></span> <span class="o">=</span> <span class="n"><span title="pydantic.Field">Field</span></span><span class="p">(</span><span class="n"><span title="pydantic.Field(default_factory)">default_factory</span></span><span class="o">=</span><span class="n"><a class="autorefs autorefs-internal" title="            sweagent.environment.swe_env.EnvironmentConfig
+
+
+  
+      pydantic-model
+  " href="../env_config/#sweagent.environment.swe_env.EnvironmentConfig">EnvironmentConfig</a></span><span class="p">,</span> <span class="n"><span title="pydantic.Field(description)">description</span></span><span class="o">=</span><span class="s1">&#39;Environment options.&#39;</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -2504,6 +2528,7 @@ SWE-agent 1.0 is the open source SOTA on SWE-bench lite! <a href="https://swe-ag
     <div class="doc doc-contents ">
 
         <p>Path to a .env file to load environment variables from.</p>
+
     </div>
 
 </div>
@@ -2526,6 +2551,7 @@ SWE-agent 1.0 is the open source SOTA on SWE-bench lite! <a href="https://swe-ag
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -2544,10 +2570,16 @@ SWE-agent 1.0 is the open source SOTA on SWE-bench lite! <a href="https://swe-ag
   </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">problem_statement</span><span class="p">:</span> <span class="n"><span title="sweagent.agent.problem_statement.ProblemStatementConfig">ProblemStatementConfig</span></span> <span class="o">=</span> <span class="n"><span title="pydantic.Field">Field</span></span><span class="p">(</span><span class="n"><span title="pydantic.Field(default_factory)">default_factory</span></span><span class="o">=</span><span class="n"><a class="autorefs autorefs-internal" title="sweagent.agent.problem_statement.EmptyProblemStatement" href="../problem_statements/#sweagent.agent.problem_statement.EmptyProblemStatement">EmptyProblemStatement</a></span><span class="p">,</span> <span class="n"><span title="pydantic.Field(description)">description</span></span><span class="o">=</span><span class="s1">&#39;Problem statement options.&#39;</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">problem_statement</span><span class="p">:</span> <span class="n"><span title="sweagent.agent.problem_statement.ProblemStatementConfig">ProblemStatementConfig</span></span> <span class="o">=</span> <span class="n"><span title="pydantic.Field">Field</span></span><span class="p">(</span><span class="n"><span title="pydantic.Field(default_factory)">default_factory</span></span><span class="o">=</span><span class="n"><a class="autorefs autorefs-internal" title="            EmptyProblemStatement
+
+
+  
+      pydantic-model
+   (sweagent.agent.problem_statement.EmptyProblemStatement)" href="../problem_statements/#sweagent.agent.problem_statement.EmptyProblemStatement">EmptyProblemStatement</a></span><span class="p">,</span> <span class="n"><span title="pydantic.Field(description)">description</span></span><span class="o">=</span><span class="s1">&#39;Problem statement options.&#39;</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -2566,6 +2598,7 @@ SWE-agent 1.0 is the open source SOTA on SWE-bench lite! <a href="https://swe-ag
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
 
             <details class="quote">
               <summary>Source code in <code>sweagent/run/run_single.py</code></summary>
@@ -2636,15 +2669,30 @@ SWE-agent 1.0 is the open source SOTA on SWE-bench lite! <a href="https://swe-ag
         <p>Fields:</p>
         <ul>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.run.run_single.RunSingleActionConfig.open_pr" href="#sweagent.run.run_single.RunSingleActionConfig.open_pr">open_pr</a></code>
+              <code><a class="autorefs autorefs-internal" title="            open_pr
+
+
+  
+      pydantic-field
+   (sweagent.run.run_single.RunSingleActionConfig.open_pr)" href="#sweagent.run.run_single.RunSingleActionConfig.open_pr">open_pr</a></code>
                 (<code><span title="bool">bool</span></code>)
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.run.run_single.RunSingleActionConfig.pr_config" href="#sweagent.run.run_single.RunSingleActionConfig.pr_config">pr_config</a></code>
+              <code><a class="autorefs autorefs-internal" title="            pr_config
+
+
+  
+      pydantic-field
+   (sweagent.run.run_single.RunSingleActionConfig.pr_config)" href="#sweagent.run.run_single.RunSingleActionConfig.pr_config">pr_config</a></code>
                 (<code><span title="sweagent.run.hooks.open_pr.OpenPRConfig">OpenPRConfig</span></code>)
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="sweagent.run.run_single.RunSingleActionConfig.apply_patch_locally" href="#sweagent.run.run_single.RunSingleActionConfig.apply_patch_locally">apply_patch_locally</a></code>
+              <code><a class="autorefs autorefs-internal" title="            apply_patch_locally
+
+
+  
+      pydantic-field
+   (sweagent.run.run_single.RunSingleActionConfig.apply_patch_locally)" href="#sweagent.run.run_single.RunSingleActionConfig.apply_patch_locally">apply_patch_locally</a></code>
                 (<code><span title="bool">bool</span></code>)
             </li>
         </ul>
@@ -2677,6 +2725,7 @@ SWE-agent 1.0 is the open source SOTA on SWE-bench lite! <a href="https://swe-ag
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -2698,6 +2747,7 @@ SWE-agent 1.0 is the open source SOTA on SWE-bench lite! <a href="https://swe-ag
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
@@ -2719,6 +2769,7 @@ SWE-agent 1.0 is the open source SOTA on SWE-bench lite! <a href="https://swe-ag
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
     </div>
 
 </div>
