@@ -2028,6 +2028,48 @@ SWE-agent 1.0 is the open source SOTA on SWE-bench lite! <a href="https://swe-ag
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#sweagent.agent.models.RetryConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;RetryConfig
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" RetryConfig">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sweagent.agent.models.RetryConfig.max_wait" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;max_wait
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sweagent.agent.models.RetryConfig.min_wait" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;min_wait
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sweagent.agent.models.RetryConfig.retries" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;retries
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2724,6 +2766,48 @@ SWE-agent 1.0 is the open source SOTA on SWE-bench lite! <a href="https://swe-ag
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#sweagent.agent.models.RetryConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;RetryConfig
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" RetryConfig">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sweagent.agent.models.RetryConfig.max_wait" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;max_wait
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sweagent.agent.models.RetryConfig.min_wait" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;min_wait
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sweagent.agent.models.RetryConfig.retries" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;retries
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3091,7 +3175,12 @@ The model will be served with the help of the <code>litellm</code> library.</p>
   
       pydantic-field
    (sweagent.agent.models.GenericAPIModelConfig.retry)" href="#sweagent.agent.models.GenericAPIModelConfig.retry">retry</a></code>
-                (<code><span title="sweagent.agent.models.RetryConfig">RetryConfig</span></code>)
+                (<code><a class="autorefs autorefs-internal" title="            sweagent.agent.models.RetryConfig
+
+
+  
+      pydantic-model
+  " href="#sweagent.agent.models.RetryConfig">RetryConfig</a></code>)
             </li>
             <li>
               <code><a class="autorefs autorefs-internal" title="            delay
@@ -3486,7 +3575,12 @@ Set this to 0 to disable this check.</p>
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">retry</span><span class="p">:</span> <span class="n"><span title="sweagent.agent.models.RetryConfig">RetryConfig</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">retry</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            sweagent.agent.models.RetryConfig
+
+
+  
+      pydantic-model
+  " href="#sweagent.agent.models.RetryConfig">RetryConfig</a></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3721,6 +3815,153 @@ Does not return API keys that were set via environment variables/.env</p>
 
     </div>
 
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="sweagent.agent.models.RetryConfig" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">sweagent.agent.models.RetryConfig</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-pydantic-model"><code>pydantic-model</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+
+        <p>This configuration object specifies how many times to retry a failed LM API call.</p>
+
+    
+
+        <p>Fields:</p>
+        <ul>
+            <li>
+              <code><a class="autorefs autorefs-internal" title="            retries
+
+
+  
+      pydantic-field
+   (sweagent.agent.models.RetryConfig.retries)" href="#sweagent.agent.models.RetryConfig.retries">retries</a></code>
+                (<code><span title="int">int</span></code>)
+            </li>
+            <li>
+              <code><a class="autorefs autorefs-internal" title="            min_wait
+
+
+  
+      pydantic-field
+   (sweagent.agent.models.RetryConfig.min_wait)" href="#sweagent.agent.models.RetryConfig.min_wait">min_wait</a></code>
+                (<code><span title="float">float</span></code>)
+            </li>
+            <li>
+              <code><a class="autorefs autorefs-internal" title="            max_wait
+
+
+  
+      pydantic-field
+   (sweagent.agent.models.RetryConfig.max_wait)" href="#sweagent.agent.models.RetryConfig.max_wait">max_wait</a></code>
+                (<code><span title="float">float</span></code>)
+            </li>
+        </ul>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="sweagent.agent.models.RetryConfig.max_wait" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">max_wait</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-pydantic-field"><code>pydantic-field</code></small>
+  </span>
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">max_wait</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mi">120</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Maximum wait time between retries (random exponential wait)</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="sweagent.agent.models.RetryConfig.min_wait" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">min_wait</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-pydantic-field"><code>pydantic-field</code></small>
+  </span>
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">min_wait</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mi">10</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Minimum wait time between retries (random exponential wait)</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="sweagent.agent.models.RetryConfig.retries" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">retries</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-pydantic-field"><code>pydantic-field</code></small>
+  </span>
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">retries</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">20</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Number of retries</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+  </div>
+
+    </div>
+
 </div><h2 id="manual-models-for-testing">Manual models for testing</h2>
 <p>The following two models allow you to test your environment by prompting you for actions.
 This can also be very useful to create your first <a href="../../config/demonstrations/">demonstrations</a>.</p>
@@ -3851,7 +4092,7 @@ This can also be very useful to create your first <a href="../../config/demonstr
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">multi_line_command_endings</span> <span class="o">=</span> <span class="p">{</span><span class="n"><span title="command.name">name</span></span><span class="p">:</span> <span class="n">_zndhDhSfor</span> <span class="n"><span title="command">command</span></span> <span class="ow">in</span> <span class="n"><span title="sweagent.agent.models.HumanModel(tools).commands">commands</span></span> <span class="k">if</span> <span class="n"><span title="command.end_name">end_name</span></span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">multi_line_command_endings</span> <span class="o">=</span> <span class="p">{</span><span class="n"><span title="command.name">name</span></span><span class="p">:</span> <span class="n">_ATFzjA3for</span> <span class="n"><span title="command">command</span></span> <span class="ow">in</span> <span class="n"><span title="sweagent.agent.models.HumanModel(tools).commands">commands</span></span> <span class="k">if</span> <span class="n"><span title="command.end_name">end_name</span></span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
