@@ -1818,9 +1818,9 @@ SWE-agent 1.0 is the open source SOTA on SWE-bench lite! <a href="https://swe-ag
 </li>
         
           <li class="md-nav__item">
-  <a href="#sweagent.run.batch_instances.SimpleBatchInstance.id" class="md-nav__link">
+  <a href="#sweagent.run.batch_instances.SimpleBatchInstance.instance_id" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;id
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;instance_id
     </span>
   </a>
   
@@ -1857,6 +1857,15 @@ SWE-agent 1.0 is the open source SOTA on SWE-bench lite! <a href="https://swe-ag
   <a href="#sweagent.run.batch_instances.SimpleBatchInstance.to_full_batch_instance" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;to_full_batch_instance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sweagent.run.batch_instances.SimpleBatchInstance.handle_legacy_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;handle_legacy_id
     </span>
   </a>
   
@@ -2761,9 +2770,9 @@ SWE-agent 1.0 is the open source SOTA on SWE-bench lite! <a href="https://swe-ag
 </li>
         
           <li class="md-nav__item">
-  <a href="#sweagent.run.batch_instances.SimpleBatchInstance.id" class="md-nav__link">
+  <a href="#sweagent.run.batch_instances.SimpleBatchInstance.instance_id" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;id
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;instance_id
     </span>
   </a>
   
@@ -2800,6 +2809,15 @@ SWE-agent 1.0 is the open source SOTA on SWE-bench lite! <a href="https://swe-ag
   <a href="#sweagent.run.batch_instances.SimpleBatchInstance.to_full_batch_instance" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;to_full_batch_instance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sweagent.run.batch_instances.SimpleBatchInstance.handle_legacy_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;handle_legacy_id
     </span>
   </a>
   
@@ -3526,6 +3544,10 @@ use similar deployment configurations.</p>
 present in the docker container.</p>
 
     
+      <p>Config:</p>
+      <ul>
+          <li><code>extra</code>: <code class="highlight language-python"><span class="s1">&#39;ignore&#39;</span></code></li>
+      </ul>
 
         <p>Fields:</p>
         <ul>
@@ -3548,12 +3570,12 @@ present in the docker container.</p>
                 (<code><span title="str">str</span></code>)
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="            id
+              <code><a class="autorefs autorefs-internal" title="            instance_id
 
 
   
       pydantic-field
-   (sweagent.run.batch_instances.SimpleBatchInstance.id)" href="#sweagent.run.batch_instances.SimpleBatchInstance.id">id</a></code>
+   (sweagent.run.batch_instances.SimpleBatchInstance.instance_id)" href="#sweagent.run.batch_instances.SimpleBatchInstance.instance_id">instance_id</a></code>
                 (<code><span title="str">str</span></code>)
             </li>
             <li>
@@ -3585,6 +3607,17 @@ present in the docker container.</p>
             </li>
         </ul>
 
+        <p>Validators:</p>
+        <ul>
+            <li>
+              <code><a class="autorefs autorefs-internal" title="            handle_legacy_id
+
+
+  
+      pydantic-validator
+   (sweagent.run.batch_instances.SimpleBatchInstance.handle_legacy_id)" href="#sweagent.run.batch_instances.SimpleBatchInstance.handle_legacy_id">handle_legacy_id</a></code>
+            </li>
+        </ul>
 
 
 
@@ -3644,8 +3677,8 @@ present in the docker container.</p>
 
 
 
-<h3 id="sweagent.run.batch_instances.SimpleBatchInstance.id" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">id</span>
+<h3 id="sweagent.run.batch_instances.SimpleBatchInstance.instance_id" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">instance_id</span>
 
 
   <span class="doc doc-labels">
@@ -3653,7 +3686,7 @@ present in the docker container.</p>
   </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nb">id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">instance_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3759,6 +3792,28 @@ This data will be available when formatting prompt templates.</p>
     <div class="doc doc-contents ">
 
         <p>Merge the deployment options into the <code>SimpleBatchInstance</code> object to get a full <code>BatchInstance</code>.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="sweagent.run.batch_instances.SimpleBatchInstance.handle_legacy_id" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">handle_legacy_id</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-pydantic-validator"><code>pydantic-validator</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">handle_legacy_id</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
 
 
     </div>
