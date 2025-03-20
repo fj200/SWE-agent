@@ -2092,9 +2092,18 @@ SWE-agent 1.0 is the open source SOTA on SWE-bench lite! <a href="https://swe-ag
 <p>This page details all environment variables that are currently in use by SWE-agent.</p>
 <ul>
 <li>All API keys (for LMs and GitHub) can be set as an environment variable. See <a href="../../installation/keys/">here</a> for more information.</li>
-<li><code>SWE_AGENT_CONFIG_ROOT</code>: Used to resolve relative paths in the <a href="../config/">config</a></li>
+<li><code>SWE_AGENT_CONFIG_ROOT</code>: Used to resolve relative paths in the <a href="../config/">config</a>. E.g., if <code>SWE_AGENT_CONFIG_ROOT=/a/b/c</code> and you set
+  add a tool bundle as <code>tools/my_bundle</code>, it will be resolved to <code>/a/b/c/tools/my_bundle</code>. The default of <code>SWE_AGENT_CONFIG_ROOT</code> is the
+  the <code>swe-agent</code> package directory.</li>
 </ul>
-<p>The following three variables can only be set as environment variables, not in the config file</p>
+<p>The following variables can only be set as environment variables, not in the config file.</p>
+<p>If you install <code>swe-agent</code> without the <code>--editable</code> option, please make sure to set</p>
+<ul>
+<li><code>SWE_AGENT_CONFIG_DIR</code> (default <code>&lt;PACKAGE&gt;/config</code>)</li>
+<li><code>SWE_AGENT_TOOLS_DIR</code> (default <code>&lt;PACKAGE&gt;/tools</code>)</li>
+<li><code>SWE_AGENT_TRAJECTORY_DIR</code> (default <code>&lt;PACKAGE&gt;/trajectories</code>)</li>
+</ul>
+<p>In addition, the following env variables allow to configure the logging.</p>
 <ul>
 <li><code>SWE_AGENT_LOG_TIME</code>: Add timestamps to log</li>
 <li><code>SWE_AGENT_LOG_STREAM_LEVEL</code>: Level of logging that is shown on the command line interface (<code>TRACE</code> being a custom level below <code>DEBUG</code>). Will have no effect for <code>run-batch</code>.</li>
