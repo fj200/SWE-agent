@@ -2417,6 +2417,19 @@ However, we temporarily support both names.</p>
 <p>See <a href="../../reference/batch_instances/#sweagent.run.batch_instances.ExpertInstancesFromFile"><code>ExpertInstances</code></a>.</p>
 </div>
 <h2 id="output-files-and-next-steps">Output files and next steps</h2>
+<p>All patches generated (all submissions/predictions of the agent) are saved to a <code>preds.json</code> file.
+If you interrupt <code>sweagent run-batch</code>, some of these or the file itself might be missing.
+You can use the <code>sweagent merge-preds</code> utility to fix this.</p>
+<p>The <code>preds.json</code> file is very similar to the <code>.jsonl</code> format that is used for SWE-bench local runs.
+You can convert between the formats with</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="n">preds</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;preds.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;instance_id&quot;</span><span class="p">:</span> <span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">value</span><span class="p">}</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">preds</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+<span class="n">jsonl</span> <span class="o">=</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+<span class="n">Path</span><span class="p">(</span><span class="s2">&quot;all_preds.jsonl&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">jsonl</span><span class="p">))</span>
+</code></pre></div>
 
 
 
