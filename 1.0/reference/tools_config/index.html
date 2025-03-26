@@ -2971,55 +2971,6 @@ For the latter, see <a href="../bundle_config/">tool bundles</a>.</p>
    (sweagent.tools.tools.ToolConfig.max_consecutive_execution_timeouts)" href="#sweagent.tools.tools.ToolConfig.max_consecutive_execution_timeouts">max_consecutive_execution_timeouts</a></code>
                 (<code><span title="int">int</span></code>)
             </li>
-            <li>
-              <code><a class="autorefs autorefs-internal" title="            use_function_calling
-
-
-  
-      cached
-      property
-      pydantic-field
-   (sweagent.tools.tools.ToolConfig.use_function_calling)" href="#sweagent.tools.tools.ToolConfig.use_function_calling">use_function_calling</a></code>
-                (<code><span title="bool">bool</span></code>)
-            </li>
-            <li>
-              <code><a class="autorefs autorefs-internal" title="            state_commands
-
-
-  
-      cached
-      property
-      pydantic-field
-   (sweagent.tools.tools.ToolConfig.state_commands)" href="#sweagent.tools.tools.ToolConfig.state_commands">state_commands</a></code>
-                (<code><span title="list">list</span>[<span title="str">str</span>]</code>)
-            </li>
-            <li>
-              <code><a class="autorefs autorefs-internal" title="            commands
-
-
-  
-      cached
-      property
-      pydantic-field
-   (sweagent.tools.tools.ToolConfig.commands)" href="#sweagent.tools.tools.ToolConfig.commands">commands</a></code>
-                (<code><span title="list">list</span>[<a class="autorefs autorefs-internal" title="            sweagent.tools.commands.Command
-
-
-  
-      pydantic-model
-  " href="../bundle_config/#sweagent.tools.commands.Command">Command</a>]</code>)
-            </li>
-            <li>
-              <code><a class="autorefs autorefs-internal" title="            tools
-
-
-  
-      cached
-      property
-      pydantic-field
-   (sweagent.tools.tools.ToolConfig.tools)" href="#sweagent.tools.tools.ToolConfig.tools">tools</a></code>
-                (<code><span title="list">list</span>[<span title="dict">dict</span>]</code>)
-            </li>
         </ul>
 
 
@@ -3093,7 +3044,6 @@ For the latter, see <a href="../bundle_config/">tool bundles</a>.</p>
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-cached"><code>cached</code></small>
       <small class="doc doc-label doc-label-property"><code>property</code></small>
-      <small class="doc doc-label doc-label-pydantic-field"><code>pydantic-field</code></small>
   </span>
 
 </h3>
@@ -3392,7 +3342,6 @@ Unlike <code>install_commands</code>, these commands are part of the environment
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-cached"><code>cached</code></small>
       <small class="doc doc-label doc-label-property"><code>property</code></small>
-      <small class="doc doc-label doc-label-pydantic-field"><code>pydantic-field</code></small>
   </span>
 
 </h3>
@@ -3463,7 +3412,6 @@ These commands are executed in a subprocess and are not part of the environment 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-cached"><code>cached</code></small>
       <small class="doc doc-label doc-label-property"><code>property</code></small>
-      <small class="doc doc-label doc-label-pydantic-field"><code>pydantic-field</code></small>
   </span>
 
 </h3>
@@ -3512,7 +3460,6 @@ Note: Does not interrupt running commands, but will stop the agent for the next 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-cached"><code>cached</code></small>
       <small class="doc doc-label doc-label-property"><code>property</code></small>
-      <small class="doc doc-label doc-label-pydantic-field"><code>pydantic-field</code></small>
   </span>
 
 </h3>
@@ -3761,46 +3708,6 @@ Note: Does not interrupt running commands, but will stop the agent for the next 
       pydantic-model
   " href="../bundle_config/#sweagent.tools.bundle.BundleConfig">BundleConfig</a></code>)
             </li>
-            <li>
-              <code><a class="autorefs autorefs-internal" title="            state_command
-
-
-  
-      property
-      pydantic-field
-   (sweagent.tools.bundle.Bundle.state_command)" href="#sweagent.tools.bundle.Bundle.state_command">state_command</a></code>
-                (<code><span title="str">str</span> | None</code>)
-            </li>
-            <li>
-              <code><a class="autorefs autorefs-internal" title="            config
-
-
-  
-      property
-      pydantic-field
-   (sweagent.tools.bundle.Bundle.config)" href="#sweagent.tools.bundle.Bundle.config">config</a></code>
-                (<code><a class="autorefs autorefs-internal" title="            sweagent.tools.bundle.BundleConfig
-
-
-  
-      pydantic-model
-  " href="../bundle_config/#sweagent.tools.bundle.BundleConfig">BundleConfig</a></code>)
-            </li>
-            <li>
-              <code><a class="autorefs autorefs-internal" title="            commands
-
-
-  
-      property
-      pydantic-field
-   (sweagent.tools.bundle.Bundle.commands)" href="#sweagent.tools.bundle.Bundle.commands">commands</a></code>
-                (<code><span title="list">list</span>[<a class="autorefs autorefs-internal" title="            sweagent.tools.commands.Command
-
-
-  
-      pydantic-model
-  " href="../bundle_config/#sweagent.tools.commands.Command">Command</a>]</code>)
-            </li>
         </ul>
 
         <p>Validators:</p>
@@ -3835,7 +3742,6 @@ Note: Does not interrupt running commands, but will stop the agent for the next 
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
-      <small class="doc doc-label doc-label-pydantic-field"><code>pydantic-field</code></small>
   </span>
 
 </h3>
@@ -3863,7 +3769,6 @@ Note: Does not interrupt running commands, but will stop the agent for the next 
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
-      <small class="doc doc-label doc-label-pydantic-field"><code>pydantic-field</code></small>
   </span>
 
 </h3>
@@ -3935,7 +3840,6 @@ Note: Does not interrupt running commands, but will stop the agent for the next 
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
-      <small class="doc doc-label doc-label-pydantic-field"><code>pydantic-field</code></small>
   </span>
 
 </h3>
