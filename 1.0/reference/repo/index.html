@@ -2854,9 +2854,9 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
 
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/repo.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deployment</span><span class="p">:</span> <span class="n">AbstractDeployment</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deployment</span><span class="p">:</span> <span class="n">AbstractDeployment</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Does nothing.&quot;&quot;&quot;</span>
     <span class="k">pass</span>
 </code></pre></div></td></tr></table></div>
@@ -2883,9 +2883,9 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
 
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/repo.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_reset_commands</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_reset_commands</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Issued after the copy operation or when the environment is reset.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_get_git_reset_commands</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_commit</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -3082,16 +3082,16 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
 
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/repo.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span>
-<span class="normal">97</span>
-<span class="normal">98</span>
-<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check_valid_repo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check_valid_repo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">repo</span> <span class="o">=</span> <span class="n">GitRepo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">search_parent_directories</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">InvalidGitRepositoryError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -3123,15 +3123,15 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
 
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/repo.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">101</span>
-<span class="normal">102</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">102</span>
 <span class="normal">103</span>
 <span class="normal">104</span>
 <span class="normal">105</span>
 <span class="normal">106</span>
 <span class="normal">107</span>
 <span class="normal">108</span>
-<span class="normal">109</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deployment</span><span class="p">:</span> <span class="n">AbstractDeployment</span><span class="p">):</span>
+<span class="normal">109</span>
+<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deployment</span><span class="p">:</span> <span class="n">AbstractDeployment</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">check_valid_repo</span><span class="p">()</span>
     <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
         <span class="n">deployment</span><span class="o">.</span><span class="n">runtime</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">UploadRequest</span><span class="p">(</span><span class="n">source_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">),</span> <span class="n">target_path</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">repo_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
@@ -3164,9 +3164,9 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
 
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/repo.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_reset_commands</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_reset_commands</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Issued after the copy operation or when the environment is reset.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_get_git_reset_commands</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_commit</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -3396,8 +3396,7 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
 
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/repo.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">153</span>
-<span class="normal">154</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">154</span>
 <span class="normal">155</span>
 <span class="normal">156</span>
 <span class="normal">157</span>
@@ -3420,7 +3419,8 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
 <span class="normal">174</span>
 <span class="normal">175</span>
 <span class="normal">176</span>
-<span class="normal">177</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deployment</span><span class="p">:</span> <span class="n">AbstractDeployment</span><span class="p">):</span>
+<span class="normal">177</span>
+<span class="normal">178</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deployment</span><span class="p">:</span> <span class="n">AbstractDeployment</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clones the repository to the sandbox.&quot;&quot;&quot;</span>
     <span class="n">base_commit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_commit</span>
     <span class="n">github_token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;GITHUB_TOKEN&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -3469,9 +3469,9 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
 
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/repo.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
-<span class="normal">180</span>
-<span class="normal">181</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_reset_commands</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_reset_commands</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Issued after the copy operation or when the environment is reset.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_get_git_reset_commands</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_commit</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -3496,7 +3496,7 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
 
 
 </h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">repo_from_simplified_input</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">base_commit</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">&#39;HEAD&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="s1">&#39;github&#39;</span><span class="p">,</span> <span class="s1">&#39;preexisting&#39;</span><span class="p">,</span> <span class="s1">&#39;auto&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;auto&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="sweagent.environment.repo.RepoConfig">RepoConfig</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">repo_from_simplified_input</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">base_commit</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">&#39;HEAD&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="s1">&#39;github&#39;</span><span class="p">,</span> <span class="s1">&#39;preexisting&#39;</span><span class="p">,</span> <span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="s1">&#39;ctf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;auto&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="sweagent.environment.repo.RepoConfig">RepoConfig</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents first">
@@ -3536,7 +3536,7 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
                 <code>type</code>
             </td>
             <td>
-                  <code><span title="typing.Literal">Literal</span>[&#39;local&#39;, &#39;github&#39;, &#39;preexisting&#39;, &#39;auto&#39;]</code>
+                  <code><span title="typing.Literal">Literal</span>[&#39;local&#39;, &#39;github&#39;, &#39;preexisting&#39;, &#39;auto&#39;, &#39;ctf&#39;]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3554,30 +3554,32 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
 
             <details class="quote">
               <summary>Source code in <code>sweagent/environment/repo.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">187</span>
-<span class="normal">188</span>
-<span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
-<span class="normal">196</span>
-<span class="normal">197</span>
-<span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span>
-<span class="normal">201</span>
-<span class="normal">202</span>
-<span class="normal">203</span>
-<span class="normal">204</span>
-<span class="normal">205</span>
-<span class="normal">206</span>
-<span class="normal">207</span>
-<span class="normal">208</span>
-<span class="normal">209</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">repo_from_simplified_input</span><span class="p">(</span>
-    <span class="o">*</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base_commit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;local&quot;</span><span class="p">,</span> <span class="s2">&quot;github&quot;</span><span class="p">,</span> <span class="s2">&quot;preexisting&quot;</span><span class="p">,</span> <span class="s2">&quot;auto&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">repo_from_simplified_input</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base_commit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;local&quot;</span><span class="p">,</span> <span class="s2">&quot;github&quot;</span><span class="p">,</span> <span class="s2">&quot;preexisting&quot;</span><span class="p">,</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;ctf&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RepoConfig</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get repo config from a simplified input.</span>
 
@@ -3597,6 +3599,8 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
             <span class="k">return</span> <span class="n">GithubRepoConfig</span><span class="p">(</span><span class="n">github_url</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span> <span class="n">base_commit</span><span class="o">=</span><span class="n">base_commit</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">LocalRepoConfig</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="nb">input</span><span class="p">),</span> <span class="n">base_commit</span><span class="o">=</span><span class="n">base_commit</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;ctf&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">CTFRepoConfig</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="nb">input</span><span class="p">))</span>
     <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Unknown repo type: </span><span class="si">{</span><span class="nb">type</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
