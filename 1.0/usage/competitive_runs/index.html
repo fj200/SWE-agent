@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.4af4bdda.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2afb09e1.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -2318,6 +2318,12 @@ SWE-agent 1.0 is the open source SOTA on SWE-bench lite! <a href="https://swe-ag
   This is a very expensive configuration.
   If you use it, also make sure to use Claude 3.7 instead of claude 3.5.</li>
 </ul>
+<div class="admonition warning">
+<p class="admonition-title">Retry configurations and command line arguments</p>
+<p>Note that the structure of the configuration with agents that run multiple attempts is different from the one of the
+default agent. In particular, supplying options like <code>--agent.model.name</code> etc. will cause (potentially confusing)
+error messages. Take a look at the above configuration file to see the structure!</p>
+</div>
 <p>You can find the command with which to run each config at the top of the config file.</p>
 <p>In order to run on multiple workers with Claude, you need to use multiple API keys in order to have enough cache break points
 For this, please set the following environment variable before running</p>
