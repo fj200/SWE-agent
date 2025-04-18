@@ -35,6 +35,20 @@ agent:
       - path: tools/review_on_submit_m
     registry_variables:
       USE_FILEMAP: 'true'
+      FILEMAP_TEMPLATE: |-
+        <NOTE>This file is too large to display entirely. Showing abbreviated version.
+        If you cannot immediately identify what code is relevant for your task,
+        it's recommended to use `grep` or similar tools to identify relevant line ranges.
+        Only use `str_replace editor view --view_range` if you are confident that the view range is relevant to your task.
+        </NOTE>
+
+        {filemap}
+
+        <IMPORTANT><NOTE>The above file has been abbreviated.
+        If you cannot immediately identify what code is relevant for your task,
+        it's recommended to use `grep` or similar tools to identify relevant line ranges.
+        Only use `str_replace editor view --view_range` if you are confident that the view range is relevant to your task.
+        </NOTE></IMPORTANT>
       SUBMIT_REVIEW_MESSAGES:
         - |
           Thank you for your work on this issue. Please carefully follow the steps below to help review your changes.
@@ -62,7 +76,14 @@ agent:
     - type: repeat_action_mitigator
       warning_messages:
         - base_action_regex: "str_replace_editor view"
-          repetition_count: 4
+          repetition_count: 5
+          warning_message: |
+            <IMPORTANT>You have been `str_replace_editor view` actions for {{repetition_count}} consecutive times.
+            This can be inefficient. Please consider using search operations to locate the context you need, for example
+            `grep` or `find`.
+            </IMPORTANT>
+        - base_action_regex: "str_replace_editor view"
+          repetition_count: 10
           warning_message: |
             <IMPORTANT>You have been `str_replace_editor view` actions for {{repetition_count}} consecutive times.
             This is inefficient. Please use search operations to locate the context you need, for example
@@ -78,9 +99,9 @@ agent:
             <IMPORTANT>
             You have been using similar actions to `{{base_command}}` for {{repetition_count}} consecutive times.
             DO NOT use `{{base_command}}` for the next action!
-            Maybe you can use `find` or `grep` to locate relevant context first?
+            Maybe you need to find more relevant context first?
             If a command doesn't work several times in a row, think of a different approach.
             </IMPORTANT>
       terminate:
         - base_action_regex: ".*"
-          repetition_count: 10
+          repetition_count: 15
