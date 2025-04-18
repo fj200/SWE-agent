@@ -83,7 +83,7 @@ agent:
             `grep` or `find`.
             </IMPORTANT>
         - base_action_regex: "str_replace_editor view"
-          repetition_count: 10
+          repetition_count: 8
           warning_message: |
             <IMPORTANT>You have been `str_replace_editor view` actions for {{repetition_count}} consecutive times.
             This is inefficient. Please use search operations to locate the context you need, for example
@@ -102,6 +102,3 @@ agent:
             Maybe you need to find more relevant context first?
             If a command doesn't work several times in a row, think of a different approach.
             </IMPORTANT>
-      terminate:
-        - base_action_regex: ".*"
-          repetition_count: 15
