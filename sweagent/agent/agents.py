@@ -20,7 +20,9 @@ from unidiff import UnidiffParseError
 from sweagent import __version__, get_agent_commit_hash, get_rex_commit_hash, get_rex_version
 from sweagent.agent.action_sampler import AbstractActionSampler, ActionSamplerConfig
 from sweagent.agent.history_processors import DefaultHistoryProcessor, HistoryProcessor
+from sweagent.agent.hooks import get_hook_from_config
 from sweagent.agent.hooks.abstract import AbstractAgentHook, CombinedAgentHook
+from sweagent.agent.hooks.config import AgentHookConfig
 from sweagent.agent.models import (
     AbstractModel,
     HumanModel,
@@ -153,7 +155,11 @@ class DefaultAgentConfig(BaseModel):
     """
     action_sampler: ActionSamplerConfig | None = None
 
+    hooks: list[AgentHookConfig] = Field(default_factory=list)
+    """List of hooks to apply to the agent."""
+
     type: Literal["default"] = "default"
+    """Do not change this."""
 
     # pydantic config
     model_config = ConfigDict(extra="forbid")
@@ -473,7 +479,7 @@ class DefaultAgent(AbstractAgent):
         # model config, because it lives on as a property in the model, tools, etc.
         config = config.model_copy(deep=True)
         model = get_model(config.model, config.tools)
-        return cls(
+        agent = cls(
             templates=config.templates,
             tools=ToolHandler(config.tools),
             history_processors=config.history_processors,
@@ -481,6 +487,9 @@ class DefaultAgent(AbstractAgent):
             max_requeries=config.max_requeries,
             action_sampler_config=config.action_sampler,
         )
+        for hook in config.hooks:
+            agent.add_hook(get_hook_from_config(hook))
+        return agent
 
     def add_hook(self, hook: AbstractAgentHook) -> None:
         """Add hook to agent"""

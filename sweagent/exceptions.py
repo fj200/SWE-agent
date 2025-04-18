@@ -52,3 +52,7 @@ class ModelConfigurationError(Exception):
     """Raised when the model configuration is invalid/no further retries
     should be made.
     """
+
+
+class RepetitiveActionExit(Exception):
+    """Raised when the agent is terminated due to repetitive actions"""

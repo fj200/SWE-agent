@@ -1,5 +1,7 @@
 from typing import TYPE_CHECKING
 
+from pydantic import BaseModel
+
 from sweagent.types import AgentInfo, StepOutput, Trajectory
 
 if TYPE_CHECKING:
@@ -8,6 +10,9 @@ if TYPE_CHECKING:
 
 
 class AbstractAgentHook:
+    def __init__(self, config: BaseModel):
+        self._config = config
+
     def on_init(self, *, agent: "DefaultAgent"):
         """Note: Depending on the internals of `Agent` should be done with care,
         it's best to use this as little as possible.
