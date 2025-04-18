@@ -7,12 +7,13 @@ from __future__ import annotations
 import copy
 import re
 from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import Any, Literal
 
 import numpy as np
 from jinja2 import Template
 from pydantic import BaseModel, ConfigDict
-from unidiff import PatchSet
+from unidiff import PatchSet, UnidiffParseError
 
 from sweagent.agent.history_processors import _set_cache_control
 from sweagent.agent.models import (
@@ -648,15 +649,13 @@ class RetryOnExitStatus(AbstractRetryLoop):
         if not patch:
             return False
         try:
-            patch_set = PatchSet(patch)
-            # Check if any file in the patch has modifications (not just additions)
-            for patched_file in patch_set:
-                if patched_file.is_modified_file:
-                    return True
-        except Exception:
-            # If we can't parse the patch, don't consider it as having modifications
+            patch_set = PatchSet(patch.splitlines())
+        except UnidiffParseError:
+            # print("Cannot parse patch of length", len(patch.splitlines()))
             return False
-        return False
+        files = [f.path for f in patch_set.modified_files]
+        files = [f for f in files if Path(f).name not in ["tox.ini", "setup.py", "setup.cfg", "pyproject.toml"]]
+        return bool(files)
 
     def get_best(self) -> int | None:
         """Returns the first successful submission, or the last attempt if none were successful."""
