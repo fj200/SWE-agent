@@ -12,6 +12,7 @@ from typing import Any, Literal
 import numpy as np
 from jinja2 import Template
 from pydantic import BaseModel, ConfigDict
+from unidiff import PatchSet
 
 from sweagent.agent.history_processors import _set_cache_control
 from sweagent.agent.models import (
@@ -197,6 +198,25 @@ class ChooserRetryLoopConfig(BaseModel):
         return ChooserRetryLoop(self, problem_statement)
 
 
+class RetryOnExitStatusConfig(BaseModel):
+    type: Literal["retry_on_exit_status"] = "retry_on_exit_status"
+
+    max_attempts: int
+    min_budget_for_new_attempt: float = 0.0
+    """Minimal $ that need to be left in order for us to start a new attempt.
+    If set to 0: Always.
+    """
+
+    cost_limit: float
+    """The maximum cost to spend on all attempts.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    def get_retry_loop(self, problem_statement: ProblemStatement) -> RetryOnExitStatus:
+        return RetryOnExitStatus(self, problem_statement)
+
+
 class ScoreRetryLoopConfig(BaseModel):
     """The configuration for the review loop"""
 
@@ -234,7 +254,7 @@ class ScoreRetryLoopConfig(BaseModel):
         return ScoreRetryLoop(self, problem_statement)
 
 
-RetryLoopConfig = ScoreRetryLoopConfig | ChooserRetryLoopConfig
+RetryLoopConfig = ScoreRetryLoopConfig | ChooserRetryLoopConfig | RetryOnExitStatusConfig
 
 # --- IMPLEMENTATIONS ---
 
@@ -555,6 +575,128 @@ class ChooserRetryLoop(AbstractRetryLoop):
         return self._chooser_output.chosen_idx
 
 
+class RetryOnExitStatus(AbstractRetryLoop):
+    def __init__(self, config: RetryOnExitStatusConfig, problem_statement: ProblemStatement):
+        """This is the most trivial retry loop. It just retries until a submission with
+        `exit_status=='submitted'` is found or we exceed our budget.
+
+        If no submission has exit_status="submitted", we need some extra heuristics:
+        First, filter all submissions that have a non-empty patch.
+        If none exist, select the first submission.
+        Else, filter for submissions that change files and not just add them.
+        If there is more than one, select the first.
+        If there is none, select the first submission with non-empty patch.
+        """
+        self._config = config
+        self._problem_statement = problem_statement
+        self._submissions: list[ReviewSubmission] = []
+        self.logger = get_logger("submitted_loop", emoji="🔄")
+        self._has_submitted = False
+
+    @property
+    def _total_stats(self) -> InstanceStats:
+        return sum((s.model_stats for s in self._submissions), start=InstanceStats())
+
+    @property
+    def review_model_stats(self) -> InstanceStats:
+        return InstanceStats()
+
+    @property
+    def _n_attempts(self) -> int:
+        return len(self._submissions)
+
+    def on_submit(self, submission: ReviewSubmission) -> None:
+        self._submissions.append(submission)
+        exit_status = submission.info.get("exit_status", "")
+        if exit_status == "submitted":
+            self._has_submitted = True
+            self.logger.info(f"Found a submission with exit_status=submitted (attempt {self._n_attempts})")
+
+    def retry(self) -> bool:
+        stat_str = f"n_samples={self._n_attempts}, has_submitted={self._has_submitted}"
+
+        # Stop if we already found a submitted solution
+        if self._has_submitted:
+            self.logger.info(f"Exiting retry loop ({stat_str}): Found a submission with exit_status=submitted")
+            return False
+
+        if self._total_stats.instance_cost > self._config.cost_limit > 0:
+            self.logger.info(
+                f"Exiting retry loop ({stat_str}): Total attempt cost ({self._total_stats.instance_cost}) "
+                f"exceeds cost limit ({self._config.cost_limit})"
+            )
+            return False
+
+        if self._n_attempts >= self._config.max_attempts > 0:
+            self.logger.info(f"Exiting retry loop ({stat_str}): max_attempts={self._config.max_attempts} reached")
+            return False
+
+        remaining_budget = self._config.cost_limit - self._total_stats.instance_cost
+        if self._config.min_budget_for_new_attempt > 0 and remaining_budget < self._config.min_budget_for_new_attempt:
+            msg = (
+                f"Exiting retry loop ({stat_str}): Not enough budget left for a new attempt "
+                f"({remaining_budget} remaining, {self._config.min_budget_for_new_attempt} required)"
+            )
+            self.logger.info(msg)
+            return False
+
+        return True
+
+    @staticmethod
+    def _patch_has_modified_files(patch: str | None) -> bool:
+        """Check if the patch modifies files and not only adds new ones"""
+        if not patch:
+            return False
+        try:
+            patch_set = PatchSet(patch)
+            # Check if any file in the patch has modifications (not just additions)
+            for patched_file in patch_set:
+                if patched_file.is_modified_file:
+                    return True
+        except Exception:
+            # If we can't parse the patch, don't consider it as having modifications
+            return False
+        return False
+
+    def get_best(self) -> int | None:
+        """Returns the first successful submission, or the last attempt if none were successful."""
+        if len(self._submissions) == 0:
+            return None
+
+        # Build boolean lists for each criterion
+        submitted = []
+        non_empty_submissions = []
+        has_modified_files = []
+
+        for submission in self._submissions:
+            # Check for exit_status="submitted"
+            is_submitted = submission.info.get("exit_status", "") == "submitted"
+            submitted.append(is_submitted)
+            patch = submission.info.get("submission", "")
+            has_patch = patch is not None and patch.strip()
+            non_empty_submissions.append(has_patch)
+            has_modified_files.append(has_patch and self._patch_has_modified_files(patch))
+
+        if any(has_modified_files):
+            selected_idx = has_modified_files.index(True)
+            self.logger.info(f"Selected submission {selected_idx} (has modifications)")
+            return selected_idx
+
+        if any(non_empty_submissions):
+            selected_idx = non_empty_submissions.index(True)
+            self.logger.info(f"Selected submission {selected_idx} (has non-empty patch but only adds files)")
+            return selected_idx
+
+        # First try to find a submission with exit_status="submitted"
+        if any(submitted):
+            selected_idx = submitted.index(True)
+            self.logger.info(f"Selected submission {selected_idx} (exit_status=submitted)")
+            return selected_idx
+
+        self.logger.info("No submissions with non-empty patches/'submitted' status found, selecting first submission")
+        return 0
+
+
 # todo: The model shouldn't be defined here, it should be defined as part of the scorer
 class ScoreRetryLoop(AbstractRetryLoop):
     def __init__(
@@ -660,5 +802,5 @@ class ScoreRetryLoop(AbstractRetryLoop):
 
 def get_retry_loop_from_config(
     config: RetryLoopConfig, problem_statement: ProblemStatement
-) -> ScoreRetryLoop | ChooserRetryLoop:
+) -> ScoreRetryLoop | ChooserRetryLoop | RetryOnExitStatus:
     return config.get_retry_loop(problem_statement=problem_statement)

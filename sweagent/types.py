@@ -17,7 +17,9 @@ class StepOutput(BaseModel):
     thought: str = ""
     action: str = ""
     output: str = ""
+    """Thought + action from the LM"""
     observation: str = ""
+    """The result of the action"""
     execution_time: float = 0.0
     done: bool = False
     exit_status: int | str | None = None
