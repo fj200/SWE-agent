@@ -10,7 +10,8 @@ from jinja2 import Template
 from sweagent.agent.hooks.abstract import AbstractAgentHook
 from sweagent.agent.hooks.config import RepeatActionMitigatorConfig
 from sweagent.exceptions import RepetitiveActionExit
-from sweagent.types import AgentInfo, StepOutput
+from sweagent.types import StepOutput
+from sweagent.utils.log import get_logger
 
 
 def _split_shell_commands(cmd_string: str) -> list[str]:
@@ -54,9 +55,12 @@ def split_shell_commands(cmd_string: str) -> list[str]:
         return cmd_string.split("&&")
 
 
-def strip_python_path(action: str) -> str:
-    """If the action starts with `PYTHONPATH=/... action`, return just `action`."""
-    pattern = r"\s*PYTHONPATH=[^ ]+\s*"
+def strip_environment_variables(action: str) -> str:
+    """Remove environment variable settings from the beginning of a command.
+
+    For example, if the action is `PYTHONPATH=/path FOO=bar command`, return just `command`.
+    """
+    pattern = r"^\s*(?:[A-Z_]+=[^ ]+\s*)+\s*"
     match = re.match(pattern, action)
     if match:
         return action[match.end() :]
@@ -78,6 +82,7 @@ def get_base_command(action: str) -> str:
     """
     if not action.strip():
         return ""
+    action = strip_environment_variables(action)
     action = split_shell_commands(action)[-1]
     action = action.split('"')[0]
     action = action.split("'")[0]
@@ -136,6 +141,7 @@ class RepeatActionMitigator(AbstractAgentHook):
     def __init__(self, config: RepeatActionMitigatorConfig):
         self._config = config
         self._past_actions = []
+        self.logger = get_logger("RepeatActionMitigator")
 
     def on_run_start(self):
         self._past_actions = []
@@ -154,25 +160,29 @@ class RepeatActionMitigator(AbstractAgentHook):
 
         base_command = get_base_command(self._past_actions[-1])
 
-        for (base_command_regex, repetition_count), message in self._config.warning_messages.items():
-            if repetition_count < repeat_action_count:
+        for warning_config in self._config.warning_messages:
+            if warning_config.repetition_count > repeat_action_count:
                 continue
-            if not re.match(base_command_regex, base_command):
+            if not re.match(warning_config.base_action_regex, base_command):
                 continue
-
-            # Format message with Jinja using repetition_count and base_command
-            template = Template(message)
+            template = Template(warning_config.warning_message)
             return template.render(repetition_count=repeat_action_count, base_command=base_command)
         return ""
 
     def should_terminate(self) -> bool:
         """Should we terminate the agent due to repetitive actions?"""
         repeat_action_count = self.get_repeat_action_count()
-        for base_command_regex, repetition_count in self._config.terminate:
-            if repetition_count < repeat_action_count:
+        base_command = get_base_command(self._past_actions[-1])
+        for termination_config in self._config.terminate:
+            if termination_config.repetition_count > repeat_action_count:
                 continue
-            if not re.match(base_command_regex, get_base_command(self._past_actions[-1])):
+            if not re.match(termination_config.base_action_regex, base_command):
                 continue
+            self.logger.warning(
+                "Terminating due to repetitive actions: repetition_count: %d, base_command: %s",
+                repeat_action_count,
+                base_command,
+            )
             return True
         return False
 
@@ -184,7 +194,7 @@ class RepeatActionMitigator(AbstractAgentHook):
         if self.should_terminate():
             raise RepetitiveActionExit()
 
-    def on_step_done(self, *, step: StepOutput, info: AgentInfo):
+    def on_action_executed(self, *, step: StepOutput):
         """Called after the step has been executed.
         We append the injected message to the observation.
         """

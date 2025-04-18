@@ -45,6 +45,7 @@ from sweagent.exceptions import (
     ContextWindowExceededError,
     CostLimitExceededError,
     FormatError,
+    RepetitiveActionExit,
     TotalCostLimitExceededError,
 )
 from sweagent.tools.parsing import (
@@ -1160,6 +1161,12 @@ class DefaultAgent(AbstractAgent):
                 return handle_error_with_autosubmission(
                     "exit_environment_error",
                     f"Exit due to environment error: {e}",
+                )
+            except RepetitiveActionExit:
+                self.logger.exception("Exiting due to repetitive action", exc_info=True)
+                return handle_error_with_autosubmission(
+                    "exit_repetitive_action",
+                    "Exiting due to repetitive action",
                 )
             except RuntimeError as e:
                 self.logger.exception(f"Exiting due to runtime error: {e}", exc_info=True)
