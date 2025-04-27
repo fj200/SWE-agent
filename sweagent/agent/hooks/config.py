@@ -41,6 +41,10 @@ class RAMRequeryConfig(BaseModel):
     Available fields: action, repetition_count, base_command
     """
 
+    requery_temperature: float | None = None
+    """Temperature to use for requery
+    """
+
 
 class RepeatActionMitigatorConfig(BaseModel):
     warning_messages: list[RAMWarningMessageConfig] = []

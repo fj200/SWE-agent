@@ -61,12 +61,20 @@ class RepetitiveActionExit(Exception):
 class BlockedActionError(Exception):
     """Raised when the agent's action is blocked"""
 
-    def __init__(self, message_template: str = "", exclude_from_format_fail_count: bool = False):
+    def __init__(
+        self,
+        *,
+        message_template: str = "",
+        exclude_from_format_fail_count: bool = False,
+        requery_temperature: float | None = None,
+    ):
         """
         Args:
             message_template: Message to display when the action is blocked.
             exclude_from_format_fail_count: If True, the action will not be counted towards the
                 total number of blocked actions.
+            requery_temperature: Temperature to use for the next query.
         """
         self.message_template = message_template
         self.exclude_from_format_fail_count = exclude_from_format_fail_count
+        self.requery_temperature = requery_temperature

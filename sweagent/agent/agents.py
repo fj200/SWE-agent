@@ -969,7 +969,7 @@ class DefaultAgent(AbstractAgent):
 
         return self.handle_submission(step)
 
-    def forward(self, history: list[dict[str, str]]) -> StepOutput:
+    def forward(self, history: list[dict[str, str]], temperature: float | None = None) -> StepOutput:
         """Forward the model without handling errors.
 
         All exceptions raised will contain the `StepOutput` object
@@ -977,6 +977,7 @@ class DefaultAgent(AbstractAgent):
 
         Args:
             history: history to query the model with
+            temperature: override temperature
 
         Returns:
             step_output: step output
@@ -1005,7 +1006,7 @@ class DefaultAgent(AbstractAgent):
                 # todo: Handle history and trajectory
                 step.extra_info.update(best.extra_info)
             else:
-                output = self.model.query(history)  # type: ignore
+                output = self.model.query(history, temperature=temperature)  # type: ignore
             step.output = output["message"]
             # todo: Can't I override the parser in __init__?
             step.thought, step.action = self.tools.parse_actions(output)
@@ -1069,9 +1070,11 @@ class DefaultAgent(AbstractAgent):
             )
 
         n_format_fails = 0
+        temperature_override = None
         while n_format_fails < self.max_requeries:
             try:
-                return self.forward(history)
+                temperature_override = 0.0
+                return self.forward(history, temperature=temperature_override)
 
             # Errors that are raised
 
@@ -1091,6 +1094,7 @@ class DefaultAgent(AbstractAgent):
                 template = (
                     e.message_template if e.message_template else self.tools.config.filter.blocklist_error_template
                 )
+                temperature_override = e.requery_temperature
                 history = handle_error_with_retry(exception=e, template=template, n_requeries=n_format_fails)
             except ContentPolicyViolationError:
                 self.logger.warning("Content policy violation, trying to resample")

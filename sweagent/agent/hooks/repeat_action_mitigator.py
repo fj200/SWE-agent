@@ -194,15 +194,15 @@ class RepeatActionMitigator(AbstractAgentHook):
             return True
         return False
 
-    def should_requery(self) -> tuple[bool, str]:
+    def should_requery(self) -> tuple[bool, str, float | None]:
         """Should we requery the agent due to repetitive actions?
 
         Returns:
-            Tuple of (should_requery, message_template)
+            Tuple of (should_requery, message_template, requery_temperature)
         """
         if not self._past_actions:
             self._requery_count = 0
-            return False, ""
+            return False, "", None
 
         repeat_action_count = self.get_repeat_action_count()
         base_command = get_base_command(self._past_actions[-1])
@@ -221,7 +221,7 @@ class RepeatActionMitigator(AbstractAgentHook):
                     requery_config.max_requeries,
                 )
                 self._requery_count = 0
-                return False, ""
+                return False, "", None
 
             template = Template(requery_config.requery_message_template)
             message = template.render(
@@ -236,18 +236,20 @@ class RepeatActionMitigator(AbstractAgentHook):
             )
 
             self._requery_count += 1
-            return True, message
+            return True, message, requery_config.requery_temperature
 
         self._requery_count = 0
-        return False, ""
+        return False, "", None
 
     def on_actions_generated(self, *, step: StepOutput):
         """Called after the actions have been generated.
         We append the action to the list of past actions and check if we should terminate.
         """
-        should_requery, message = self.should_requery()
+        should_requery, message, requery_temperature = self.should_requery()
         if should_requery:
-            raise BlockedActionError(message_template=message, exclude_from_format_fail_count=True)
+            raise BlockedActionError(
+                message_template=message, exclude_from_format_fail_count=True, requery_temperature=requery_temperature
+            )
         # Important: Only append the action after we've checked if we should requery
         self._past_actions.append(step.action)
 
