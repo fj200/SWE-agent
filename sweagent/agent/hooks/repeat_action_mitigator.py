@@ -9,7 +9,7 @@ from jinja2 import Template
 
 from sweagent.agent.hooks.abstract import AbstractAgentHook
 from sweagent.agent.hooks.config import RepeatActionMitigatorConfig
-from sweagent.exceptions import RepetitiveActionExit
+from sweagent.exceptions import BlockedActionError, RepetitiveActionExit
 from sweagent.types import StepOutput
 from sweagent.utils.log import get_logger
 
@@ -141,10 +141,12 @@ class RepeatActionMitigator(AbstractAgentHook):
     def __init__(self, config: RepeatActionMitigatorConfig):
         self._config = config
         self._past_actions = []
+        self._requery_count = 0  # How many times we've required
         self.logger = get_logger("RepeatActionMitigator")
 
     def on_run_start(self):
         self._past_actions = []
+        self._requery_count = 0
 
     def get_repeat_action_count(self) -> int:
         """How often was the last base command repeated consecutively?"""
@@ -186,13 +188,62 @@ class RepeatActionMitigator(AbstractAgentHook):
             return True
         return False
 
+    def should_requery(self) -> tuple[bool, str]:
+        """Should we requery the agent due to repetitive actions?
+
+        Returns:
+            Tuple of (should_requery, message_template)
+        """
+        if not self._past_actions:
+            self._requery_count = 0
+            return False, ""
+
+        repeat_action_count = self.get_repeat_action_count()
+        base_command = get_base_command(self._past_actions[-1])
+
+        for requery_config in self._config.requery:
+            if requery_config.repetition_count > repeat_action_count:
+                continue
+            if not re.match(requery_config.base_action_regex, base_command):
+                continue
+
+            if self._requery_count >= requery_config.max_requeries:
+                self.logger.warning(
+                    "Maximum requeries reached for base_command: %s (%d/%d)",
+                    base_command,
+                    self._requery_count,
+                    requery_config.max_requeries,
+                )
+                self._requery_count = 0
+                return False, ""
+
+            template = Template(requery_config.requery_message_template)
+            message = template.render(
+                repetition_count=repeat_action_count, base_command=base_command, action=self._past_actions[-1]
+            )
+            self.logger.info(
+                "Requerying due to repetitive actions: repetition_count: %d, base_command: %s, requery: %d/%d",
+                repeat_action_count,
+                base_command,
+                self._requery_count,
+                requery_config.max_requeries,
+            )
+
+            self._requery_count += 1
+            return True, message
+
+        self._requery_count = 0
+        return False, ""
+
     def on_actions_generated(self, *, step: StepOutput):
         """Called after the actions have been generated.
         We append the action to the list of past actions and check if we should terminate.
         """
+        should_requery, message = self.should_requery()
+        if should_requery:
+            raise BlockedActionError(message_template=message, exclude_from_format_fail_count=True)
+        # Important: Only append the action after we've checked if we should requery
         self._past_actions.append(step.action)
-        if self.should_terminate():
-            raise RepetitiveActionExit()
 
     def on_action_executed(self, *, step: StepOutput):
         """Called after the step has been executed.
@@ -201,3 +252,5 @@ class RepeatActionMitigator(AbstractAgentHook):
         injected_message = self.get_injected_message()
         if injected_message:
             step.observation += f"\n\n{injected_message}"
+        if self.should_terminate():
+            raise RepetitiveActionExit()

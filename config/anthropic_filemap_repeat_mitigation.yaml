@@ -76,14 +76,7 @@ agent:
     - type: repeat_action_mitigator
       warning_messages:
         - base_action_regex: "str_replace_editor view"
-          repetition_count: 5
-          warning_message: |
-            <IMPORTANT>You have been `str_replace_editor view` actions for {{repetition_count}} consecutive times.
-            This can be inefficient. Please consider using search operations to locate the context you need, for example
-            `grep` or `find`.
-            </IMPORTANT>
-        - base_action_regex: "str_replace_editor view"
-          repetition_count: 8
+          repetition_count: 4
           warning_message: |
             <IMPORTANT>You have been `str_replace_editor view` actions for {{repetition_count}} consecutive times.
             This is inefficient. Please use search operations to locate the context you need, for example
@@ -92,6 +85,13 @@ agent:
 
             <IMPORTANT>
             DO NOT use `str_replace_editor view` for the next action!
+            </IMPORTANT>
+        - base_action_regex: "str_replace_editor view"
+          repetition_count: 2
+          warning_message: |
+            <IMPORTANT>You have been `str_replace_editor view` actions for {{repetition_count}} consecutive times.
+            This can be inefficient. Please consider using search operations to locate the context you need, for example
+            `grep` or `find`.
             </IMPORTANT>
         - base_action_regex: ".*"
           repetition_count: 4
@@ -102,3 +102,16 @@ agent:
             Maybe you need to find more relevant context first?
             If a command doesn't work several times in a row, think of a different approach.
             </IMPORTANT>
+      requery:
+        - base_action_regex: ".*"
+          repetition_count: 6
+          max_requeries: 6
+          requery_message_template: |
+            <IMPORTANT>
+            You have been using similar actions to `{{base_command}}` for {{repetition_count}} consecutive times.
+            Your action has been blocked and did not execute. You MUST use a different approach now.
+            Similar actions will be blocked again.
+            </IMPORTANT>
+      terminate:
+        - base_action_regex: ".*"
+          repetition_count: 8

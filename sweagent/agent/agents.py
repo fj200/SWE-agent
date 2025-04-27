@@ -41,6 +41,7 @@ from sweagent.agent.reviewer import (
 )
 from sweagent.environment.swe_env import SWEEnv
 from sweagent.exceptions import (
+    BlockedActionError,
     ContentPolicyViolationError,
     ContextWindowExceededError,
     CostLimitExceededError,
@@ -177,10 +178,6 @@ class RetryAgentConfig(BaseModel):
 AgentConfig = Annotated[DefaultAgentConfig | RetryAgentConfig, Field(union_mode="left_to_right")]
 
 
-class _BlockedActionError(Exception):
-    """Raised when the agent's action is blocked"""
-
-
 class _RetryWithOutput(Exception):
     """Used for internal control flow"""
 
@@ -274,7 +271,7 @@ class RetryAgent(AbstractAgent):
         self._traj_path = output_dir / (self._problem_statement.id + ".traj")
         self._env = env
         self._output_dir = output_dir
-        self._rloop = get_retry_loop_from_config(self.config.retry_loop, problem_statement=problem_statement)
+        self._rloop = get_retry_loop_from_config(self.config.retry_loop, problem_statement=problem_statement)  # type: ignore
 
     def _setup_agent(self) -> AbstractAgent:
         """Setup the agent for the current attempt."""
@@ -883,9 +880,9 @@ class DefaultAgent(AbstractAgent):
                 pf = (
                     PatchFormatter(
                         patch,
-                        read_method=lambda path: self._env.read_file(
-                            PurePosixPath("/") / self._env.repo.repo_name / path
-                        ),  # type: ignore[attr-defined]
+                        read_method=lambda path: self._env.read_file(  # type: ignore[attr-defined]read_file(
+                            PurePosixPath("/") / self._env.repo.repo_name / path  # type: ignore[attr-defined]
+                        ),
                     )
                     if patch
                     else None
@@ -913,7 +910,7 @@ class DefaultAgent(AbstractAgent):
             action_execution_output: action execution output
         """
         if self.tools.should_block_action(step.action):
-            raise _BlockedActionError()
+            raise BlockedActionError()
 
         if step.action.strip() == "exit":
             self.logger.info("Exiting agent")
@@ -1088,11 +1085,13 @@ class DefaultAgent(AbstractAgent):
                 history = handle_error_with_retry(
                     exception=e, template=self.tools.config.format_error_template, n_requeries=n_format_fails
                 )
-            except _BlockedActionError as e:
-                n_format_fails += 1
-                history = handle_error_with_retry(
-                    exception=e, template=self.tools.config.filter.blocklist_error_template, n_requeries=n_format_fails
+            except BlockedActionError as e:
+                if not e.exclude_from_format_fail_count:
+                    n_format_fails += 1
+                template = (
+                    e.message_template if e.message_template else self.tools.config.filter.blocklist_error_template
                 )
+                history = handle_error_with_retry(exception=e, template=template, n_requeries=n_format_fails)
             except ContentPolicyViolationError:
                 self.logger.warning("Content policy violation, trying to resample")
                 n_format_fails += 1
