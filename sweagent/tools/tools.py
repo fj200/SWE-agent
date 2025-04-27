@@ -333,16 +333,17 @@ class ToolHandler:
 
     def should_block_action(self, action: str) -> bool:
         """Check if the command should be blocked."""
+        base_action = action.split("&&")[-1].strip()
         action = action.strip()
         if not action:
             return False
-        if any(f.startswith(action) for f in self.config.filter.blocklist):
+        if any(f.startswith(base_action) for f in self.config.filter.blocklist):
             return True
-        if action in self.config.filter.blocklist_standalone:
+        if base_action in self.config.filter.blocklist_standalone:
             return True
-        name = action.split()[0]
+        name = base_action.split()[0]
         if name in self.config.filter.block_unless_regex and not re.search(
-            self.config.filter.block_unless_regex[name], action
+            self.config.filter.block_unless_regex[name], base_action
         ):
             return True
         return False
