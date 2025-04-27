@@ -168,7 +168,13 @@ class RepeatActionMitigator(AbstractAgentHook):
             if not re.match(warning_config.base_action_regex, base_command):
                 continue
             template = Template(warning_config.warning_message)
-            return template.render(repetition_count=repeat_action_count, base_command=base_command)
+            message = template.render(repetition_count=repeat_action_count, base_command=base_command)
+            self.logger.warning(
+                "Warning: repetitive actions: repetition_count: %d, base_command: %s",
+                repeat_action_count,
+                base_command,
+            )
+            return message
         return ""
 
     def should_terminate(self) -> bool:
@@ -221,7 +227,7 @@ class RepeatActionMitigator(AbstractAgentHook):
             message = template.render(
                 repetition_count=repeat_action_count, base_command=base_command, action=self._past_actions[-1]
             )
-            self.logger.info(
+            self.logger.warning(
                 "Requerying due to repetitive actions: repetition_count: %d, base_command: %s, requery: %d/%d",
                 repeat_action_count,
                 base_command,
