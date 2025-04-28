@@ -1,6 +1,6 @@
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class RAMWarningMessageConfig(BaseModel):
@@ -17,6 +17,8 @@ class RAMWarningMessageConfig(BaseModel):
     - base_command: The base command of the action
     """
 
+    model_config = ConfigDict(extra="forbid")
+
 
 class RAMTerminationConfig(BaseModel):
     base_action_regex: str
@@ -24,6 +26,8 @@ class RAMTerminationConfig(BaseModel):
 
     repetition_count: int
     """How often the action was repeated."""
+
+    model_config = ConfigDict(extra="forbid")
 
 
 class RAMRequeryConfig(BaseModel):
@@ -45,6 +49,8 @@ class RAMRequeryConfig(BaseModel):
     """Temperature to use for requery
     """
 
+    model_config = ConfigDict(extra="forbid")
+
 
 class RepeatActionMitigatorConfig(BaseModel):
     warning_messages: list[RAMWarningMessageConfig] = []
@@ -63,6 +69,8 @@ class RepeatActionMitigatorConfig(BaseModel):
 
     type: Literal["repeat_action_mitigator"] = "repeat_action_mitigator"
     """Do not change this."""
+
+    model_config = ConfigDict(extra="forbid")
 
 
 AgentHookConfig = Annotated[RepeatActionMitigatorConfig, Field(discriminator="type")]
