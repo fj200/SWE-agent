@@ -10,7 +10,7 @@ from jinja2 import Template
 from sweagent.agent.hooks.abstract import AbstractAgentHook
 from sweagent.agent.hooks.config import RepeatActionMitigatorConfig
 from sweagent.exceptions import BlockedActionError, RepetitiveActionExit
-from sweagent.types import StepOutput
+from sweagent.types import AgentInfo, StepOutput
 from sweagent.utils.log import get_logger
 
 
@@ -143,6 +143,10 @@ class RepeatActionMitigator(AbstractAgentHook):
         self._past_actions = []
         self._requery_count = 0  # How many times we've required
         self.logger = get_logger("RepeatActionMitigator")
+        self._agent = None
+
+    def on_init(self, agent):
+        self._agent = agent
 
     def on_run_start(self):
         self._past_actions = []
@@ -241,6 +245,23 @@ class RepeatActionMitigator(AbstractAgentHook):
         self._requery_count = 0
         return False, "", None
 
+    def should_rollback_history(self) -> tuple[bool, int]:
+        """Should we rollback the history due to repetitive actions?"""
+        repeat_action_count = self.get_repeat_action_count()
+        base_command = get_base_command(self._past_actions[-1])
+        for rollback_config in self._config.rollback_history:
+            if rollback_config.repetition_count > repeat_action_count:
+                continue
+            if not re.match(rollback_config.base_action_regex, base_command):
+                continue
+            self.logger.warning(
+                "Rolling back history due to repetitive actions: repetition_count: %d, base_command: %s",
+                repeat_action_count,
+                base_command,
+            )
+            return True, repeat_action_count + rollback_config.rollback_step_offset
+        return False, 0
+
     def on_actions_generated(self, *, step: StepOutput):
         """Called after the actions have been generated.
         We append the action to the list of past actions and check if we should terminate.
@@ -260,5 +281,34 @@ class RepeatActionMitigator(AbstractAgentHook):
         injected_message = self.get_injected_message()
         if injected_message:
             step.observation += f"\n\n{injected_message}"
+
         if self.should_terminate():
             raise RepetitiveActionExit()
+
+    def on_step_done(self, *, step: StepOutput, info: AgentInfo):
+        should_rollback, rollback_steps = self.should_rollback_history()
+        if should_rollback and rollback_steps > 0:
+            self.logger.warning("Rolling back history by %d steps", rollback_steps)
+            assert self._agent is not None
+            # Avoid cutting into initial problem statement/sestem prompt etc.
+            # This should only happen if user configures a > 1 cutoff
+            # Note: We multiply by 2, because there's always a user and an assistant step
+            history_rollback_steps: int = min(
+                min(2 * rollback_steps, len(self._agent.history) - 2), 2 * len(self._past_actions)
+            )
+            self._past_actions = self._past_actions[:-history_rollback_steps]
+            self._agent.history = self._agent.history[:-history_rollback_steps]
+            if "extra_info" not in info:
+                info["extra_info"] = {}
+            if "rollbacks" not in info["extra_info"]:
+                info["extra_info"]["rollbacks"] = []
+            info["extra_info"]["rollbacks"].append(
+                {
+                    "step_count": len(self._agent._trajectory),
+                    "history_rollback_steps": history_rollback_steps,
+                }
+            )
+            # self._agent._trajectory = self._agent._trajectory[:-rollback_step_offset]
+            # step.extra_info["rollbac
+            #     "rollback_step_offset": rollback_step_offset,
+            # }

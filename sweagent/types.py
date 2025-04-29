@@ -93,6 +93,7 @@ class AgentInfo(TypedDict, total=False):
     swe_agent_version: str
     swe_rex_version: str
     swe_rex_hash: str
+    extra_info: dict[str, Any]
 
 
 class AgentRunResult(BaseModel):

@@ -52,6 +52,19 @@ class RAMRequeryConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
+class RAMRollbackHistoryConfig(BaseModel):
+    base_action_regex: str
+    """Regex for the base action."""
+
+    repetition_count: int
+    """How often the action was repeated."""
+
+    rollback_step_offset: int
+    """How many additional steps to roll back."""
+
+    model_config = ConfigDict(extra="forbid")
+
+
 class RepeatActionMitigatorConfig(BaseModel):
     warning_messages: list[RAMWarningMessageConfig] = []
     """List of warning messages to display.
@@ -65,6 +78,10 @@ class RepeatActionMitigatorConfig(BaseModel):
 
     requery: list[RAMRequeryConfig] = []
     """List of requery configurations.
+    """
+
+    rollback_history: list[RAMRollbackHistoryConfig] = []
+    """List of rollback history configurations.
     """
 
     type: Literal["repeat_action_mitigator"] = "repeat_action_mitigator"
