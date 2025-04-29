@@ -144,6 +144,7 @@ class RepeatActionMitigator(AbstractAgentHook):
         self._requery_count = 0  # How many times we've required
         self.logger = get_logger("RepeatActionMitigator")
         self._agent = None
+        self._rollback_count = 0
 
     def on_init(self, agent):
         self._agent = agent
@@ -151,6 +152,7 @@ class RepeatActionMitigator(AbstractAgentHook):
     def on_run_start(self):
         self._past_actions = []
         self._requery_count = 0
+        self._rollback_count = 0
 
     def get_repeat_action_count(self) -> int:
         """How often was the last base command repeated consecutively?"""
@@ -249,6 +251,8 @@ class RepeatActionMitigator(AbstractAgentHook):
 
     def should_rollback_history(self) -> tuple[bool, int]:
         """Should we rollback the history due to repetitive actions?"""
+        if self._rollback_count >= self._config.max_rollbacks > 0:
+            return False, 0
         if not self._past_actions:
             return False, 0
         repeat_action_count = self.get_repeat_action_count()
@@ -292,6 +296,7 @@ class RepeatActionMitigator(AbstractAgentHook):
     def on_step_done(self, *, step: StepOutput, info: AgentInfo):
         should_rollback, rollback_steps = self.should_rollback_history()
         if should_rollback and rollback_steps > 0:
+            self._rollback_count += 1
             self.logger.warning("Rolling back history by %d steps", rollback_steps)
             assert self._agent is not None
             # Avoid cutting into initial problem statement/sestem prompt etc.

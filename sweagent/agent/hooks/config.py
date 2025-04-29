@@ -83,6 +83,8 @@ class RepeatActionMitigatorConfig(BaseModel):
     rollback_history: list[RAMRollbackHistoryConfig] = []
     """List of rollback history configurations.
     """
+    max_rollbacks: int = 0
+    """Maximum number of rollbacks. Set to 0 for unlimited rollbacks."""
 
     type: Literal["repeat_action_mitigator"] = "repeat_action_mitigator"
     """Do not change this."""
