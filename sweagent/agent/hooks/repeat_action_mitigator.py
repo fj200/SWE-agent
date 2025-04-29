@@ -183,6 +183,8 @@ class RepeatActionMitigator(AbstractAgentHook):
 
     def should_terminate(self) -> bool:
         """Should we terminate the agent due to repetitive actions?"""
+        if not self._past_actions:
+            return False
         repeat_action_count = self.get_repeat_action_count()
         base_command = get_base_command(self._past_actions[-1])
         for termination_config in self._config.terminate:
@@ -247,6 +249,8 @@ class RepeatActionMitigator(AbstractAgentHook):
 
     def should_rollback_history(self) -> tuple[bool, int]:
         """Should we rollback the history due to repetitive actions?"""
+        if not self._past_actions:
+            return False, 0
         repeat_action_count = self.get_repeat_action_count()
         base_command = get_base_command(self._past_actions[-1])
         for rollback_config in self._config.rollback_history:
