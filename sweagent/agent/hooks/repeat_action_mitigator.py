@@ -202,7 +202,7 @@ class RepeatActionMitigator(AbstractAgentHook):
             return True
         return False
 
-    def handle_requery(self) -> None:
+    def handle_requery(self, proposed_action: str) -> None:
         """Should we requery the agent due to repetitive actions?
 
         Returns:
@@ -214,6 +214,12 @@ class RepeatActionMitigator(AbstractAgentHook):
 
         repeat_action_count = self.get_repeat_action_count()
         base_command = get_base_command(self._past_actions[-1])
+        new_base_command = get_base_command(proposed_action)
+        if new_base_command != base_command:
+            # Probably means that the requery was successful,
+            # or in any way there's nothing to do here
+            self._requery_count = 0
+            return
 
         for requery_config in self._config.requery:
             if requery_config.repetition_count > repeat_action_count:
@@ -305,7 +311,7 @@ class RepeatActionMitigator(AbstractAgentHook):
         """Called after the actions have been generated.
         We append the action to the list of past actions and check if we should terminate.
         """
-        self.handle_requery()
+        self.handle_requery(step.action)
         # Important: Only append the action after we've checked if we should requery
         self._past_actions.append(step.action)
 
