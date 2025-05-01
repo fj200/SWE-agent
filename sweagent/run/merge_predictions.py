@@ -38,10 +38,20 @@ def merge_predictions(directories: list[Path], output: Path | None = None) -> No
             continue
         # Ensure model_patch is a string
         _data["model_patch"] = str(_data["model_patch"]) if _data["model_patch"] is not None else ""
+
+        # Filter based on model_patch length
+        model_patch_len = len(_data["model_patch"])
+        logger.debug("%s model_patch length: %d", instance_id, model_patch_len)
+        if not (0 < model_patch_len < 100_000):
+            logger.warning("Removing %s because model_patch is too long/short", instance_id)
+            continue
+
         if instance_id in data:
             msg = f"Duplicate instance ID found: {instance_id}"
             raise ValueError(msg)
         data[instance_id] = _data
+
+    logger.info("Kept %d predictions after filtering", len(data))
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(data, indent=4))
     logger.info("Wrote merged predictions to %s", output)
