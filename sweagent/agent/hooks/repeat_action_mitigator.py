@@ -247,6 +247,7 @@ class RepeatActionMitigator(AbstractAgentHook):
                 message_template=message,
                 exclude_from_format_fail_count=True,
                 requery_temperature=requery_config.requery_temperature,
+                add_error_template_as_assistant_message=requery_config.add_error_template_as_assistant_message,
             )
 
         self._requery_count = 0

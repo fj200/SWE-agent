@@ -49,6 +49,9 @@ class RAMRequeryConfig(BaseModel):
     """Temperature to use for requery
     """
 
+    add_error_template_as_assistant_message: bool = False
+    """If true, the error template will be added as an assistant message to the requery history."""
+
     model_config = ConfigDict(extra="forbid")
 
 
