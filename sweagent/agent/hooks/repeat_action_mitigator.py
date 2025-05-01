@@ -235,6 +235,7 @@ class RepeatActionMitigator(AbstractAgentHook):
                     requery_config.max_requeries,
                 )
                 self._requery_count = 0
+                return
 
             template = Template(requery_config.requery_message_template)
             message = template.render(
