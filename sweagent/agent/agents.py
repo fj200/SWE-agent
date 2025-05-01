@@ -1083,8 +1083,9 @@ class DefaultAgent(AbstractAgent):
         temperature_override = None
         while n_format_fails < self.max_requeries:
             try:
-                temperature_override = 0.0
-                return self.forward(history, temperature=temperature_override)
+                _temperature = temperature_override
+                temperature_override = None
+                return self.forward(history, temperature=_temperature)
 
             # Errors that are raised
 
