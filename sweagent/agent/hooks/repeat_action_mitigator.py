@@ -142,7 +142,7 @@ class RepeatActionMitigator(AbstractAgentHook):
         self._config = config
         self._past_actions = []
         self._requery_count = 0  # How many times we've required
-        self.logger = get_logger("RepeatActionMitigator")
+        self.logger = get_logger("RepeatActionMitigator", emoji="🦜")
         self._agent = None
         self._rollback_count = 0
 

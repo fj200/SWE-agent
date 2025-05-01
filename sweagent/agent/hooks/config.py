@@ -68,6 +68,19 @@ class RAMRollbackHistoryConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
+class InjectMessagesConfig(BaseModel):
+    messages: list[dict[str, str]] = []
+    """List of messages to inject in the format [{"role": "user", "content": "message"}, ...]"""
+
+    inject_after_step: int
+    """Step number after which to inject the messages."""
+
+    type: Literal["inject_messages"] = "inject_messages"
+    """Do not change this."""
+
+    model_config = ConfigDict(extra="forbid")
+
+
 class RepeatActionMitigatorConfig(BaseModel):
     warning_messages: list[RAMWarningMessageConfig] = []
     """List of warning messages to display.
@@ -95,4 +108,4 @@ class RepeatActionMitigatorConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
-AgentHookConfig = Annotated[RepeatActionMitigatorConfig, Field(discriminator="type")]
+AgentHookConfig = Annotated[RepeatActionMitigatorConfig | InjectMessagesConfig, Field(discriminator="type")]
