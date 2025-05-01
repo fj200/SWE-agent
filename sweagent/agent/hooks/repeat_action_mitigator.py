@@ -202,7 +202,7 @@ class RepeatActionMitigator(AbstractAgentHook):
             return True
         return False
 
-    def should_requery(self) -> tuple[bool, str, float | None]:
+    def handle_requery(self) -> None:
         """Should we requery the agent due to repetitive actions?
 
         Returns:
@@ -210,7 +210,7 @@ class RepeatActionMitigator(AbstractAgentHook):
         """
         if not self._past_actions:
             self._requery_count = 0
-            return False, "", None
+            return
 
         repeat_action_count = self.get_repeat_action_count()
         base_command = get_base_command(self._past_actions[-1])
@@ -229,7 +229,6 @@ class RepeatActionMitigator(AbstractAgentHook):
                     requery_config.max_requeries,
                 )
                 self._requery_count = 0
-                return False, "", None
 
             template = Template(requery_config.requery_message_template)
             message = template.render(
@@ -244,17 +243,20 @@ class RepeatActionMitigator(AbstractAgentHook):
             )
 
             self._requery_count += 1
-            return True, message, requery_config.requery_temperature
+            raise BlockedActionError(
+                message_template=message,
+                exclude_from_format_fail_count=True,
+                requery_temperature=requery_config.requery_temperature,
+            )
 
         self._requery_count = 0
-        return False, "", None
 
-    def should_rollback_history(self) -> tuple[bool, int]:
+    def handle_rollback_history(self) -> None:
         """Should we rollback the history due to repetitive actions?"""
         if self._rollback_count >= self._config.max_rollbacks > 0:
-            return False, 0
+            return
         if not self._past_actions:
-            return False, 0
+            return
         repeat_action_count = self.get_repeat_action_count()
         base_command = get_base_command(self._past_actions[-1])
         for rollback_config in self._config.rollback_history:
@@ -267,18 +269,42 @@ class RepeatActionMitigator(AbstractAgentHook):
                 repeat_action_count,
                 base_command,
             )
-            return True, repeat_action_count + rollback_config.rollback_step_offset
-        return False, 0
+
+            # Rolling back now
+
+            rollback_steps = repeat_action_count + rollback_config.rollback_step_offset
+            if rollback_steps <= 0:
+                return
+            self._rollback_count += 1
+            self.logger.warning("Rolling back history by %d steps", rollback_steps)
+            assert self._agent is not None
+            # Avoid cutting into initial problem statement/sestem prompt etc.
+            # This should only happen if user configures a > 1 cutoff
+            # Note: We multiply by 2, because there's always a user and an assistant step
+            history_rollback_steps: int = min(
+                min(2 * rollback_steps, len(self._agent.history) - 2), 2 * len(self._past_actions)
+            )
+            self._past_actions = self._past_actions[:-history_rollback_steps]
+            self._agent.history = self._agent.history[:-history_rollback_steps]
+            info = self._agent.info
+            if "extra_info" not in info:
+                info["extra_info"] = {}
+            if "rollbacks" not in info["extra_info"]:
+                info["extra_info"]["rollbacks"] = []
+            info["extra_info"]["rollbacks"].append(
+                {
+                    "step_count": len(self._agent._trajectory),
+                    "history_rollback_steps": history_rollback_steps,
+                }
+            )
+            return
+        return
 
     def on_actions_generated(self, *, step: StepOutput):
         """Called after the actions have been generated.
         We append the action to the list of past actions and check if we should terminate.
         """
-        should_requery, message, requery_temperature = self.should_requery()
-        if should_requery:
-            raise BlockedActionError(
-                message_template=message, exclude_from_format_fail_count=True, requery_temperature=requery_temperature
-            )
+        self.handle_requery()
         # Important: Only append the action after we've checked if we should requery
         self._past_actions.append(step.action)
 
@@ -294,30 +320,4 @@ class RepeatActionMitigator(AbstractAgentHook):
             raise RepetitiveActionExit()
 
     def on_step_done(self, *, step: StepOutput, info: AgentInfo):
-        should_rollback, rollback_steps = self.should_rollback_history()
-        if should_rollback and rollback_steps > 0:
-            self._rollback_count += 1
-            self.logger.warning("Rolling back history by %d steps", rollback_steps)
-            assert self._agent is not None
-            # Avoid cutting into initial problem statement/sestem prompt etc.
-            # This should only happen if user configures a > 1 cutoff
-            # Note: We multiply by 2, because there's always a user and an assistant step
-            history_rollback_steps: int = min(
-                min(2 * rollback_steps, len(self._agent.history) - 2), 2 * len(self._past_actions)
-            )
-            self._past_actions = self._past_actions[:-history_rollback_steps]
-            self._agent.history = self._agent.history[:-history_rollback_steps]
-            if "extra_info" not in info:
-                info["extra_info"] = {}
-            if "rollbacks" not in info["extra_info"]:
-                info["extra_info"]["rollbacks"] = []
-            info["extra_info"]["rollbacks"].append(
-                {
-                    "step_count": len(self._agent._trajectory),
-                    "history_rollback_steps": history_rollback_steps,
-                }
-            )
-            # self._agent._trajectory = self._agent._trajectory[:-rollback_step_offset]
-            # step.extra_info["rollbac
-            #     "rollback_step_offset": rollback_step_offset,
-            # }
+        self.handle_rollback_history()
