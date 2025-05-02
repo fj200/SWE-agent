@@ -3,6 +3,7 @@
 Will be automatically added to `run_batch` if `SWEBenchInstances.evaluate` is set to true
 """
 
+import shlex
 import subprocess
 import sys
 from datetime import datetime
@@ -97,15 +98,18 @@ class SweBenchEvaluate(RunHook):
 
     def on_end(self) -> None:
         self.logger.info("Submitting results to SWE-Bench")
+        cmd = self._get_sb_call(preds_path=self.output_dir / "preds.json")
         try:
             subprocess.run(
-                self._get_sb_call(preds_path=self.output_dir / "preds.json"),
+                cmd,
                 check=True,
                 stdout=sys.stdout,
                 stderr=sys.stderr,
             )
-        except subprocess.CalledProcessError as e:
-            self.logger.error("Failed to submit results to SweBench eval: %s", e)
+        except subprocess.CalledProcessError:
+            self.logger.error(
+                "Failed to submit results to SweBench eval: %s returned non-zero exit code", shlex.join(cmd)
+            )
         else:
             # remove temporary predictions if they exist
             if (self.output_dir / "tmppreds.json").exists():
