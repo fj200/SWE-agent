@@ -10,7 +10,9 @@ from sweagent.utils.log import get_logger
 logger = get_logger("merge", emoji="➕")
 
 
-def merge_predictions(directories: list[Path], output: Path | None = None) -> None:
+def merge_predictions(
+    directories: list[Path], output: Path | None = None, *, filter_patches_for_length: bool = False
+) -> None:
     """Merge predictions found in `directories` into a single JSON file.
 
     Args:
@@ -42,7 +44,7 @@ def merge_predictions(directories: list[Path], output: Path | None = None) -> No
         # Filter based on model_patch length
         model_patch_len = len(_data["model_patch"])
         logger.debug("%s model_patch length: %d", instance_id, model_patch_len)
-        if not (0 < model_patch_len < 100_000):
+        if filter_patches_for_length and not (0 < model_patch_len < 100_000):
             logger.warning("Removing %s because model_patch is too long/short", instance_id)
             continue
 
@@ -61,13 +63,16 @@ def get_cli_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directories", type=Path, help="Directory containing predictions", nargs="+")
     parser.add_argument("--output", type=Path, help="Output file")
+    parser.add_argument("--filter-patches-for-length", action="store_true", help="Remove 0-length or very long patches")
     return parser
 
 
 def run_from_cli(args: list[str] | None = None) -> None:
     cli_parser = get_cli_parser()
     cli_args = cli_parser.parse_args(args)
-    merge_predictions(cli_args.directories, cli_args.output)
+    merge_predictions(
+        cli_args.directories, cli_args.output, filter_patches_for_length=cli_args.filter_patches_for_length
+    )
 
 
 if __name__ == "__main__":

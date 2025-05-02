@@ -72,7 +72,7 @@ class SweBenchEvaluate(RunHook):
             return
 
         with self.merge_lock:
-            merge_predictions([self.output_dir], self.output_dir / "tmppreds.json")
+            merge_predictions([self.output_dir], self.output_dir / "tmppreds.json", filter_patches_for_length=True)
             self.last_evaluation_time = current_time
 
         self._running_calls.append(
