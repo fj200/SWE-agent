@@ -26,6 +26,7 @@ from tenacity import (
 )
 
 from sweagent import REPO_ROOT
+from sweagent.agent.history_processors import LastNObservations
 from sweagent.exceptions import (
     ContentPolicyViolationError,
     ContextWindowExceededError,
@@ -747,6 +748,16 @@ class LiteLLMModel(AbstractModel):
         return outputs
 
     def query(self, history: History, n: int = 1, temperature: float | None = None) -> list[dict] | dict:
+        try:
+            return self._query_without_context_retry(history, n=n, temperature=temperature)
+        except ContextWindowExceededError:
+            self.logger.warning("Context window exceeded. Trying to truncate to one observation to recover.")
+            history = LastNObservations(n=1)(history)
+            return self._query_without_context_retry(history, n=n, temperature=temperature)
+
+    def _query_without_context_retry(
+        self, history: History, n: int = 1, temperature: float | None = None
+    ) -> list[dict] | dict:
         messages = self._history_to_messages(history)
 
         def retry_warning(retry_state: RetryCallState):
