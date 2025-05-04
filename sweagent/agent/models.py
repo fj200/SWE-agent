@@ -139,10 +139,6 @@ class GenericAPIModelConfig(PydanticBaseModel):
     Set this to 0 to disable this check.
     """
 
-    timeout: float = 30
-    """Timeout for the model.
-    """
-
     # pydantic
     model_config = ConfigDict(extra="forbid")
 
@@ -694,7 +690,6 @@ class LiteLLMModel(AbstractModel):
                 **completion_kwargs,
                 **extra_args,
                 n=n,
-                timeout=self.config.timeout,
             )
         except litellm.exceptions.ContextWindowExceededError as e:
             raise ContextWindowExceededError from e
