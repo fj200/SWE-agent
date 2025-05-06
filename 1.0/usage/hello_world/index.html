@@ -2227,7 +2227,7 @@ The most important ones are</p>
 <p>In this tutorial, we will focus on the <code>run</code> subcommand.</p>
 <p>Let's start with an absolutely trivial example and solve an issue about a simple syntax error (<a href="https://github.com/SWE-agent/test-repo/issues/1"><code>swe-agent/test-repo #1</code></a>)</p>
 <div class="highlight"><pre><span></span><code>sweagent<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--agent.model.name<span class="o">=</span>claude-3-5-sonnet-20241022<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--agent.model.name<span class="o">=</span>claude-3-7-sonnet-latest<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--agent.model.per_instance_cost_limit<span class="o">=</span><span class="m">2</span>.00<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--env.repo.github_url<span class="o">=</span>https://github.com/SWE-agent/test-repo<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--problem_statement.github_url<span class="o">=</span>https://github.com/SWE-agent/test-repo/issues/1
@@ -2269,7 +2269,7 @@ In order to use it, you need to add your keys to the environment:</p>
 🌱 DEBUG    Resetting repository SWE-agent__test-repo to commit HEAD
 🏃 INFO     Running agent
 🤠 INFO     Trajectory will be saved to
-            /Users/fuchur/Documents/24/git_sync/SWE-agent/trajectories/fuchur/default__claude-3-5-sonnet-20241022__t-0.00__p-1.00__c-2.00___SWE-agent__test-repo-i1/SWE-agent__test-
+            /Users/fuchur/Documents/24/git_sync/SWE-agent/trajectories/fuchur/default__claude-3-7-sonnet-latest__t-0.00__p-1.00__c-2.00___SWE-agent__test-repo-i1/SWE-agent__test-
             repo-i1/SWE-agent__test-repo-i1.traj
 🦖 DEBUG    Uploading file from /Users/fuchur/Documents/24/git_sync/SWE-agent/tools/registry to /root/tools/registry
 🦖 DEBUG    Created zip file at /var/folders/g3/1y2_hl1j16scls01cxqm76s80000gn/T/tmpswoslekq/zipped_transfer.zip
@@ -2615,7 +2615,7 @@ In order to use it, you need to add your keys to the environment:</p>
             (Current directory: /SWE-agent__test-repo)
             bash-$
 🤠 INFO     Trajectory saved to
-            /Users/fuchur/Documents/24/git_sync/SWE-agent/trajectories/fuchur/default__claude-3-5-sonnet-20241022__t-0.00__p-1.00__c-2.00___SWE-agent__test-repo-i1/SWE-agent__test-
+            /Users/fuchur/Documents/24/git_sync/SWE-agent/trajectories/fuchur/default__claude-3-7-sonnet-latest__t-0.00__p-1.00__c-2.00___SWE-agent__test-repo-i1/SWE-agent__test-
             repo-i1/SWE-agent__test-repo-i1.traj
 ╭──────────────────────────── 🎉 Submission successful 🎉 ────────────────────────────╮
 │ SWE-agent has produced a patch that it believes will solve the issue you submitted! │
@@ -2623,7 +2623,7 @@ In order to use it, you need to add your keys to the environment:</p>
 ╰─────────────────────────────────────────────────────────────────────────────────────╯
 
  # The patch has been saved to your local filesystem at:
- PATCH_FILE_PATH=&#39;/Users/fuchur/Documents/24/git_sync/SWE-agent/trajectories/fuchur/default__claude-3-5-sonnet-20241022__t-0.00__p-1.00__c-2.00___SWE-agent__test-repo-i1/SWE-agent
+ PATCH_FILE_PATH=&#39;/Users/fuchur/Documents/24/git_sync/SWE-agent/trajectories/fuchur/default__claude-3-7-sonnet-latest__t-0.00__p-1.00__c-2.00___SWE-agent__test-repo-i1/SWE-agent
  test-repo-i1.patch&#39;
  # Inspect it:
  cat &quot;${PATCH_FILE_PATH}&quot;
