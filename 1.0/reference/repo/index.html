@@ -3458,8 +3458,8 @@ SWE-agent will then start from this commit when trying to solve the problem.</p>
             <span class="n">Command</span><span class="p">(</span>
                 <span class="n">command</span><span class="o">=</span><span class="s2">&quot; &amp;&amp; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                     <span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;mkdir </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">repo_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                        <span class="sa">f</span><span class="s2">&quot;cd </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">repo_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">&quot;mkdir /</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">repo_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">&quot;cd /</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">repo_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;git init&quot;</span><span class="p">,</span>
                         <span class="sa">f</span><span class="s2">&quot;git remote add origin </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                         <span class="sa">f</span><span class="s2">&quot;git fetch --depth 1 origin </span><span class="si">{</span><span class="n">base_commit</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
