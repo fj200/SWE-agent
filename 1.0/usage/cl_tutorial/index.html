@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.13">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
     
     
       
@@ -2427,7 +2427,8 @@ For this, you first need to set up a modal account, install the necessary extra 
 <div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Command line</label><label for="__tabbed_2_2"><code>agent.yaml</code></label><label for="__tabbed_2_3"><code>env.yaml</code></label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>run.py<span class="w"> </span>--config<span class="w"> </span>agent.yaml<span class="w"> </span>--config<span class="w"> </span>env.yaml<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Note that you need --config in front of every config file</span>
+python<span class="w"> </span>run.py<span class="w"> </span>--config<span class="w"> </span>agent.yaml<span class="w"> </span>--config<span class="w"> </span>env.yaml<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--problem_statement.text<span class="o">=</span><span class="s2">&quot;Hey, can you fix all the bugs?&quot;</span>
 </code></pre></div>
 </div>
@@ -2445,6 +2446,13 @@ For this, you first need to set up a modal account, install the necessary extra 
 </code></pre></div>
 </div>
 </div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Multiple config files</p>
+<p>Prior to version SWE-agent 1.1.0, configs were merged with simple dictionary updates,
+rather than a hierarchical merge, so specifying <code>agent</code> (or any key with subkeys) in the
+second config would completely overwrite all <code>agent</code> settings of the first config.
+This is fixed since SWE-agent 1.1.0.</p>
 </div>
 <p>The default config file is <code>config/anthropic_filemap.yaml</code>. Let's take a look at it:</p>
 <details>
