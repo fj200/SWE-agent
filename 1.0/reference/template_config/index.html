@@ -2059,9 +2059,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sweagent.agent.agents.TemplateConfig.warn_models_in_history" class="md-nav__link">
+  <a href="#sweagent.agent.agents.TemplateConfig.warnings" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;warn_models_in_history
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;warnings
     </span>
   </a>
   
@@ -2491,9 +2491,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sweagent.agent.agents.TemplateConfig.warn_models_in_history" class="md-nav__link">
+  <a href="#sweagent.agent.agents.TemplateConfig.warnings" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;warn_models_in_history
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;warnings
     </span>
   </a>
   
@@ -2679,12 +2679,12 @@ formatted by the agent and sent to the LM.</p>
    (sweagent.agent.agents.TemplateConfig.validate_template_jinja_syntax)" href="#sweagent.agent.agents.TemplateConfig.validate_template_jinja_syntax">validate_template_jinja_syntax</a></code>
             </li>
             <li>
-              <code><a class="autorefs autorefs-internal" title="            warn_models_in_history
+              <code><a class="autorefs autorefs-internal" title="            warnings
 
 
   
       pydantic-validator
-   (sweagent.agent.agents.TemplateConfig.warn_models_in_history)" href="#sweagent.agent.agents.TemplateConfig.warn_models_in_history">warn_models_in_history</a></code>
+   (sweagent.agent.agents.TemplateConfig.warnings)" href="#sweagent.agent.agents.TemplateConfig.warnings">warnings</a></code>
             </li>
         </ul>
 
@@ -3024,8 +3024,8 @@ Available variables: <code>bash_stdout</code>, <code>bash_stderr</code></p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="sweagent.agent.agents.TemplateConfig.warn_models_in_history" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">warn_models_in_history</span>
+<h3 id="sweagent.agent.agents.TemplateConfig.warnings" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">warnings</span>
 
 
   <span class="doc doc-labels">
@@ -3033,7 +3033,7 @@ Available variables: <code>bash_stdout</code>, <code>bash_stderr</code></p>
   </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">warn_models_in_history</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="typing_extensions.Self">Self</span></span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">warnings</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="typing_extensions.Self">Self</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3046,11 +3046,23 @@ Available variables: <code>bash_stdout</code>, <code>bash_stderr</code></p>
 <span class="normal">129</span>
 <span class="normal">130</span>
 <span class="normal">131</span>
-<span class="normal">132</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">warn_models_in_history</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">warnings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="s2">&quot;swea-config&quot;</span><span class="p">,</span> <span class="n">emoji</span><span class="o">=</span><span class="s2">&quot;🔧&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">put_demos_in_history</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">demonstration_template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="s2">&quot;swea-config&quot;</span><span class="p">,</span> <span class="n">emoji</span><span class="o">=</span><span class="s2">&quot;🔧&quot;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;demonstration_template is ignored when put_demos_in_history is True&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_template</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_template</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;system_template/instance_template is not set, using empty string. Perhaps you were&quot;</span>
+            <span class="s2">&quot; overwriting the default config? See https://swe-agent.com/latest/usage/cl_tutorial/&quot;</span>
+            <span class="s2">&quot; for more information. Note: You can ignore this warning in human mode.&quot;</span>
+        <span class="p">)</span>
     <span class="k">return</span> <span class="bp">self</span>
 </code></pre></div></td></tr></table></div>
             </details>
