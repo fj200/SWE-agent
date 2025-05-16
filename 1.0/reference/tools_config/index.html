@@ -2905,6 +2905,8 @@ For the latter, see <a href="../bundle_config/">tool bundles</a>.</p>
             <p class="doc doc-class-bases">
               Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
+        <p>Configuration for the tools that are made available to the agent.</p>
+
     
 
         <p>Fields:</p>
@@ -3459,6 +3461,10 @@ Unlike <code>install_commands</code>, these commands are part of the environment
 
     <div class="doc doc-contents ">
 
+        <p>This property returns the state commands from all bundles.
+State commands are commands that are used to get the state of the environment
+(e.g., the current working directory).</p>
+
     </div>
 
 </div>
@@ -3612,6 +3618,9 @@ Note: Does not interrupt running commands, but will stop the agent for the next 
             <p class="doc doc-class-bases">
               Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
+        <p>Filter out commands that are blocked by the environment
+(for example interactive commands like <code>vim</code>).</p>
+
     
 
         <p>Fields:</p>
@@ -3730,6 +3739,8 @@ Note: Does not interrupt running commands, but will stop the agent for the next 
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
+        <p>The error template to use when a command is blocked.</p>
 
     </div>
 
