@@ -3095,7 +3095,9 @@ Using this training data, our LM SWE-agent-LM-32b achieves open-weights SotA on 
 <h3 id="breaking-changes">Breaking changes</h3>
 <ul>
 <li>Changes to trajectory data format. The <code>messages</code> field is replaced by <code>query</code> by <a href="https://github.com/klieret">@klieret</a> in <a href="https://github.com/princeton-nlp/SWE-agent/pull/1107">#1107</a></li>
-<li>Change in <code>default</code> tools: Don't append \n to new file by <a href="https://github.com/klieret">@klieret</a> in <a href="https://github.com/princeton-nlp/SWE-agent/pull/1114">#1114</a></li>
+<li>Renamed many tool bundles that used "windowed" file viewer (<code>defaults</code> and more) by <a href="https://github.com/klieret">@klieret</a> in <a href="https://github.com/princeton-nlp/SWE-agent/pull/1147">#1147</a></li>
+<li>Removed <code>review_on_submit</code> tool bundle (replaced by <code>review_on_submit_m</code>) by <a href="https://github.com/klieret">@klieret</a> in <a href="https://github.com/princeton-nlp/SWE-agent/pull/1148">#1148</a></li>
+<li>Change in <code>windowed</code> tools (formerly <code>default</code>): Don't append \n to new file by <a href="https://github.com/klieret">@klieret</a> in <a href="https://github.com/princeton-nlp/SWE-agent/pull/1114">#1114</a></li>
 </ul>
 <h3 id="added">Added</h3>
 <p>New dataset support:</p>
