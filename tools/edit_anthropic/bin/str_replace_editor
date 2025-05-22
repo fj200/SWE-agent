@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/root/python3.11/bin/python3.11
 
 """This is an adaptation of the Anthropic Text Editor tool from
 https://github.com/anthropics/anthropic-quickstarts/blob/main/computer-use-demo/computer_use_demo/tools/edit.py
