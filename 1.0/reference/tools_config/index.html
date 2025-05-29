@@ -2073,6 +2073,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#sweagent.tools.tools.ToolConfig.propagate_env_variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;propagate_env_variables
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#sweagent.tools.tools.ToolConfig.registry_variables" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;registry_variables
@@ -2656,6 +2665,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#sweagent.tools.tools.ToolConfig.propagate_env_variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;propagate_env_variables
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#sweagent.tools.tools.ToolConfig.registry_variables" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;registry_variables
@@ -2938,6 +2956,15 @@ For the latter, see <a href="../bundle_config/">tool bundles</a>.</p>
   
       pydantic-model
   " href="#sweagent.tools.bundle.Bundle">Bundle</a>]</code>)
+            </li>
+            <li>
+              <code><a class="autorefs autorefs-internal" title="            propagate_env_variables
+
+
+  
+      pydantic-field
+   (sweagent.tools.tools.ToolConfig.propagate_env_variables)" href="#sweagent.tools.tools.ToolConfig.propagate_env_variables">propagate_env_variables</a></code>
+                (<code><span title="list">list</span>[<span title="str">str</span>]</code>)
             </li>
             <li>
               <code><a class="autorefs autorefs-internal" title="            env_variables
@@ -3388,6 +3415,34 @@ equivalent to adding <code>export VARNAME=value</code> to the <code>reset_comman
     <div class="doc doc-contents ">
 
         <p>The action parser that is responsible for parsing the model output into a thought and action.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="sweagent.tools.tools.ToolConfig.propagate_env_variables" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">propagate_env_variables</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-pydantic-field"><code>pydantic-field</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">propagate_env_variables</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Environment variables to propagate to the environment.
+This is useful if you want to propagate API keys or similar from your own environment to the
+environment in which the tools run.
+IMPORTANT NOTE: The value of the environment variables can be read in debug log files,
+so be careful with your API keys!</p>
 
     </div>
 
