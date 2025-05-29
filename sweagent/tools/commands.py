@@ -1,19 +1,5 @@
 """
-Core module for defining and parsing commands in the SWE Agent system.
-
-This module provides the foundational classes and utilities for defining commands that can be executed by the agent.
-It is used extensively by:
-
-- tools.py: For command installation, execution and environment management
-- parsing.py: For parsing model outputs into executable commands
-- utils.py: For handling multi-line commands and argument quoting
-
-Key Classes:
-- Command: Represents an executable command with arguments and documentation
-- Argument: Defines an argument that can be passed to a command
-
-The module supports both simple bash commands and complex multi-line commands with typed arguments.
-Commands can be defined either in bash scripts with YAML docstrings or as bash functions.
+Core module for defining and parsing commands.
 """
 
 from __future__ import annotations

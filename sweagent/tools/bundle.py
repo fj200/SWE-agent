@@ -1,3 +1,10 @@
+"""
+Module for handling tool bundles.
+
+This module provides config classes to manage collections of tools that can be loaded together
+from a specific path, with configuration defined in YAML files.
+"""
+
 from __future__ import annotations
 
 from pathlib import Path

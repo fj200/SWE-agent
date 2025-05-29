@@ -1,3 +1,10 @@
+"""
+Utility functions for SWE Agent tools.
+
+This module provides helper functions for handling multiline input, command documentation
+generation, and argument handling for the tools subsystem.
+"""
+
 import re
 from collections.abc import Callable
 from typing import Any
