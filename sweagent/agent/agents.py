@@ -753,7 +753,12 @@ class DefaultAgent(AbstractAgent):
         self.traj_path.write_text(json.dumps(data, indent=2))
 
     def get_model_requery_history(
-        self, error_template: str, *, output: str, **kwargs: str | int | float | bool | None
+        self,
+        error_template: str,
+        *,
+        output: str,
+        add_error_template_as_assistant_message: bool = False,
+        **kwargs,
     ) -> list[dict[str, str]]:
         """Ask the model to correct after a hitting one of the following errors:
 
@@ -772,7 +777,7 @@ class DefaultAgent(AbstractAgent):
             error_template: error template
             output: model output
             **kwargs: keyword arguments to be passed to the error template
-
+            add_error_template_as_assistant_message: if True, the error template will be added as an assistant message
         Returns:
             model output after requery
         """
@@ -781,9 +786,11 @@ class DefaultAgent(AbstractAgent):
 
         self.logger.warning(f"{error_template}")
 
+        role = "assistant" if add_error_template_as_assistant_message else "user"
+
         return self.messages + [
             {"role": "assistant", "content": output, "agent": self.name, "message_type": "assistant"},
-            {"role": "user", "content": error_template, "agent": self.name, "message_type": "user"},
+            {"role": role, "content": error_template, "agent": self.name, "message_type": "user"},
         ]
 
     def attempt_autosubmission_after_error(self, step: StepOutput) -> StepOutput:
@@ -1067,6 +1074,9 @@ class DefaultAgent(AbstractAgent):
                 **step.to_template_format_dict(),
                 **getattr(exception, "extra_info", {}),
                 exception_message=exception_message,
+                add_error_template_as_assistant_message=getattr(
+                    exception, "add_error_template_as_assistant_message", False
+                ),
             )
 
         n_format_fails = 0

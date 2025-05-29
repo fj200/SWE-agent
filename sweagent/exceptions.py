@@ -67,6 +67,7 @@ class BlockedActionError(Exception):
         message_template: str = "",
         exclude_from_format_fail_count: bool = False,
         requery_temperature: float | None = None,
+        add_error_template_as_assistant_message: bool = False,
     ):
         """
         Args:
@@ -74,7 +75,9 @@ class BlockedActionError(Exception):
             exclude_from_format_fail_count: If True, the action will not be counted towards the
                 total number of blocked actions.
             requery_temperature: Temperature to use for the next query.
+            add_error_template_as_assistant_message: If True, the error template will be added as an assistant message.
         """
         self.message_template = message_template
         self.exclude_from_format_fail_count = exclude_from_format_fail_count
         self.requery_temperature = requery_temperature
+        self.add_error_template_as_assistant_message = add_error_template_as_assistant_message
