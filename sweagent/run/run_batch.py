@@ -32,13 +32,13 @@ With [green]filter[/green], you can select specific instances, e.g., [green]--in
 import getpass
 import json
 import logging
-import random
 import sys
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from contextlib import ExitStack
 from pathlib import Path
+from threading import Lock
 from typing import Self
 
 import yaml
@@ -100,6 +100,20 @@ class RunBatchConfig(BaseSettings, cli_implicit_flags=False):
     # pydantic config
     model_config = SettingsConfigDict(extra="forbid", env_prefix="SWE_AGENT_")
 
+    @model_validator(mode="before")
+    def check_deprecated_config(cls, data):
+        if isinstance(data, dict) and "random_delay_multiplier" in data:
+            import warnings
+
+            warnings.warn(
+                "The 'random_delay_multiplier' parameter is deprecated. "
+                "Please use 'min_time_between_instance_start' instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            data.pop("random_delay_multiplier")
+        return data
+
     def set_default_output_dir(self) -> None:
         # Needs to be called explicitly, because self._config_files will be setup
         # post-init.
@@ -146,7 +160,7 @@ class RunBatch:
         redo_existing: bool = False,
         num_workers: int = 1,
         progress_bar: bool = True,
-        random_delay_multiplier: float = 0.3,
+        min_time_between_instance_start: float = 0.3,
     ):
         """Note: When initializing this class, make sure to add the hooks that are required by your actions.
         See `from_config` for an example.
@@ -156,9 +170,8 @@ class RunBatch:
             num_workers: Number of parallel workers to use. Default is 1 (sequential execution).
             progress_bar: Whether to show a progress bar. Progress bar is never shown for human models.
                 Progress bar is always shown for multi-worker runs.
-            random_delay_multiplier: We will wait for a random amount of time between 0 and `random_delay_multiplier`
-                times the number of workers at the start of each instance. This is to avoid any
-                potential race conditions.
+            min_time_between_instance_start: Minimum time in seconds to wait between starting instances to
+                avoid potential race conditions.
         """
         if self._model_id in ["human", "human_thought"] and num_workers > 1:
             msg = "Cannot run with human model in parallel"
@@ -183,7 +196,9 @@ class RunBatch:
             num_instances=len(instances), yaml_report_path=output_dir / "run_batch_exit_statuses.yaml"
         )
         self._show_progress_bar = progress_bar
-        self._random_delay_multiplier = random_delay_multiplier
+        self._min_time_between_instance_start = min_time_between_instance_start
+        self._last_instance_start_time = 0.0
+        self._time_lock = Lock()
 
     @property
     def _model_id(self) -> str:
@@ -218,7 +233,7 @@ class RunBatch:
             redo_existing=config.redo_existing,
             num_workers=config.num_workers,
             progress_bar=config.progress_bar,
-            random_delay_multiplier=config.random_delay_multiplier,
+            min_time_between_instance_start=config.min_time_between_instance_start,
         )
         if isinstance(config.instances, SWEBenchInstances) and config.instances.evaluate:
             from sweagent.run.hooks.swe_bench_evaluate import SweBenchEvaluate
@@ -292,9 +307,15 @@ class RunBatch:
         self.logger.info("Running on instance %s", instance.problem_statement.id)
         register_thread_name(instance.problem_statement.id)
         self._add_instance_log_file_handlers(instance.problem_statement.id, multi_worker=self._num_workers > 1)
-        # Let's add some randomness to avoid any potential race conditions or thundering herd
-        if self._progress_manager.n_completed < self._num_workers:
-            time.sleep(random.random() * self._random_delay_multiplier * (self._num_workers - 1))
+        # Wait for minimum time between instance starts to avoid race conditions
+        if self._num_workers > 1:
+            current_time = time.time()
+            elapsed_since_last_start = current_time - self._last_instance_start_time
+            wait_time = self._min_time_between_instance_start - elapsed_since_last_start
+            if wait_time > 0:
+                time.sleep(wait_time)
+            with self._time_lock:
+                self._last_instance_start_time = time.time()
 
         self._progress_manager.on_instance_start(instance.problem_statement.id)
 
