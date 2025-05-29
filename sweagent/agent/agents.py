@@ -787,7 +787,7 @@ class DefaultAgent(AbstractAgent):
         self.logger.warning(f"{error_template}")
 
         role = "assistant" if add_error_template_as_assistant_message else "user"
-        message_type = "user" if add_error_template_as_assistant_message else "observation"
+        message_type = "assistant_prefix" if add_error_template_as_assistant_message else "observation"
 
         return self.messages + [
             {"role": "assistant", "content": output, "agent": self.name, "message_type": "observation"},
