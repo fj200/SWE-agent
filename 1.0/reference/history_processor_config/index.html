@@ -2706,6 +2706,12 @@
 <h1 id="history-processor-configuration">History processor configuration</h1>
 <p>History processors can filter the history/trajectory to query the model.
 For example, a very simple history processor would be one that strips away old observations to reduce context when querying the model.</p>
+<p>You can set them as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">agent</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">history_processors</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">last_n_observations</span>
+<span class="w">      </span><span class="nt">n</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+</code></pre></div>
 
 
 <div class="doc doc-object doc-class">
@@ -2810,7 +2816,24 @@ For example, a very simple history processor would be one that strips away old o
             <p class="doc doc-class-bases">
               Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
-        <p>Keep the last n observations or remove tagged observations.</p>
+        <p>Elide all but the last n observations or remove tagged observations.</p>
+<p>This is our most classic history processor, used in the original paper
+to elide but the last 5 observations.
+Elided observations are replaced by "Old environment output: (n lines omitted)".</p>
+<p>Typical configuration:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">agent</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">history_processors</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">last_n_observations</span>
+<span class="w">      </span><span class="nt">n</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+</code></pre></div>
+<p>as for example in use in the SWE-agent 0.7 config at
+<a href="https://github.com/SWE-agent/SWE-agent/blob/main/config/sweagent_0_7/07.yaml">https://github.com/SWE-agent/SWE-agent/blob/main/config/sweagent_0_7/07.yaml</a></p>
+<p>For most use cases, you only need to set <code>n</code>.</p>
+<p>Note that using this history processor will break prompt caching (as the
+history of every query will change every time due to the elided observations).
+There are some workarounds possible with the <code>polling</code> parameter.</p>
+<p>However, most SotA models can now fit a lot of context, so generally this
+history processor is not always needed anymore.</p>
 
     
       <p>Config:</p>
@@ -3042,12 +3065,12 @@ Effectively, we will now keep between <code>n</code> and <code>n+polling</code> 
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/history_processors.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@field_validator</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@field_validator</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">validate_n</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;n must be a positive integer&quot;</span>
