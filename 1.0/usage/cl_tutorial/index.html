@@ -2381,7 +2381,7 @@
 </span></code></pre></div>
 <div class="highlight"><span class="filename">Fix a bug in a local repository using a custom docker image</span><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/SWE-agent/test-repo.git
 python<span class="w"> </span>run.py<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--agent.model.name<span class="o">=</span>claude-3.5<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--agent.model.name<span class="o">=</span>claude-sonnet-4-20250514<span class="se">\</span>
 <span class="hll"><span class="w">  </span>--env.repo.path<span class="o">=</span>test-repo<span class="w"> </span><span class="se">\</span>
 </span><span class="hll"><span class="w">  </span>--problem_statement.path<span class="o">=</span>test-repo/problem_statements/1.md<span class="w"> </span><span class="se">\</span>
 </span><span class="hll"><span class="w">  </span>--env.deployment.image<span class="o">=</span>python:3.12
