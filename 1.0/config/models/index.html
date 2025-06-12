@@ -2383,6 +2383,9 @@
 <h3 id="local-models">Local models</h3>
 <p>See <a href="../../installation/keys/">the model section</a> in the installation guide.
 Remember to unset spending limits and configure the action parser if you cannot support function calling.</p>
+<p>For "cost" tracking with local models, you can optionally provide a custom <code>litellm_model_registry</code> file in your configuration.
+This allows you to define custom pricing information for your local models instead of disabling cost limits entirely.
+See the <a href="../../installation/keys/#custom-model-registry-for-cost-tracking">local models section</a> for detailed instructions.</p>
 <h3 id="anthropic-claude">Anthropic Claude</h3>
 <p>Prompt caching makes SWE-agent several times more affordable. While this is done automatically for models like <code>gpt-4o</code>,
 care has to be taken for Anthropic Claude, as you need to manually set the cache break points.</p>

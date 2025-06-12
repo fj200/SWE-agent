@@ -2091,6 +2091,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#sweagent.agent.models.GenericAPIModelConfig.litellm_model_registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;litellm_model_registry
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#sweagent.agent.models.GenericAPIModelConfig.id" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;id
@@ -2849,6 +2858,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#sweagent.agent.models.GenericAPIModelConfig.litellm_model_registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;litellm_model_registry
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#sweagent.agent.models.GenericAPIModelConfig.id" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;id
@@ -3342,6 +3360,15 @@ The model will be served with the help of the <code>litellm</code> library.</p>
    (sweagent.agent.models.GenericAPIModelConfig.max_output_tokens)" href="#sweagent.agent.models.GenericAPIModelConfig.max_output_tokens">max_output_tokens</a></code>
                 (<code><span title="int">int</span> | None</code>)
             </li>
+            <li>
+              <code><a class="autorefs autorefs-internal" title="            litellm_model_registry
+
+
+  
+      pydantic-field
+   (sweagent.agent.models.GenericAPIModelConfig.litellm_model_registry)" href="#sweagent.agent.models.GenericAPIModelConfig.litellm_model_registry">litellm_model_registry</a></code>
+                (<code><span title="str">str</span> | None</code>)
+            </li>
         </ul>
 
 
@@ -3811,6 +3838,31 @@ Set this to 0 to disable this check.</p>
 
 
 
+<h4 id="sweagent.agent.models.GenericAPIModelConfig.litellm_model_registry" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">litellm_model_registry</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-pydantic-field"><code>pydantic-field</code></small>
+  </span>
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">litellm_model_registry</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>If set, this will override the default model registry for litellm.
+Use this for local models or models not (yet) in the default litellm model registry for tracking costs.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
 <h4 id="sweagent.agent.models.GenericAPIModelConfig.id" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">id</span>
 
@@ -3850,12 +3902,7 @@ Does not return API keys that were set via environment variables/.env</p>
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/models.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">149</span>
 <span class="normal">150</span>
 <span class="normal">151</span>
 <span class="normal">152</span>
@@ -3865,7 +3912,12 @@ Does not return API keys that were set via environment variables/.env</p>
 <span class="normal">156</span>
 <span class="normal">157</span>
 <span class="normal">158</span>
-<span class="normal">159</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_api_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_api_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a list of API keys that were explicitly set in this config.</span>
 <span class="sd">    Does not return API keys that were set via environment variables/.env</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -3907,12 +3959,7 @@ taken from the environment variables/.env file).</p>
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/models.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">166</span>
 <span class="normal">167</span>
 <span class="normal">168</span>
 <span class="normal">169</span>
@@ -3925,7 +3972,12 @@ taken from the environment variables/.env file).</p>
 <span class="normal">176</span>
 <span class="normal">177</span>
 <span class="normal">178</span>
-<span class="normal">179</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">choose_api_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">choose_api_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Chooses an API key based on the API keys explicitly set in this config.</span>
 <span class="sd">    If no API keys are set, returns None (which means that the API key will be</span>
 <span class="sd">    taken from the environment variables/.env file).</span>
@@ -4140,18 +4192,18 @@ This can also be very useful to create your first <a href="../../config/demonstr
 
                   <details class="quote">
                     <summary>Source code in <code>sweagent/agent/models.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">327</span>
-<span class="normal">328</span>
-<span class="normal">329</span>
-<span class="normal">330</span>
-<span class="normal">331</span>
-<span class="normal">332</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">332</span>
 <span class="normal">333</span>
 <span class="normal">334</span>
 <span class="normal">335</span>
 <span class="normal">336</span>
 <span class="normal">337</span>
-<span class="normal">338</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">HumanModelConfig</span><span class="p">,</span> <span class="n">tools</span><span class="p">:</span> <span class="n">ToolConfig</span><span class="p">):</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">HumanModelConfig</span><span class="p">,</span> <span class="n">tools</span><span class="p">:</span> <span class="n">ToolConfig</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Model that allows for human-in-the-loop&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="s2">&quot;swea-lm&quot;</span><span class="p">,</span> <span class="n">emoji</span><span class="o">=</span><span class="s2">&quot;🤖&quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">:</span> <span class="n">HumanModelConfig</span> <span class="o">=</span> <span class="n">config</span>
@@ -4255,7 +4307,7 @@ This can also be very useful to create your first <a href="../../config/demonstr
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">multi_line_command_endings</span> <span class="o">=</span> <span class="p">{</span><span class="n"><span title="command.name">name</span></span><span class="p">:</span> <span class="n">_hGIHVUcfor</span> <span class="n"><span title="command">command</span></span> <span class="ow">in</span> <span class="n"><span title="sweagent.agent.models.HumanModel(tools).commands">commands</span></span> <span class="k">if</span> <span class="n"><span title="command.end_name">end_name</span></span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">multi_line_command_endings</span> <span class="o">=</span> <span class="p">{</span><span class="n"><span title="command.name">name</span></span><span class="p">:</span> <span class="n">_s3zMZjGfor</span> <span class="n"><span title="command">command</span></span> <span class="ow">in</span> <span class="n"><span title="sweagent.agent.models.HumanModel(tools).commands">commands</span></span> <span class="k">if</span> <span class="n"><span title="command.end_name">end_name</span></span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -4284,12 +4336,7 @@ This can also be very useful to create your first <a href="../../config/demonstr
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/models.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">406</span>
-<span class="normal">407</span>
-<span class="normal">408</span>
-<span class="normal">409</span>
-<span class="normal">410</span>
-<span class="normal">411</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">411</span>
 <span class="normal">412</span>
 <span class="normal">413</span>
 <span class="normal">414</span>
@@ -4303,7 +4350,12 @@ This can also be very useful to create your first <a href="../../config/demonstr
 <span class="normal">422</span>
 <span class="normal">423</span>
 <span class="normal">424</span>
-<span class="normal">425</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">history</span><span class="p">:</span> <span class="n">History</span><span class="p">,</span> <span class="n">action_prompt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&gt; &quot;</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">history</span><span class="p">:</span> <span class="n">History</span><span class="p">,</span> <span class="n">action_prompt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&gt; &quot;</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper to separate action prompt from formatting&quot;&quot;&quot;</span>
     <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">n_samples</span> <span class="o">=</span> <span class="n">n</span> <span class="ow">or</span> <span class="mi">1</span>
@@ -4367,18 +4419,18 @@ This can also be very useful to create your first <a href="../../config/demonstr
 
                   <details class="quote">
                     <summary>Source code in <code>sweagent/agent/models.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">327</span>
-<span class="normal">328</span>
-<span class="normal">329</span>
-<span class="normal">330</span>
-<span class="normal">331</span>
-<span class="normal">332</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">332</span>
 <span class="normal">333</span>
 <span class="normal">334</span>
 <span class="normal">335</span>
 <span class="normal">336</span>
 <span class="normal">337</span>
-<span class="normal">338</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">HumanModelConfig</span><span class="p">,</span> <span class="n">tools</span><span class="p">:</span> <span class="n">ToolConfig</span><span class="p">):</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">HumanModelConfig</span><span class="p">,</span> <span class="n">tools</span><span class="p">:</span> <span class="n">ToolConfig</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Model that allows for human-in-the-loop&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="s2">&quot;swea-lm&quot;</span><span class="p">,</span> <span class="n">emoji</span><span class="o">=</span><span class="s2">&quot;🤖&quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">:</span> <span class="n">HumanModelConfig</span> <span class="o">=</span> <span class="n">config</span>
@@ -4423,12 +4475,7 @@ This can also be very useful to create your first <a href="../../config/demonstr
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/models.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">429</span>
-<span class="normal">430</span>
-<span class="normal">431</span>
-<span class="normal">432</span>
-<span class="normal">433</span>
-<span class="normal">434</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">434</span>
 <span class="normal">435</span>
 <span class="normal">436</span>
 <span class="normal">437</span>
@@ -4437,7 +4484,12 @@ This can also be very useful to create your first <a href="../../config/demonstr
 <span class="normal">440</span>
 <span class="normal">441</span>
 <span class="normal">442</span>
-<span class="normal">443</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">history</span><span class="p">:</span> <span class="n">History</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">history</span><span class="p">:</span> <span class="n">History</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Logic for handling user input (both thought + action) to pass to SWEEnv&quot;&quot;&quot;</span>
     <span class="n">thought_all</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">thought</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Thought (end w/ END_THOUGHT): &quot;</span><span class="p">)</span>
@@ -4500,12 +4552,7 @@ and re-issuing them.</p>
 
                   <details class="quote">
                     <summary>Source code in <code>sweagent/agent/models.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">447</span>
-<span class="normal">448</span>
-<span class="normal">449</span>
-<span class="normal">450</span>
-<span class="normal">451</span>
-<span class="normal">452</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">452</span>
 <span class="normal">453</span>
 <span class="normal">454</span>
 <span class="normal">455</span>
@@ -4518,7 +4565,12 @@ and re-issuing them.</p>
 <span class="normal">462</span>
 <span class="normal">463</span>
 <span class="normal">464</span>
-<span class="normal">465</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ReplayModelConfig</span><span class="p">,</span> <span class="n">tools</span><span class="p">:</span> <span class="n">ToolConfig</span><span class="p">):</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ReplayModelConfig</span><span class="p">,</span> <span class="n">tools</span><span class="p">:</span> <span class="n">ToolConfig</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Model used for replaying a trajectory (i.e., taking all the actions for the `.traj` file</span>
 <span class="sd">    and re-issuing them.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -4680,12 +4732,7 @@ and re-issuing them.</p>
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/models.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">472</span>
-<span class="normal">473</span>
-<span class="normal">474</span>
-<span class="normal">475</span>
-<span class="normal">476</span>
-<span class="normal">477</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">477</span>
 <span class="normal">478</span>
 <span class="normal">479</span>
 <span class="normal">480</span>
@@ -4716,7 +4763,12 @@ and re-issuing them.</p>
 <span class="normal">505</span>
 <span class="normal">506</span>
 <span class="normal">507</span>
-<span class="normal">508</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">history</span><span class="p">:</span> <span class="n">History</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">508</span>
+<span class="normal">509</span>
+<span class="normal">510</span>
+<span class="normal">511</span>
+<span class="normal">512</span>
+<span class="normal">513</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">history</span><span class="p">:</span> <span class="n">History</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Logic for tracking which replay action to pass to SWEEnv&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">api_calls</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="n">actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replays</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_replay_idx</span><span class="p">]</span>
