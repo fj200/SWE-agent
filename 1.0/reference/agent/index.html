@@ -4391,8 +4391,7 @@ formatting the system message and adding demonstrations to the history.</p>
 <span class="normal">726</span>
 <span class="normal">727</span>
 <span class="normal">728</span>
-<span class="normal">729</span>
-<span class="normal">730</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_step_to_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="n">StepOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">729</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_step_to_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="n">StepOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds a step (command that was run and output) to the model history&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_append_history</span><span class="p">(</span>
         <span class="p">{</span>
@@ -4413,7 +4412,6 @@ formatting the system message and adding demonstrations to the history.</p>
     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">observation</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">templates</span><span class="o">.</span><span class="n">max_observation_length</span><span class="p">:</span>
         <span class="n">templates</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">templates</span><span class="o">.</span><span class="n">next_step_truncated_observation_template</span><span class="p">]</span>
         <span class="n">elided_chars</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">observation</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">templates</span><span class="o">.</span><span class="n">max_observation_length</span>
-        <span class="n">step</span><span class="o">.</span><span class="n">observation</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">observation</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">templates</span><span class="o">.</span><span class="n">max_observation_length</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Show standard output template if there is observation content</span>
         <span class="n">templates</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">templates</span><span class="o">.</span><span class="n">next_step_template</span><span class="p">]</span>
@@ -4450,7 +4448,8 @@ at the start of a new attempt.</p>
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">732</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">731</span>
+<span class="normal">732</span>
 <span class="normal">733</span>
 <span class="normal">734</span>
 <span class="normal">735</span>
@@ -4461,8 +4460,7 @@ at the start of a new attempt.</p>
 <span class="normal">740</span>
 <span class="normal">741</span>
 <span class="normal">742</span>
-<span class="normal">743</span>
-<span class="normal">744</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_instance_template_to_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">743</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_instance_template_to_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add observation to history, as well as the instance template or demonstrations if we&#39;re</span>
 <span class="sd">    at the start of a new attempt.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -4499,7 +4497,8 @@ at the start of a new attempt.</p>
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">746</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">745</span>
+<span class="normal">746</span>
 <span class="normal">747</span>
 <span class="normal">748</span>
 <span class="normal">749</span>
@@ -4513,8 +4512,7 @@ at the start of a new attempt.</p>
 <span class="normal">757</span>
 <span class="normal">758</span>
 <span class="normal">759</span>
-<span class="normal">760</span>
-<span class="normal">761</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_trajectory_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="normal">760</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_trajectory_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all data that we save in .traj files.&quot;&quot;&quot;</span>
 
     <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -4555,15 +4553,15 @@ This includes the history, the environment state, and the model stats.</p>
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">763</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">762</span>
+<span class="normal">763</span>
 <span class="normal">764</span>
 <span class="normal">765</span>
 <span class="normal">766</span>
 <span class="normal">767</span>
 <span class="normal">768</span>
 <span class="normal">769</span>
-<span class="normal">770</span>
-<span class="normal">771</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">save_trajectory</span><span class="p">(</span>
+<span class="normal">770</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">save_trajectory</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Save the trajectory to disk.</span>
@@ -4692,7 +4690,8 @@ If the model is able to correct itself, the records of the mistakes will not be 
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">773</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">772</span>
+<span class="normal">773</span>
 <span class="normal">774</span>
 <span class="normal">775</span>
 <span class="normal">776</span>
@@ -4723,8 +4722,7 @@ If the model is able to correct itself, the records of the mistakes will not be 
 <span class="normal">801</span>
 <span class="normal">802</span>
 <span class="normal">803</span>
-<span class="normal">804</span>
-<span class="normal">805</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model_requery_history</span><span class="p">(</span>
+<span class="normal">804</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model_requery_history</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">error_template</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Ask the model to correct after a hitting one of the following errors:</span>
@@ -4782,7 +4780,8 @@ This means we send the <code>submit</code> command to the runtime and parse the 
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">807</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">806</span>
+<span class="normal">807</span>
 <span class="normal">808</span>
 <span class="normal">809</span>
 <span class="normal">810</span>
@@ -4826,8 +4825,7 @@ This means we send the <code>submit</code> command to the runtime and parse the 
 <span class="normal">848</span>
 <span class="normal">849</span>
 <span class="normal">850</span>
-<span class="normal">851</span>
-<span class="normal">852</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">attempt_autosubmission_after_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="n">StepOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StepOutput</span><span class="p">:</span>
+<span class="normal">851</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">attempt_autosubmission_after_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="n">StepOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StepOutput</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;For most exceptions, we attempt to still extract the patch and submit that.</span>
 <span class="sd">    This means we send the `submit` command to the runtime and parse the output.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -4982,7 +4980,8 @@ This means we send the <code>submit</code> command to the runtime and parse the 
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">854</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">853</span>
+<span class="normal">854</span>
 <span class="normal">855</span>
 <span class="normal">856</span>
 <span class="normal">857</span>
@@ -5016,8 +5015,7 @@ This means we send the <code>submit</code> command to the runtime and parse the 
 <span class="normal">885</span>
 <span class="normal">886</span>
 <span class="normal">887</span>
-<span class="normal">888</span>
-<span class="normal">889</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">handle_submission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="n">StepOutput</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">observation</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">force_submission</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StepOutput</span><span class="p">:</span>
+<span class="normal">888</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">handle_submission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="n">StepOutput</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">observation</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">force_submission</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StepOutput</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if there was a submission in the observation and handle it.</span>
 
 <span class="sd">    Args:</span>
@@ -5145,7 +5143,8 @@ This means we send the <code>submit</code> command to the runtime and parse the 
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">920</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">919</span>
+<span class="normal">920</span>
 <span class="normal">921</span>
 <span class="normal">922</span>
 <span class="normal">923</span>
@@ -5212,8 +5211,7 @@ This means we send the <code>submit</code> command to the runtime and parse the 
 <span class="normal">984</span>
 <span class="normal">985</span>
 <span class="normal">986</span>
-<span class="normal">987</span>
-<span class="normal">988</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">handle_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="n">StepOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StepOutput</span><span class="p">:</span>
+<span class="normal">987</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">handle_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="n">StepOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StepOutput</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Runs an action proposed by the agent in the environment and returns the corresponding output.</span>
 
 <span class="sd">    Args:</span>
@@ -5362,7 +5360,8 @@ with some of the attributes set.</p>
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 990</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 989</span>
+<span class="normal"> 990</span>
 <span class="normal"> 991</span>
 <span class="normal"> 992</span>
 <span class="normal"> 993</span>
@@ -5414,8 +5413,7 @@ with some of the attributes set.</p>
 <span class="normal">1039</span>
 <span class="normal">1040</span>
 <span class="normal">1041</span>
-<span class="normal">1042</span>
-<span class="normal">1043</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">history</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">StepOutput</span><span class="p">:</span>
+<span class="normal">1042</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">history</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">StepOutput</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Forward the model without handling errors.</span>
 
 <span class="sd">    All exceptions raised will contain the `StepOutput` object</span>
@@ -5550,7 +5548,8 @@ we will not execute it but requery the model for a corrected command.</p>
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1045</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1044</span>
+<span class="normal">1045</span>
 <span class="normal">1046</span>
 <span class="normal">1047</span>
 <span class="normal">1048</span>
@@ -5705,8 +5704,7 @@ we will not execute it but requery the model for a corrected command.</p>
 <span class="normal">1197</span>
 <span class="normal">1198</span>
 <span class="normal">1199</span>
-<span class="normal">1200</span>
-<span class="normal">1201</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">forward_with_handling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">history</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">StepOutput</span><span class="p">:</span>
+<span class="normal">1200</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">forward_with_handling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">history</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">StepOutput</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Forward the model and handle errors, requerying the model if we can.</span>
 <span class="sd">    For example, if the model outputs a bash command that has syntax errors,</span>
 <span class="sd">    we will not execute it but requery the model for a corrected command.</span>
@@ -5885,7 +5883,8 @@ we will not execute it but requery the model for a corrected command.</p>
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1203</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1202</span>
+<span class="normal">1203</span>
 <span class="normal">1204</span>
 <span class="normal">1205</span>
 <span class="normal">1206</span>
@@ -5897,8 +5896,7 @@ we will not execute it but requery the model for a corrected command.</p>
 <span class="normal">1212</span>
 <span class="normal">1213</span>
 <span class="normal">1214</span>
-<span class="normal">1215</span>
-<span class="normal">1216</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_step_to_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="n">StepOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">1215</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_step_to_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="n">StepOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">trajectory_step</span> <span class="o">=</span> <span class="n">TrajectoryStep</span><span class="p">(</span>
         <span class="p">{</span>
             <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="n">step</span><span class="o">.</span><span class="n">action</span><span class="p">,</span>
@@ -5965,7 +5963,8 @@ with additional bookkeeping:</p>
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1218</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1217</span>
+<span class="normal">1218</span>
 <span class="normal">1219</span>
 <span class="normal">1220</span>
 <span class="normal">1221</span>
@@ -5992,8 +5991,7 @@ with additional bookkeeping:</p>
 <span class="normal">1242</span>
 <span class="normal">1243</span>
 <span class="normal">1244</span>
-<span class="normal">1245</span>
-<span class="normal">1246</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StepOutput</span><span class="p">:</span>
+<span class="normal">1245</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StepOutput</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Run a step of the agent. This is a wrapper around `self.forward_with_handling`</span>
 <span class="sd">    with additional bookkeeping:</span>
 
@@ -6108,7 +6106,8 @@ main loop that repeatedly calls <code>self._step</code> until the problem is sol
 
             <details class="quote">
               <summary>Source code in <code>sweagent/agent/agents.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1248</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1247</span>
+<span class="normal">1248</span>
 <span class="normal">1249</span>
 <span class="normal">1250</span>
 <span class="normal">1251</span>
@@ -6136,8 +6135,7 @@ main loop that repeatedly calls <code>self._step</code> until the problem is sol
 <span class="normal">1273</span>
 <span class="normal">1274</span>
 <span class="normal">1275</span>
-<span class="normal">1276</span>
-<span class="normal">1277</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span>
+<span class="normal">1276</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">env</span><span class="p">:</span> <span class="n">SWEEnv</span><span class="p">,</span>
     <span class="n">problem_statement</span><span class="p">:</span> <span class="n">ProblemStatement</span> <span class="o">|</span> <span class="n">ProblemStatementConfig</span><span class="p">,</span>
