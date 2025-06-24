@@ -2311,7 +2311,11 @@
 </ul>
 </div>
 <h2 id="current-competitive-configurations">Current competitive configurations</h2>
-<p>We recently used two configurations for SWE-bench submissions</p>
+<div class="admonition hint">
+<p class="admonition-title">Most recent configs</p>
+<p>You can find all benchmark submission configs <a href="https://github.com/SWE-agent/SWE-agent/tree/main/config/benchmarks">here</a></p>
+</div>
+<p>Examples of configurations for SWE-bench submissions:</p>
 <ul>
 <li><a href="https://github.com/SWE-agent/SWE-agent/blob/main/config/250225_anthropic_filemap_simple_review.yaml">250225_anthropic_filemap_simple_review.yaml</a>:
   This is our current default one-attempt config. It uses <code>claude-3-7-sonnet-20250219</code>.</li>
@@ -2328,7 +2332,7 @@ default agent. In particular, supplying options like <code>--agent.model.name</c
 error messages. Take a look at the above configuration file to see the structure!</p>
 </div>
 <p>You can find the command with which to run each config at the top of the config file.</p>
-<p>In order to run on multiple workers with Claude, you need to use multiple API keys in order to have enough cache break points
+<p>In order to run on multiple workers with Claude, you need to use multiple API keys in order to have enough cache break points.
 For this, please set the following environment variable before running</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># concatenate your keys</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">CLAUDE_API_KEY_ROTATION</span><span class="o">=</span><span class="s2">&quot;KEY1:::KEY2:::KEY3&quot;</span>
