@@ -940,6 +940,19 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    FAQ
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -951,6 +964,61 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#basics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basics
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Models
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuring-swe-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuring SWE-agent
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#misc" class="md-nav__link">
+    <span class="md-ellipsis">
+      MISC
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -2207,6 +2275,50 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#basics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basics
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Models
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuring-swe-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuring SWE-agent
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#misc" class="md-nav__link">
+    <span class="md-ellipsis">
+      MISC
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2231,27 +2343,7 @@
 
 
 <h1 id="frequently-asked-questions">Frequently Asked Questions</h1>
-<blockquote>
-<p>What models are supported?</p>
-</blockquote>
-<p>Probably all of them! There's even a few for testing. See <a href="../installation/keys/">models</a>.</p>
-<blockquote>
-<p>What can I do if my model doesn't support function calling?</p>
-</blockquote>
-<p>You can configure how to parse the model's response by choosing your <code>agent.tools.parse_function</code>.
-The default now is <code>function_calling</code>, but you can change it to <code>thought_action</code>.
-More information in the <a href="../reference/parsers/">reference</a>.
-There are also some config example in our <a href="https://github.com/SWE-agent/SWE-agent/tree/main/config">config folder</a>.</p>
-<blockquote>
-<p>What's up with all the output files?</p>
-</blockquote>
-<p>You're probably most interested in the <code>*.traj</code> files, which contain complete records of SWE-agent's thought process and actions. See <a href="../usage/trajectories/">output files</a> for more information.</p>
-<blockquote>
-<p>How can I change the demonstrations given to SWE-agent?</p>
-</blockquote>
-<p>At the start of each run, we feed the agent a demonstration trajectory, showing it how to solve an example issue.
-This substantially improves the agent's abilities to solve novel issues.
-If you'd like to modify or totally change this demonstration, to better fit your use case, see <a href="../config/demonstrations/">this</a>.</p>
+<h2 id="basics">Basics</h2>
 <blockquote>
 <p>Does SWE-agent run on Windows/MacOS/Linux?</p>
 </blockquote>
@@ -2263,6 +2355,38 @@ But you can always execute SWE-agent in the cloud.</p>
 <p>This is probably because of union types.
 See <a href="../usage/cl_tutorial/#union-types">this section</a> for more information, but the short version is that some options (e.g., the repository or problem statement) can be specified in multiple ways, so we try every option until we find the one that works based on your inputs.
 If none of them work, we throw an error which then tells you why we cannot initialize any of the types, so this will get somewhat long and confusing.</p>
+<blockquote>
+<p>I have a question/bug report/feature request...</p>
+</blockquote>
+<p>Please open a <a href="https://github.com/SWE-agent/SWE-agent/issues">github issue!</a>!</p>
+<h2 id="models">Models</h2>
+<blockquote>
+<p>What models are supported? Do you support local models?</p>
+</blockquote>
+<p>Probably all of them, including local models! There's even a few for testing. See <a href="../installation/keys/">models</a> and <a href="../config/models/">more on models</a>.</p>
+<blockquote>
+<p>What can I do if my model doesn't support function calling?</p>
+</blockquote>
+<p>You can configure how to parse the model's response by choosing your <code>agent.tools.parse_function</code>.
+The default now is <code>function_calling</code>, but you can change it to <code>thought_action</code>.
+More information in the <a href="../reference/parsers/">reference</a>.
+There are also some config example in our <a href="https://github.com/SWE-agent/SWE-agent/tree/main/config">config folder</a>.</p>
+<h2 id="configuring-swe-agent">Configuring SWE-agent</h2>
+<blockquote>
+<p>How can I change the demonstrations given to SWE-agent?</p>
+</blockquote>
+<p>At the start of each run, we feed the agent a demonstration trajectory, showing it how to solve an example issue.
+This substantially improves the agent's abilities to solve novel issues.
+If you'd like to modify or totally change this demonstration, to better fit your use case, see <a href="../config/demonstrations/">this</a>.</p>
+<blockquote>
+<p>Can I add custom tools?</p>
+</blockquote>
+<p>Yes! Take a look at <a href="../usage/adding_custom_tools/">this tutorial</a>.</p>
+<h2 id="misc">MISC</h2>
+<blockquote>
+<p>What's up with all the output files?</p>
+</blockquote>
+<p>You're probably most interested in the <code>*.traj</code> files, which contain complete records of SWE-agent's thought process and actions. See <a href="../usage/trajectories/">output files</a> for more information.</p>
 <div class="grid cards">
 <ul>
 <li>
