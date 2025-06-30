@@ -656,21 +656,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Using local models">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#custom-cost-tracking" class="md-nav__link">
-    <span class="md-ellipsis">
-      Custom cost tracking
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -2332,21 +2317,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Using local models">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#custom-cost-tracking" class="md-nav__link">
-    <span class="md-ellipsis">
-      Custom cost tracking
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -2511,45 +2481,10 @@ for local models.</p>
 <p>You have two options:</p>
 <ol>
 <li><strong>Disable cost tracking</strong> (recommended for most users): Set <code>per_instance_cost_limit</code> to 0 and use the <code>per_instance_call_limit</code> instead to limit the runtime per issue.</li>
-<li><strong>Use a custom model registry</strong>: If you want to track costs for your local model, you can provide a custom <code>litellm_model_registry</code> file with cost information for your model (see below).</li>
+<li><strong>Use a custom model registry</strong>: If you want to track costs for your local model, you can provide a custom <code>litellm_model_registry</code> file with cost information for your model (see <a href="../../config/models/#custom-cost-tracking">here</a>).</li>
 </ol>
 <p>Please also make sure to set <code>max_input_tokens</code> to a non-<code>None</code> value to avoid other warnings.</p>
 </div>
-<h3 id="custom-cost-tracking">Custom cost tracking</h3>
-<p>If you want to track costs for models not in the default litellm registry, you can provide a custom model registry file. This is particularly useful for:</p>
-<ul>
-<li>New models not yet supported by litellm's default registry</li>
-<li>Overriding default / old cost values in litellm</li>
-<li>Local models that you want to track "costs" for, to compare to other results</li>
-</ul>
-<p>This file will override entries in the <a href="https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json">litellm community model cost file</a>.</p>
-<p>Create a JSON file with your model's cost information following the litellm model registry format:</p>
-<div class="highlight"><span class="filename">my_model_registry.json</span><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;ollama/llama2&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;max_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8192</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;input_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.00002</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;output_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.00006</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;litellm_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ollama&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chat&quot;</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;my-custom-provider/my-new-model&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;max_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8192</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;max_input_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8192</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;max_output_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8192</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;input_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.000001</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;output_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.000002</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;litellm_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openai&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chat&quot;</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>Then specify this registry in your config:</p>
-<div class="highlight"><span class="filename">config/your_config.yaml</span><pre><span></span><code><span class="nt">agent</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">model</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">litellm_model_registry</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;my_model_registry.json&quot;</span><span class="w">  </span><span class="c1"># Path to your custom registry</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-</code></pre></div>
-<p>If you need to modify the tokenizer that is used when calculating costs, you can set the <code>custom_tokenizer</code> setting in the <a href="../../reference/model_config/">model config</a>.</p>
 <div class="admonition warning">
 <p class="admonition-title">Parsing functions</p>
 <p>The default config uses function calling to retrieve actions from the model response, i.e.,
