@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
     
     
       
@@ -2199,6 +2199,38 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#multimodal-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multimodal Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multimodal Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-multimodal-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Multimodal Settings
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2214,7 +2246,7 @@
 
 
   
-    <a href="https://github.com/SWE-agent/SWE-agent/edit/main/docs/config/index.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/SWE-agent/SWE-agent/edit/main/docs/config/index.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2235,6 +2267,7 @@
 <div class="admonition tip">
 <p class="admonition-title">Default config files</p>
 <p>Our default config files are in the <a href="https://github.com/SWE-agent/SWE-agent/tree/main/config"><code>config/</code></a> directory.</p>
+<p>For multimodal support, use <code>config/default_mm_with_images.yaml</code> which includes image processing capabilities.</p>
 </div>
 <p>To use a config file, you can use the <code>--config</code> flag in the command line interface.</p>
 <div class="highlight"><pre><span></span><code>sweagent<span class="w"> </span>run<span class="w"> </span>--config<span class="w"> </span>config/your_config.yaml
@@ -2324,6 +2357,30 @@ Config options are merged in a nested way.</p>
 <p>Relative paths in config files are resolved to the <code>SWE_AGENT_CONFIG_ROOT</code> environment variable (if set)
 or the SWE-agent repository root.</p>
 </div>
+<h2 id="multimodal-configuration">Multimodal Configuration</h2>
+<p>For working with images and vision-capable models, SWE-agent provides specialized multimodal configuration options.</p>
+<p>These options are best demonstrated in <code>default_mm_with_images.yaml</code>.</p>
+<p>This configuration enables full image processing capabilities:</p>
+<ul>
+<li><strong>SWE-bench Multimodal Image processing</strong>: Downloads and converts GitHub issue images to base64 format for SWE-bench Multimodal instances.</li>
+<li><strong>Extended observation length</strong>: Increases observation token limits to accommodate images</li>
+<li><strong>Image tools</strong>: Includes <code>image_tools</code> bundle for viewing images</li>
+<li><strong>Web browsing tools</strong>: Includes <code>web_browser</code> bundle for using web browsers</li>
+<li><strong>History processing</strong>: Enables <code>image_parsing</code> history processor for parsing</li>
+</ul>
+<h3 id="key-multimodal-settings">Key Multimodal Settings</h3>
+<div class="highlight"><pre><span></span><code><span class="nt">agent</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">templates</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">disable_image_processing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">  </span><span class="c1"># enable/disable image processing</span>
+<span class="w">    </span><span class="nt">max_observation_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10_000_000</span><span class="w">  </span><span class="c1"># increased for images</span>
+<span class="w">  </span><span class="nt">tools</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">bundles</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tools/image_tools</span><span class="w">  </span><span class="c1"># image viewing capabilities</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tools/web_browser</span><span class="w">  </span><span class="c1"># browser automation tools</span>
+<span class="w">  </span><span class="nt">history_processors</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">image_parsing</span><span class="w">  </span><span class="c1"># process image tools outputs (required for tools to work)</span>
+</code></pre></div>
+<p>See the <a href="../usage/multimodal/">multimodal guide</a> for detailed configuration options.</p>
 
 
 
@@ -2445,7 +2502,7 @@ or the SWE-agent repository root.</p>
       <script id="__config" type="application/json">{"base": "..", "features": ["navigation.indexes", "navigation.top", "content.action.edit", "navigation.footer", "content.code.copy", "content.footnote.tooltips", "header.autohide", "announce.dismiss", "content.code.annotate", "navigation.tabs", "navigation.tabs.sticky"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      <script src="../assets/javascripts/bundle.56ea9cef.min.js"></script>
       
         <script src="../assets/js/sh-annotation.js"></script>
       

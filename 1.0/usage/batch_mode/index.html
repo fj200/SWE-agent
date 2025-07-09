@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
     
     
       
@@ -886,6 +886,15 @@
   <a href="#a-first-example-swe-bench" class="md-nav__link">
     <span class="md-ellipsis">
       A first example: SWE-bench
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multimodal-swe-bench" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multimodal SWE-bench
     </span>
   </a>
   
@@ -2311,6 +2320,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#multimodal-swe-bench" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multimodal SWE-bench
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#running-in-parallel" class="md-nav__link">
     <span class="md-ellipsis">
       Running in parallel
@@ -2372,7 +2390,7 @@
 
 
   
-    <a href="https://github.com/SWE-agent/SWE-agent/edit/main/docs/usage/batch_mode.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/SWE-agent/SWE-agent/edit/main/docs/usage/batch_mode.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2435,6 +2453,33 @@ Kind of slow, isn't it?</p>
 <p class="admonition-title">Evaluating on SWE-bench</p>
 <p>If you are using <a href="https://www.swebench.com/sb-cli/"><code>sb-cli</code></a>, you can automatically evaluate on SWE-bench by adding the <code>--evaluate=True</code> flag.
 This will already submit submissions to <code>sb-cli</code> while you are running, so that you should receive results within a minute of finishing your run.</p>
+</div>
+<h2 id="multimodal-swe-bench">Multimodal SWE-bench</h2>
+<p>SWE-agent supports the <strong>SWE-bench Multimodal</strong> dataset, which includes GitHub issues with associated images (screenshots, diagrams, UI mockups). To run on multimodal instances:</p>
+<div class="highlight"><pre><span></span><code>sweagent<span class="w"> </span>run-batch<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--config<span class="w"> </span>config/default_mm_with_images.yaml<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--agent.model.name<span class="w"> </span>claude-sonnet-4-20250514<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--agent.model.per_instance_cost_limit<span class="w"> </span><span class="m">2</span>.00<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--instances.type<span class="w"> </span>swe_bench<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--instances.subset<span class="w"> </span>multimodal<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--instances.split<span class="w"> </span>dev<span class="w">  </span><span class="se">\</span>
+<span class="w">    </span>--instances.slice<span class="w"> </span>:3<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--instances.shuffle<span class="o">=</span>True
+</code></pre></div>
+<p>Key differences for multimodal runs:</p>
+<ul>
+<li><strong>Configuration</strong>: Use <code>config/default_mm_with_images.yaml</code> which includes image processing capabilities</li>
+<li><strong>Subset</strong>: Use <code>--instances.subset multimodal</code> to access the multimodal dataset</li>
+<li><strong>Token limits</strong>: Consider higher cost limits as images consume more tokens</li>
+<li><strong>Multimodal Tools</strong>: <code>tools/image_tools</code> and <code>tools/web_browser</code> include useful tools for viewing images and web browsers</li>
+</ul>
+<p>The system automatically:
+- Downloads images from GitHub issue URLs
+- Converts them to base64 markdown format
+- Provides visual context to the AI model</p>
+<div class="admonition tip">
+<p class="admonition-title">Multimodal Configuration</p>
+<p>See the <a href="../multimodal/">multimodal guide</a> for detailed configuration options and troubleshooting.</p>
 </div>
 <h2 id="running-in-parallel">Running in parallel</h2>
 <p>Let's speed things up and run on 5 instances at once. Only a single line to change:</p>
@@ -2683,7 +2728,7 @@ for more information on running on SWE-Bench and similar benchmarks.</p>
       <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.top", "content.action.edit", "navigation.footer", "content.code.copy", "content.footnote.tooltips", "header.autohide", "announce.dismiss", "content.code.annotate", "navigation.tabs", "navigation.tabs.sticky"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
       
         <script src="../../assets/js/sh-annotation.js"></script>
       

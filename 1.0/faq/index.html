@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
     
     
       
@@ -1011,6 +1011,15 @@
   <a href="#misc" class="md-nav__link">
     <span class="md-ellipsis">
       MISC
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anything-else" class="md-nav__link">
+    <span class="md-ellipsis">
+      Anything else?
     </span>
   </a>
   
@@ -2317,6 +2326,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#anything-else" class="md-nav__link">
+    <span class="md-ellipsis">
+      Anything else?
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2334,7 +2352,7 @@
 
 
   
-    <a href="https://github.com/SWE-agent/SWE-agent/edit/main/docs/faq.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/SWE-agent/SWE-agent/edit/main/docs/faq.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2356,14 +2374,18 @@ But you can always execute SWE-agent in the cloud.</p>
 See <a href="../usage/cl_tutorial/#union-types">this section</a> for more information, but the short version is that some options (e.g., the repository or problem statement) can be specified in multiple ways, so we try every option until we find the one that works based on your inputs.
 If none of them work, we throw an error which then tells you why we cannot initialize any of the types, so this will get somewhat long and confusing.</p>
 <blockquote>
-<p>I have a question/bug report/feature request...</p>
+<p>Why are my images not being processed?</p>
 </blockquote>
-<p>Please open a <a href="https://github.com/SWE-agent/SWE-agent/issues">github issue!</a>!</p>
+<p>Check that you're using a multimodal configuration (see <code>default_mm_with_images.yaml</code> as an example), have internet connectivity, and images are under 10MB. See <a href="../usage/multimodal/">Multimodal usage notes</a> for more details.</p>
 <h2 id="models">Models</h2>
 <blockquote>
 <p>What models are supported? Do you support local models?</p>
 </blockquote>
 <p>Probably all of them, including local models! There's even a few for testing. See <a href="../installation/keys/">models</a> and <a href="../config/models/">more on models</a>.</p>
+<blockquote>
+<p>Does SWE-agent support multimodal models and images?</p>
+</blockquote>
+<p>Yes! SWE-agent supports vision-capable models that can process images from GitHub issues. Use <code>--config config/default_mm_with_images.yaml</code> and specify a multimodal model like Claude Sonnet 4 or GPT-4o. See the <a href="../usage/multimodal/">multimodal guide</a> for details.</p>
 <blockquote>
 <p>What can I do if my model doesn't support function calling?</p>
 </blockquote>
@@ -2387,6 +2409,11 @@ If you'd like to modify or totally change this demonstration, to better fit your
 <p>What's up with all the output files?</p>
 </blockquote>
 <p>You're probably most interested in the <code>*.traj</code> files, which contain complete records of SWE-agent's thought process and actions. See <a href="../usage/trajectories/">output files</a> for more information.</p>
+<h2 id="anything-else">Anything else?</h2>
+<blockquote>
+<p>I have a question/bug report/feature request...</p>
+</blockquote>
+<p>Please open a <a href="https://github.com/SWE-agent/SWE-agent/issues">github issue!</a>!</p>
 <div class="grid cards">
 <ul>
 <li>
@@ -2520,7 +2547,7 @@ If you'd like to modify or totally change this demonstration, to better fit your
       <script id="__config" type="application/json">{"base": "..", "features": ["navigation.indexes", "navigation.top", "content.action.edit", "navigation.footer", "content.code.copy", "content.footnote.tooltips", "header.autohide", "announce.dismiss", "content.code.annotate", "navigation.tabs", "navigation.tabs.sticky"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      <script src="../assets/javascripts/bundle.56ea9cef.min.js"></script>
       
         <script src="../assets/js/sh-annotation.js"></script>
       
