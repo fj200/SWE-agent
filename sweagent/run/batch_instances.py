@@ -306,11 +306,11 @@ class SWEBenchInstances(BaseModel, AbstractInstanceSource):
         if self.path_override is not None:
             return str(self.path_override)
         dataset_mapping = {
-            "full": "princeton-nlp/SWE-Bench",
-            "verified": "princeton-nlp/SWE-Bench_Verified",
-            "lite": "princeton-nlp/SWE-Bench_Lite",
-            "multimodal": "princeton-nlp/SWE-Bench_Multimodal",
-            "multilingual": "swe-bench/SWE-Bench_Multilingual",
+            "full": "SWE-bench/SWE-Bench",
+            "verified": "SWE-bench/SWE-Bench_Verified",
+            "lite": "SWE-bench/SWE-Bench_Lite",
+            "multimodal": "SWE-bench/SWE-Bench_Multimodal",
+            "multilingual": "SWE-bench/SWE-Bench_Multilingual",
         }
 
         if self.subset not in dataset_mapping:
@@ -400,7 +400,11 @@ class SWESmithInstances(BaseModel, AbstractInstanceSource):
             instance_dict["extra_fields"] = {"fail_to_pass": instance_dict["FAIL_TO_PASS"]}
             return instance_dict
 
-        instance_dicts = load_file(self.path)
+        if str(self.path).lower() in ["swe-bench/swe-smith", "swe-smith"]:
+            from datasets import load_dataset
+            instance_dicts = load_dataset("SWE-bench/SWE-smith", split="train")
+        else:
+            instance_dicts = load_file(self.path)
         instances = [
             SimpleBatchInstance.model_validate(convert_instance_dict(instance_dict)).to_full_batch_instance(
                 self.deployment
