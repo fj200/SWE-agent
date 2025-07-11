@@ -32,8 +32,8 @@ Use the pre-configured multimodal setup:
 ```bash
 sweagent run-batch \
     --config config/default_mm_with_images.yaml \
-    --instances.type swe_bench \
-    --instances.subset multimodal \
+    --instances.type swebench \
+    --instances.path SWE-bench/SWE-bench_Multimodal \
     --instances.split dev
 ```
 
@@ -152,6 +152,6 @@ The `web_browser` bundle provides tools for:
 
 ### Templates Configuration
 
-We've enabled multimodal processing when `--instances.type=swe-bench --instances.subset=multimodal` are set.
+We've enabled multimodal processing when `--instances.type=swe-bench --instances.path=SWE-bench/SWE-bench_Multimodal` are set.
 
 To disable this behavior, you must set `--templates.disable_image_processing=true`.

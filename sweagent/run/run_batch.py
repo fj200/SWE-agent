@@ -11,11 +11,9 @@ Run on a batch of instances/issues, e.g., SWE-bench.
 Basic usage: Run over a [bold][cyan]SWE-bench lite[/bold][/cyan][green]:
 
 sweagent run-batch \\
-    --instances.type swe_bench \\ # configure instances
-    --instances.subset lite \\
+    --instances.type swebench \\ # configure instances
+    --instances.path SWE-bench/SWE-bench_Verified \\
     --instances.split dev  \\
-    --instances.slice :50 \\     # first 50 instances
-    --instances.shuffle=True \\  # shuffle instances (with fixed seed)
     --config config/default.yaml \\
     --agent.model.name gpt-4o  # configure model
 [/green]
@@ -23,10 +21,7 @@ sweagent run-batch \\
 [cyan][bold]=== LOADING INSTANCES ===[/bold][/cyan]
 
 [cyan][bold]From a file[/bold][/cyan] [green]--instances.type file --instances.path /path/to/file[/green].
-[cyan][bold]From huggingface[/bold][/cyan] [green]--instances.type huggingface --instances.dataset_name=SWE_Bench_lite --instances.split=dev[/green].
-
-All instance specifications support the [green]filter[/green], [green]slice[/green], and [green]shuffle[/green] options.
-With [green]filter[/green], you can select specific instances, e.g., [green]--instances.filter='instance_id_1|instance_id_2'[/green].
+[cyan][bold]From SWE-bench style HF dataset[/bold][/cyan] [green]--instances.type swebench --instances.path=SWE-bench/SWE-bench_Lite --instances.split=dev[/green].
 """
 
 import getpass
@@ -42,7 +37,7 @@ from pathlib import Path
 from typing import Self
 
 import yaml
-from pydantic import Field, model_validator
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from rich.live import Live
 from swerex.deployment.hooks.status import SetStatusDeploymentHook
@@ -54,7 +49,7 @@ from sweagent.environment.hooks.status import SetStatusEnvironmentHook
 from sweagent.environment.swe_env import SWEEnv
 from sweagent.exceptions import ModelConfigurationError, TotalCostLimitExceededError
 from sweagent.run._progress import RunBatchProgressManager
-from sweagent.run.batch_instances import BatchInstance, BatchInstanceSourceConfig, SWEBenchInstances
+from sweagent.run.batch_instances import BatchInstance, InstancesConfig, InstanceSource
 from sweagent.run.common import BasicCLI, ConfigHelper, save_predictions
 from sweagent.run.hooks.abstract import CombinedRunHooks, RunHook
 from sweagent.run.hooks.apply_patch import SaveApplyPatchHook
@@ -73,7 +68,7 @@ from sweagent.utils.log import (
 
 
 class RunBatchConfig(BaseSettings, cli_implicit_flags=False):
-    instances: BatchInstanceSourceConfig = Field(description="Instances to run.")
+    instances: InstancesConfig = Field(description="Instances config dict (type, path, etc.)")
     agent: AgentConfig = Field(description="Agent options.")
     output_dir: Path = Field(default=Path("DEFAULT"), description="Output directory.")
     suffix: str = ""
@@ -105,7 +100,7 @@ class RunBatchConfig(BaseSettings, cli_implicit_flags=False):
         # post-init.
         if self.output_dir == Path("DEFAULT"):
             user_id = getpass.getuser()
-            source_id = self.instances.id
+            source_id = self.instances.type
             try:
                 model_id = self.agent.model.id  # type: ignore[attr-defined]
             except AttributeError:
@@ -115,19 +110,6 @@ class RunBatchConfig(BaseSettings, cli_implicit_flags=False):
                 config_file = Path(config_file).stem
             suffix = f"__{self.suffix}" if self.suffix else ""
             self.output_dir = TRAJECTORY_DIR / user_id / f"{config_file}__{model_id}___{source_id}{suffix}"
-
-    @model_validator(mode="after")
-    def evaluate_and_redo_existing(self) -> Self:
-        if not isinstance(self.instances, SWEBenchInstances):
-            return self
-        if self.instances.evaluate and self.redo_existing:
-            msg = (
-                "Cannot evaluate and redo existing at the same time. This would cause invalid results, because "
-                "after the first merge_preds gives you a preds.json, this file would be submitted to SB-CLI, causing"
-                "evaluation of old instances, which could then not be overwritten by the new ones."
-            )
-            raise ValueError(msg)
-        return self
 
 
 class _BreakLoop(Exception):
@@ -200,17 +182,18 @@ class RunBatch:
         (config.output_dir / "run_batch.config.yaml").write_text(yaml.dump(config.model_dump_json(), indent=2))
         logger = get_logger("run", emoji="🏃")
         logger.debug("Loading instances from %s", f"{config.instances!r}")
-        instances = config.instances.get_instance_configs()
+
+        instances = InstanceSource(config).get_instances()
+
         logger.info("Loaded %d instances", len(instances))
         if not instances:
             msg = (
                 "No instances to run. Here are a few things to check:\n"
                 "- With huggingface data: Check that you have the right split (test or dev)\n"
-                "- Check your filter does not exclude all instances (check the info log messages)"
             )
             raise ValueError(msg)
         logger.debug("The first instance is %s", f"{instances[0]!r}")
-        rb = cls(
+        return cls(
             instances=instances,
             agent_config=config.agent,
             output_dir=config.output_dir,
@@ -220,18 +203,6 @@ class RunBatch:
             progress_bar=config.progress_bar,
             random_delay_multiplier=config.random_delay_multiplier,
         )
-        if isinstance(config.instances, SWEBenchInstances) and config.instances.evaluate:
-            from sweagent.run.hooks.swe_bench_evaluate import SweBenchEvaluate
-
-            rb.add_hook(
-                SweBenchEvaluate(
-                    output_dir=config.output_dir,
-                    subset=config.instances.subset,
-                    split=config.instances.split,
-                    continuous_submission_every=30,
-                )
-            )
-        return rb
 
     def add_hook(self, hook: RunHook) -> None:
         hook.on_init(run=self)

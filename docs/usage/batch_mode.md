@@ -17,28 +17,21 @@ sweagent run-batch \
     --config config/default.yaml \
     --agent.model.name gpt-4o \
     --agent.model.per_instance_cost_limit 2.00 \
-    --instances.type swe_bench \
-    --instances.subset lite \
-    --instances.split dev  \
-    --instances.slice :3 \
-    --instances.shuffle=True
+    --instances.type swebench \
+    --instances.path SWE-bench/SWE-bench_Lite \
+    --instances.split dev
 ```
 
 Let's look at the options:
 
-1. `--instances.type swe_bench`: There's a couple of built-in ways to configure instances. This option selects the SWE-bench dataset.
-2. `--instances.subset lite`: There's a few datasets provided by the SWE-bench project. Lite is a subset of GitHub issues with a few heuristic filters that makes them more likely to be solvable.
+1. `--instances.type swebench`: Selects the SWE-bench dataset.
+2. `--instances.path SWE-bench/SWE-bench_Lite`: Choose a subset of the SWE-bench dataset.
 3. `--instances.split dev`: Most datasets have a `dev` and a `test` split.
-4. `--instances.slice :3`: The `--slice` option allows you to select a subset of instances from the dataset. It works just the way to pythons `list[...]` slicing, so you can specify `:10` to take the first 10 instances, `10:20` to take the next 10, `-10:` to take the last 10, or `10:20:2` to take every second instance in that range.
-5. `--instances.shuffle=True`: Shuffle all instances before slicing. This is a deterministic operation, so the same command will always return the same instances in the same order.
 
-* There's some things that you should recognize: All of the `--agent` options are available and you can still specify `--config` files.
-* However, the `--problem_statement`, `--repo`, and `--env` options obviously need to change, because you now want to populate these settings automatically from a source.
+* All of the `--agent` options are available and you can still specify `--config` files.
+* The `--problem_statement`, `--repo`, and `--env` options are now populated automatically from the instance source.
 
-This is where the new option comes in: `--instances`, specifying the **instance source** together with a few options.
-
-!!! tip "Tooltips"
-    Click on the :material-chevron-right-circle: icon in the right margin of the code snippet to see more information about the line.
+This is where the new option comes in: `--instances`, specifying the **instance source** together with a few options as a flat dict.
 
 The output should remind you a lot like the output of the [hello world tutorial](hello_world.md), except for the progress bar at the bottom.
 Kind of slow, isn't it?
@@ -46,7 +39,6 @@ Kind of slow, isn't it?
 
 !!! tip "All command line options"
     * See [`RunBatchConfig`](../reference/run_batch_config.md/#sweagent.run.run_batch.RunBatchConfig) for an overview of all options.
-    * SWE-bench config: [`SWEBenchInstances`](../reference/batch_instances.md/#sweagent.run.batch_instances.SWEBenchInstances).
 
 !!! tip "Evaluating on SWE-bench"
     If you are using [`sb-cli`](https://www.swebench.com/sb-cli/), you can automatically evaluate on SWE-bench by adding the `--evaluate=True` flag.
@@ -61,17 +53,15 @@ sweagent run-batch \
     --config config/default_mm_with_images.yaml \
     --agent.model.name claude-sonnet-4-20250514 \
     --agent.model.per_instance_cost_limit 2.00 \
-    --instances.type swe_bench \
-    --instances.subset multimodal \
-    --instances.split dev  \
-    --instances.slice :3 \
-    --instances.shuffle=True
+    --instances.type swebench \
+    --instances.path SWE-bench/SWE-bench_Multimodal \
+    --instances.split dev
 ```
 
 Key differences for multimodal runs:
 
 - **Configuration**: Use `config/default_mm_with_images.yaml` which includes image processing capabilities
-- **Subset**: Use `--instances.subset multimodal` to access the multimodal dataset
+- **Subset**: Use `--instances.path SWE-bench/SWE-bench_Multimodal` to access the multimodal dataset
 - **Token limits**: Consider higher cost limits as images consume more tokens
 - **Multimodal Tools**: `tools/image_tools` and `tools/web_browser` include useful tools for viewing images and web browsers
 
@@ -93,11 +83,9 @@ sweagent run-batch \
     --agent.model.name gpt-4o \
     --num_workers 3 \
     --agent.model.per_instance_cost_limit 2.00 \
-    --instances.type swe_bench \
-    --instances.subset lite \
-    --instances.split dev  \
-    --instances.slice :3 \
-    --instances.shuffle=True
+    --instances.type swebench \
+    --instances.path SWE-bench/SWE-bench_Lite \
+    --instances.split dev
 ```
 
 You'll see output that looks like this (only with 3 workers instead of 30):
@@ -122,9 +110,7 @@ sweagent run-batch \
     --config config/default.yaml \
     --agent.model.name gpt-4o \
     --instances.type file \
-    --instances.path instances.yaml \
-    --instances.slice :3 \
-    --instances.shuffle=True
+    --instances.path instances.yaml
 ```
 
 `--instances.path` supports `.jsonl`, `.json`, and `.yaml` files.
@@ -148,8 +134,7 @@ Here'the simplest example of what such a file can look like
     However, we temporarily support both names.
 
 !!! tip "More options"
-    * There's a few more fields that you can populate. See [`SimpleBatchInstances`](../reference/batch_instances.md/#sweagent.run.batch_instances.SimpleBatchInstance) for more information.
-    * For all command line options with this instance type, see [`InstancesFromFile`](../reference/batch_instances.md/#sweagent.run.batch_instances.InstancesFromFile).
+    * There's a few more fields that you can populate. See the loader function for details.
 
 ## Huggingface instances
 
@@ -159,52 +144,9 @@ If you upload your dataset to Huggingface in a similar style as the example we j
 sweagent run-batch \
     ...
     --instances.type huggingface \
-    --instances.dataset_name "your_username/your_dataset" \
-    --instances.split "dev" \
-    --instances.slice :3 \
-    --instances.shuffle=True
+    --instances.path "your_username/your_dataset" \
+    --instances.split "dev"
 ```
-
-!!! tip "All instance options"
-    See [`InstancesFromHuggingFace`](../reference/batch_instances.md/#sweagent.run.batch_instances.InstancesFromHuggingFace).
-
-## Expert instances
-
-If this is not enough for your use case, you can also specify a full set of `Environment`, `ProblemStatement`, and `Repository` config objects:
-
-```bash
-sweagent run-batch \
-    ...
-    --instances.type expert_file \
-    --instances.path instances.yaml
-```
-
-where `instances.yaml` could look like this:
-
-```yaml title="instances.yaml"
-- env:
-    deployment:
-      type: docker
-      image: python:3.11
-    repo:
-        type: github
-        github_url: "https://github.com/swe-agent/test-repo"
-  problem_statement:
-    type: text
-    text: "A simple test problem"
-    id: "simple_test_problem"
-- env:
-    deployment:
-      type: docker
-      image: python:3.11
-  problem_statement:
-    type: text
-    text: "A simple test problem 2"
-    id: "simple_test_problem_2"
-```
-
-!!! tip "All instance options"
-    See [`ExpertInstances`](../reference/batch_instances.md/#sweagent.run.batch_instances.ExpertInstancesFromFile).
 
 ## Output files and next steps
 

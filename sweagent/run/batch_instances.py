@@ -1,21 +1,18 @@
 import json
-import random
-import re
-from abc import ABC, abstractmethod
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from datasets import load_dataset
+from pydantic import BaseModel, ConfigDict, Field
 from swerex.deployment.config import (
     DeploymentConfig,
     DockerDeploymentConfig,
     DummyDeploymentConfig,
     LocalDeploymentConfig,
 )
-from typing_extensions import Self
 
 from sweagent.agent.problem_statement import (
-    ProblemStatementConfig,
     SWEBenchMultimodalProblemStatement,
     TextProblemStatement,
 )
@@ -27,397 +24,177 @@ from sweagent.utils.log import get_logger
 logger = get_logger("swea-config", emoji="🔧")
 
 
-class AbstractInstanceSource(ABC):
-    """Anything that adheres to this standard can be used to load instances."""
-
-    @abstractmethod
-    def get_instance_configs(self) -> list[EnvironmentConfig]: ...
-
-
-class BatchInstance(BaseModel):
-    """A single instance in a batch of instances.
-    This specifies both the environment configuration and the problem statement.
-    """
-
-    env: EnvironmentConfig
-    problem_statement: ProblemStatementConfig
-
-
-def _slice_spec_to_slice(slice_spec: str) -> slice:
-    if slice_spec == "":
-        return slice(None)
-    parts = slice_spec.split(":")
-    values = [None if p == "" else int(p) for p in parts]
-    if len(parts) == 1:
-        return slice(values[0])
-    if len(parts) == 2:
-        return slice(values[0], values[1])
-    if len(parts) == 3:
-        return slice(values[0], values[1], values[2])
-    msg = (
-        f"Invalid slice specification: {slice_spec!r}. "
-        "Here's the expected format: stop or start:stop or start:stop:step "
-        "(i.e., it behaves exactly like python's list slicing `list[slice]`)."
+class InstancesConfig(BaseModel):
+    type: str = "file"
+    path: str | None = None
+    deployment: DockerDeploymentConfig | None = Field(
+        default_factory=lambda: DockerDeploymentConfig(image="python:3.11"),
+        description="Deployment configuration for instances.",
     )
-    raise ValueError(msg)
+    # Allow arbitrary extra fields for CLI parsing
+    model_config = ConfigDict(extra="allow")
 
 
-def _filter_batch_items(
-    instances: list[BatchInstance], *, filter_: str, slice_: str = "", shuffle: bool = False
-) -> list[BatchInstance]:
-    if shuffle:
-        instances = sorted(instances.copy(), key=lambda x: x.problem_statement.id)
-        random.seed(42)
-        random.shuffle(instances)
-    before_filter = len(instances)
-    instances = [instance for instance in instances if re.match(filter_, instance.problem_statement.id)]
-    after_filter = len(instances)
-    if before_filter != after_filter:
-        logger.info("Instance filter: %d -> %d instances", before_filter, after_filter)
-    if slice_:
-        instances = instances[_slice_spec_to_slice(slice_)]
-        after_slice = len(instances)
-        if before_filter != after_slice:
-            logger.info("Instance slice: %d -> %d instances", before_filter, after_slice)
-    return instances
+class BatchInstance:
+    """A single instance in a batch of instances."""
+
+    def __init__(self, env: EnvironmentConfig, problem_statement: Any):
+        self.env = env
+        self.problem_statement = problem_statement
 
 
-class SimpleBatchInstance(BaseModel):
-    """A simple way to configure a single instance in a batch of instances that all
-    use similar deployment configurations.
-
-    Predominantly used for benchmarking purposes. Assumes that the repository is already
-    present in the docker container.
+class InstanceSource:
+    """
+    Unified loader for batch instances from various sources.
+    Register new sources by adding loader functions to the LOADERS dict.
     """
 
-    image_name: str
-    problem_statement: str
-    instance_id: str
-    repo_name: str = ""
-    """Specifies the repository to use. If empty, no repository is used.
-    If the string does not contain a slash, it is interpreted as an already existing repository at the root
-    of the docker container. If it contains the word "github", it is interpreted as a github repository.
-    Else, it is interpreted as a local repository.
-    """
-    base_commit: str = "HEAD"
-    """Used to reset repo."""
-    extra_fields: dict[str, Any] = Field(default_factory=dict)
-    """Any additional data to be added to the instance.
-    This data will be available when formatting prompt templates.
-    """
+    LOADERS: dict[str, Callable[[dict, DeploymentConfig | None], list[BatchInstance]]] = {}
 
-    # Ignore instead of allow because they should be added as `extra_fields`
-    model_config = ConfigDict(extra="ignore")
-
-    def to_full_batch_instance(self, deployment: DeploymentConfig) -> BatchInstance:
-        """Merge the deployment options into the `SimpleBatchInstance` object to get a full `BatchInstance`."""
-        # Very important: Make a copy of the deployment config because it will be shared among instances!!!
-        deployment = deployment.model_copy(deep=True)
-
-        if "issue_images" in self.extra_fields:
-            problem_statement = SWEBenchMultimodalProblemStatement(
-                text=self.problem_statement,
-                issue_images=self.extra_fields.pop("issue_images"),
-                id=self.instance_id,
-                extra_fields=self.extra_fields,
-            )
+    def __init__(self, config: Any):
+        self.source_type = config.instances.type
+        self.source_config = config.instances.model_dump()
+        # Handle deployment configuration
+        if config.instances.deployment is not None:
+            self.deployment = config.instances.deployment
         else:
-            problem_statement = TextProblemStatement(
-                text=self.problem_statement, id=self.instance_id, extra_fields=self.extra_fields
-            )
+            self.deployment = DockerDeploymentConfig(image="python:3.11")
 
-        if not self.repo_name:
-            repo = None
-        elif "github" in self.repo_name:
-            repo = GithubRepoConfig(github_url=self.repo_name, base_commit=self.base_commit)
-        elif "/" not in self.repo_name:
-            repo = PreExistingRepoConfig(repo_name=self.repo_name, base_commit=self.base_commit)
-        else:
-            repo = LocalRepoConfig(path=Path(self.repo_name), base_commit=self.base_commit)
-        if isinstance(deployment, LocalDeploymentConfig):
-            if self.image_name:
-                msg = "Local deployment does not support image_name"
-                raise ValueError(msg)
-            return BatchInstance(
-                env=EnvironmentConfig(deployment=deployment, repo=repo), problem_statement=problem_statement
-            )
-        if isinstance(deployment, DummyDeploymentConfig):
-            return BatchInstance(
-                env=EnvironmentConfig(deployment=deployment, repo=repo), problem_statement=problem_statement
-            )
+    @classmethod
+    def register_loader(cls, name: str):
+        def decorator(fn):
+            cls.LOADERS[name] = fn
+            return fn
 
-        deployment.image = self.image_name  # type: ignore
+        return decorator
 
-        if isinstance(deployment, DockerDeploymentConfig) and deployment.python_standalone_dir is None:
-            # Note: you can disable this by setting python_standalone_dir to ""
-            deployment.python_standalone_dir = "/root"  # type: ignore
+    def get_instances(self) -> list[BatchInstance]:
+        loader = self.LOADERS[self.source_type]
+        return loader(self.source_config, self.deployment)
 
+
+# --- Loader Implementations ---
+
+
+def _to_batch_instance(instance: dict, deployment: DeploymentConfig = None) -> BatchInstance:
+    """Convert a simple instance dict to a BatchInstance."""
+
+    instance_id = instance.get("instance_id", instance.get("id"))
+
+    extra_fields = instance.get("extra_fields", {})
+    if "issue_images" in extra_fields:
+        problem_statement = SWEBenchMultimodalProblemStatement(
+            text=instance["problem_statement"],
+            issue_images=extra_fields.pop("issue_images"),
+            id=instance_id,
+            extra_fields=extra_fields,
+        )
+    else:
+        problem_statement = TextProblemStatement(
+            text=instance["problem_statement"],
+            id=instance_id,
+            extra_fields=extra_fields,
+        )
+
+    # Repo config
+    repo_name = instance.get("repo_name", instance.get("repo", ""))
+    base_commit = instance.get("base_commit", "HEAD")
+    if not repo_name:
+        repo = None
+    elif "github" in repo_name:
+        repo = GithubRepoConfig(github_url=repo_name, base_commit=base_commit)
+    elif "/" not in repo_name:
+        repo = PreExistingRepoConfig(repo_name=repo_name, base_commit=base_commit)
+    else:
+        repo = LocalRepoConfig(path=Path(repo_name), base_commit=base_commit)
+
+    # Deployment
+    if isinstance(deployment, LocalDeploymentConfig):
+        if instance.get("image_name", False):
+            msg = "Local deployment does not support image_name"
+            raise ValueError(msg)
+        return BatchInstance(
+            env=EnvironmentConfig(deployment=deployment, repo=repo), problem_statement=problem_statement
+        )
+    if isinstance(deployment, DummyDeploymentConfig):
         return BatchInstance(
             env=EnvironmentConfig(deployment=deployment, repo=repo), problem_statement=problem_statement
         )
 
-    @model_validator(mode="before")
-    @classmethod
-    def handle_legacy_id(cls, data):
-        # Handling compatibility with swe-agent <= 1.0.1
-        if isinstance(data, dict):
-            if "id" in data and "instance_id" not in data:
-                data["instance_id"] = data["id"]
-                data.pop("id")
-        return data
+    # Handle Docker deployment with image_name from instance
+    if isinstance(deployment, DockerDeploymentConfig):
+        if instance.get("image_name"):
+            deployment.image = instance["image_name"]
+        if deployment.python_standalone_dir is None:
+            # Note: you can disable this by setting python_standalone_dir to ""
+            deployment.python_standalone_dir = "/root"  # type: ignore
 
-    # todo: Maybe populate extra fields?
-    @classmethod
-    def from_swe_bench(cls, instance: dict[str, Any]) -> Self:
-        """Convert instances from the classical SWE-bench dataset to the `SimpleBatchInstance` format."""
-        iid = instance["instance_id"]
-        image_name = instance.get("image_name", None)
-        if image_name is None:
-            # Docker doesn't allow double underscore, so we replace them with a magic token
-            id_docker_compatible = iid.replace("__", "_1776_")
-            image_name = f"swebench/sweb.eval.x86_64.{id_docker_compatible}:latest".lower()
-        extra_fields = {}
-        if "image_assets" in instance:
-            issue_images = json.loads(instance["image_assets"])["problem_statement"]
+    env = EnvironmentConfig(deployment=deployment, repo=repo)
+
+    return BatchInstance(env=env, problem_statement=problem_statement)
+
+
+@InstanceSource.register_loader("file")
+def load_from_file(config: dict, deployment: DeploymentConfig | None) -> list[BatchInstance]:
+    instance_dicts = load_file(Path(config["path"]))
+    return [_to_batch_instance(inst, deployment) for inst in instance_dicts]
+
+
+@InstanceSource.register_loader("swebench")
+def load_from_swe_bench(config: dict, deployment: DeploymentConfig | None) -> list[BatchInstance]:
+    def swe_bench_to_simple(inst: dict) -> dict:
+        iid = inst["instance_id"]
+        image_name = inst.get("image_name") or f"swebench/sweb.eval.x86_64.{iid.replace('__', '_1776_')}:latest".lower()
+        extra_fields = inst.get("extra_fields", {})
+        if "image_assets" in inst:
+            issue_images = json.loads(inst["image_assets"]).get("problem_statement", [])
             extra_fields["issue_images"] = issue_images
-        return cls(
-            image_name=image_name,
-            problem_statement=instance["problem_statement"],
-            instance_id=iid,
-            repo_name="testbed",
-            base_commit=instance["base_commit"],
-            extra_fields=extra_fields,
-        )
-
-
-class InstancesFromFile(BaseModel, AbstractInstanceSource):
-    """Load instances from a file."""
-
-    path: Path
-    filter: str = ".*"
-    """Regular expression to filter the instances by instance id."""
-    slice: str = ""
-    """Select only a slice of the instances (after filtering by `filter`).
-    Possible values are stop or start:stop or start:stop:step
-    (i.e., it behaves exactly like python's list slicing `list[slice]`).
-    """
-    shuffle: bool = False
-    """Shuffle the instances (before filtering and slicing)."""
-
-    deployment: DeploymentConfig = Field(
-        default_factory=lambda: DockerDeploymentConfig(image="python:3.11"),
-        description="Deployment options.",
-    )
-    """Note that the image_name option is overwritten by the images specified in the task instances."""
-
-    simple: Literal[True] = True
-    """Convenience discriminator for (de)serialization/CLI. Do not change."""
-
-    type: Literal["file"] = "file"
-    """Discriminator for (de)serialization/CLI. Do not change."""
-
-    def get_instance_configs(self) -> list[BatchInstance]:
-        instance_dicts = load_file(self.path)
-        simple_instances = [SimpleBatchInstance.model_validate(instance_dict) for instance_dict in instance_dicts]
-        instances = [instance.to_full_batch_instance(self.deployment) for instance in simple_instances]
-        return _filter_batch_items(instances, filter_=self.filter, slice_=self.slice, shuffle=self.shuffle)
-
-    @property
-    def id(self) -> str:
-        return self.path.stem
-
-
-class InstancesFromHuggingFace(BaseModel, AbstractInstanceSource):
-    """Load instances from HuggingFace."""
-
-    dataset_name: str
-    """Name of the HuggingFace dataset. Same as when using `datasets.load_dataset`."""
-    split: str = "dev"
-    filter: str = ".*"
-    """Regular expression to filter the instances by instance id."""
-    slice: str = ""
-    """Select only a slice of the instances (after filtering by `filter`).
-    Possible values are stop or start:stop or start:stop:step.
-    (i.e., it behaves exactly like python's list slicing `list[slice]`).
-    """
-    shuffle: bool = False
-    """Shuffle the instances (before filtering and slicing)."""
-
-    deployment: DeploymentConfig = Field(
-        default_factory=lambda: DockerDeploymentConfig(image="python:3.11"),
-    )
-    """Deployment configuration. Note that the `image_name` option is overwritten by the images specified in the task instances.
-    """
-    type: Literal["huggingface"] = "huggingface"
-    """Discriminator for (de)serialization/CLI. Do not change."""
-
-    def get_instance_configs(self) -> list[BatchInstance]:
-        from datasets import load_dataset
-
-        ds: list[dict[str, Any]] = load_dataset(self.dataset_name, split=self.split)  # type: ignore
-        simple_instances: list[SimpleBatchInstance] = [SimpleBatchInstance.model_validate(instance) for instance in ds]
-        instances = [instance.to_full_batch_instance(self.deployment) for instance in simple_instances]
-        return _filter_batch_items(instances, filter_=self.filter, slice_=self.slice, shuffle=self.shuffle)
-
-    @property
-    def id(self) -> str:
-        ds_name = "".join(l for l in self.dataset_name if l.isalnum() or l in ["-", "_"])
-        return f"{ds_name}_{self.split}"
-
-
-class SWEBenchInstances(BaseModel, AbstractInstanceSource):
-    """Load instances from SWE-bench."""
-
-    subset: Literal["lite", "verified", "full", "multimodal", "multilingual"] = "lite"
-    """Subset of swe-bench to use"""
-
-    # IMPORTANT: Do not call this `path`, because then if people do not specify instance.type,
-    # it might be resolved to ExpertInstancesFromFile or something like that.
-    path_override: str | Path | None = None
-    """Allow to specify a different huggingface dataset name or path to a huggingface
-    dataset. This will override the automatic path set by `subset`.
-    """
-
-    split: Literal["dev", "test"] = "dev"
-
-    deployment: DeploymentConfig = Field(
-        default_factory=lambda: DockerDeploymentConfig(image="python:3.11"),
-    )
-    """Deployment configuration. Note that the image_name option is overwritten by the images specified in the task instances.
-    """
-
-    type: Literal["swe_bench"] = "swe_bench"
-    """Discriminator for (de)serialization/CLI. Do not change."""
-
-    filter: str = ".*"
-    """Regular expression to filter the instances by instance id."""
-    slice: str = ""
-    """Select only a slice of the instances (after filtering by `filter`).
-    Possible values are stop or start:stop or start:stop:step.
-    (i.e., it behaves exactly like python's list slicing `list[slice]`).
-    """
-    shuffle: bool = False
-    """Shuffle the instances (before filtering and slicing)."""
-
-    evaluate: bool = False
-    """Run sb-cli to evaluate"""
-
-    def _get_dataset_path(self) -> str:
-        if self.path_override is not None:
-            return str(self.path_override)
-        dataset_mapping = {
-            "full": "SWE-bench/SWE-Bench",
-            "verified": "SWE-bench/SWE-Bench_Verified",
-            "lite": "SWE-bench/SWE-Bench_Lite",
-            "multimodal": "SWE-bench/SWE-Bench_Multimodal",
-            "multilingual": "SWE-bench/SWE-Bench_Multilingual",
+        return {
+            "image_name": image_name,
+            "problem_statement": inst["problem_statement"],
+            "instance_id": iid,
+            "repo_name": inst.get("repo_name", "testbed"),
+            "base_commit": inst.get("base_commit", "HEAD"),
+            "extra_fields": extra_fields,
         }
 
-        if self.subset not in dataset_mapping:
-            msg = f"Unsupported subset: {self.subset}"
-            raise ValueError(msg)
+    path = config["path"]
+    try:
+        instance_dicts = load_file(Path(path))
+        instances = [swe_bench_to_simple(inst) for inst in instance_dicts]
+    except FileNotFoundError as e:
+        try:
+            split = config.get("split", "dev")
+            ds = load_dataset(path, split=split)
+            instances = [swe_bench_to_simple(dict(inst)) for inst in ds]
+        except:
+            raise e
 
-        return dataset_mapping[self.subset]
-
-    def get_instance_configs(self) -> list[BatchInstance]:
-        from datasets import load_dataset
-
-        ds: list[dict[str, Any]] = load_dataset(self._get_dataset_path(), split=self.split)  # type: ignore
-
-        if isinstance(self.deployment, DockerDeploymentConfig):
-            self.deployment.platform = "linux/amd64"
-
-        instances = [
-            SimpleBatchInstance.from_swe_bench(instance).to_full_batch_instance(self.deployment) for instance in ds
-        ]
-        return _filter_batch_items(instances, filter_=self.filter, slice_=self.slice, shuffle=self.shuffle)
-
-    @property
-    def id(self) -> str:
-        return f"swe_bench_{self.subset}_{self.split}"
+    if isinstance(deployment, DockerDeploymentConfig):
+        deployment.platform = "linux/amd64"
+    return [_to_batch_instance(inst, deployment) for inst in instances]
 
 
-class ExpertInstancesFromFile(BaseModel, AbstractInstanceSource):
-    """Load instances from a file. The difference to `InstancesFromFile` is that the instances are configured as full
-    `EnvironmentInstanceConfig` objects, i.e., we could specify separate deployment configurations etc.
-    """
+@InstanceSource.register_loader("swesmith")
+def load_from_swe_smith(config: dict, deployment: DeploymentConfig | None) -> list[BatchInstance]:
+    def convert_instance_dict(instance_dict: dict) -> dict:
+        instance_dict["id"] = instance_dict["instance_id"]
+        instance_dict["base_commit"] = instance_dict["id"]
+        instance_dict["problem_statement"] = instance_dict.get("problem_statement", "")
+        instance_dict["repo_name"] = "testbed"
+        instance_dict["extra_fields"] = {"fail_to_pass": instance_dict["FAIL_TO_PASS"]}
+        return instance_dict
 
-    path: Path
-    filter: str = ".*"
-    """Regular expression to filter the instances by instance id."""
-    slice: str = ""
-    """Select only a slice of the instances (after filtering by `filter`).
-    Possible values are stop or start:stop or start:stop:step.
-    (i.e., it behaves exactly like python's list slicing `list[slice]`).
-    """
-    shuffle: bool = False
-    """Shuffle the instances (before filtering and slicing)."""
+    path = config["path"]
+    try:
+        instance_dicts = load_file(Path(path))
+        instances = [convert_instance_dict(dict(inst)) for inst in instance_dicts]
+    except FileNotFoundError as e:
+        try:
+            split = config.get("split", "train")
+            instance_dicts = load_dataset(path, split)
+            instances = [convert_instance_dict(dict(inst)) for inst in instance_dicts]
+        except:
+            raise e
 
-    type: Literal["expert_file"] = "expert_file"
-    """Discriminator for (de)serialization/CLI. Do not change."""
-
-    def get_instance_configs(self) -> list[BatchInstance]:
-        instance_dicts = load_file(self.path)
-        instances = [BatchInstance.model_validate(instance_dict) for instance_dict in instance_dicts]
-        return _filter_batch_items(instances, filter_=self.filter, slice_=self.slice, shuffle=self.shuffle)
-
-    @property
-    def id(self) -> str:
-        return self.path.stem
-
-
-class SWESmithInstances(BaseModel, AbstractInstanceSource):
-    """Load instances from SWE-smith."""
-
-    path: Path
-
-    deployment: DeploymentConfig = Field(
-        default_factory=lambda: DockerDeploymentConfig(image="python:3.11"),
-    )
-    """Deployment configuration. Note that the image_name option is overwritten by the images specified in the task instances.
-    """
-
-    filter: str = ".*"
-    """Regular expression to filter the instances by instance id."""
-    slice: str = ""
-    """Select only a slice of the instances (after filtering by `filter`).
-    Possible values are stop or start:stop or start:stop:step.
-    (i.e., it behaves exactly like python's list slicing `list[slice]`).
-    """
-    shuffle: bool = False
-    """Shuffle the instances (before filtering and slicing)."""
-
-    type: Literal["swesmith"] = "swesmith"
-    """Discriminator for (de)serialization/CLI. Do not change."""
-
-    def get_instance_configs(self) -> list[BatchInstance]:
-        def convert_instance_dict(instance_dict: dict[str, Any]) -> dict[str, Any]:
-            instance_dict["id"] = instance_dict["instance_id"]
-            # todo: The base_commit is currently incorrect
-            instance_dict["base_commit"] = instance_dict["id"]
-            instance_dict["problem_statement"] = instance_dict.get("problem_statement", "")
-            instance_dict["repo_name"] = "testbed"
-            instance_dict["extra_fields"] = {"fail_to_pass": instance_dict["FAIL_TO_PASS"]}
-            return instance_dict
-
-        if str(self.path).lower() in ["swe-bench/swe-smith", "swe-smith"]:
-            from datasets import load_dataset
-            instance_dicts = load_dataset("SWE-bench/SWE-smith", split="train")
-        else:
-            instance_dicts = load_file(self.path)
-        instances = [
-            SimpleBatchInstance.model_validate(convert_instance_dict(instance_dict)).to_full_batch_instance(
-                self.deployment
-            )
-            for instance_dict in instance_dicts
-        ]
-        return _filter_batch_items(instances, filter_=self.filter, slice_=self.slice, shuffle=self.shuffle)
-
-    @property
-    def id(self) -> str:
-        return f"swesmith_{self.path.stem}"
-
-
-BatchInstanceSourceConfig = (
-    InstancesFromHuggingFace | InstancesFromFile | SWEBenchInstances | ExpertInstancesFromFile | SWESmithInstances
-)
+    return [_to_batch_instance(inst, deployment) for inst in instances]

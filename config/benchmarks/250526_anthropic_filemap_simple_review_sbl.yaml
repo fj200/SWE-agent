@@ -5,10 +5,9 @@
 # For running on test:
 random_delay_multiplier: 1.0
 instances:
-  type: swe_bench
-  subset: lite
+  type: swebench
+  path: SWE-bench/SWE-bench_Lite
   split: test
-  shuffle: true
   evaluate: true
   deployment:
     type: docker
