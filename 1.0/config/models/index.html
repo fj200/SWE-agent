@@ -2469,6 +2469,14 @@ See <a href="https://github.com/BerriAI/litellm/issues/8984">this issue in litel
 for omore information.
 Since <a href="https://github.com/SWE-agent/SWE-agent/pull/1036">#1036</a> you can also manually set the maximum output tokens and override the information
 from <code>litellm</code>.</p>
+<p>To use extended thinking, you can set the following in your config:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">agent</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;claude-sonnet-4-20250514&#39;</span>
+<span class="w">  </span><span class="nt">model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.</span>
+<span class="w">    </span><span class="nt">completion_kwargs</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">reasoning_effort</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;high&#39;</span>
+</code></pre></div>
 <h3 id="o1">o1</h3>
 <p>Make sure to set</p>
 <div class="highlight"><pre><span></span><code><span class="nt">agent</span><span class="p">:</span>
