@@ -1,0 +1,9 @@
+agent:
+  model:
+    max_input_tokens: 0 
+  tools:
+    # The default for obtaining actions from model outputs is function calling.
+    # If your local model does not support that, you can use the thought_action parser
+    # instead (see below)
+    parse_function:
+      type: "thought_action"
