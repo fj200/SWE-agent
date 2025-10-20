@@ -1,0 +1,38 @@
+2025-10-17 11:08:13,073 - INFO - rex-deploy-scikit-learn__scikit-learn-11040 - Pulling image 'docker.io/swebench/sweb.eval.x86_64.scikit-learn_1776_scikit-learn-11040:latest'
+2025-10-17 11:09:05,645 - INFO - rex-deploy-scikit-learn__scikit-learn-11040 - Building image docker.io/swebench/sweb.eval.x86_64.scikit-learn_1776_scikit-learn-11040:latest to install a standalone python to /root. This might take a while (but you only have to do it once). To skip this step, set `python_standalone_dir` to None.
+2025-10-17 11:09:51,875 - INFO - rex-deploy-scikit-learn__scikit-learn-11040 - Starting container docker.ioswebenchsweb.eval.x86_64.scikit-learn_1776_scikit-learn-11040latest-8f26786c-2623-4af8-840a-0c1a485efca0 with image docker.io/swebench/sweb.eval.x86_64.scikit-learn_1776_scikit-learn-11040:latest serving on port 42393
+2025-10-17 11:09:51,877 - INFO - rex-deploy-scikit-learn__scikit-learn-11040 - Starting runtime at 42393
+2025-10-17 11:09:56,416 - ERROR - swea-agent-scikit-learn__scikit-learn-11040 - Traceback (most recent call last):
+  File "/workspaces/SWE-agent/sweagent/run/run_batch.py", line 358, in _run_instance
+    env.start()
+  File "/workspaces/SWE-agent/sweagent/environment/swe_env.py", line 111, in start
+    self._init_deployment()
+  File "/workspaces/SWE-agent/sweagent/environment/swe_env.py", line 183, in _init_deployment
+    asyncio.run(self.deployment.start())
+  File "/opt/conda/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 274, in start
+    await self._wait_until_alive(timeout=self._config.startup_timeout)
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 108, in _wait_until_alive
+    return await _wait_until_alive(self.is_alive, timeout=timeout, function_timeout=self._runtime_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/swerex/utils/wait.py", line 23, in _wait_until_alive
+    await_response = await function(timeout=function_timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 103, in is_alive
+    raise RuntimeError(msg)
+RuntimeError: Container process terminated.
+stdout:
+
+stderr:
+
+
+2025-10-17 11:09:56,425 - INFO - swea-env-scikit-learn__scikit-learn-11040 - Beginning environment shutdown...
+2025-10-17 11:09:56,425 - ERROR - rex-runtime-scikit-learn__scikit-learn-11040 - Error making request b55001e7-cf60-418d-8fb2-e55e13ff50f5 after 0 retries: Cannot connect to host 127.0.0.1:42393 ssl:default [Connect call failed ('127.0.0.1', 42393)]

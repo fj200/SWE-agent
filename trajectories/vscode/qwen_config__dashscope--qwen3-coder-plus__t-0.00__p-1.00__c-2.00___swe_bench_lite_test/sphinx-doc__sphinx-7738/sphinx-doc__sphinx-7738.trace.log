@@ -1,0 +1,67 @@
+2025-10-17 11:09:50,401 - INFO - rex-deploy-sphinx-doc__sphinx-7738 - Pulling image 'docker.io/swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-7738:latest'
+2025-10-17 11:09:56,221 - ERROR - swea-agent-sphinx-doc__sphinx-7738 - Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 143, in _pull_image
+    _pull_image(self._config.image, self._config.container_runtime)
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 42, in _pull_image
+    raise subprocess.CalledProcessError(e.returncode, e.cmd, e.output, e.stderr) from None
+subprocess.CalledProcessError: Command '['docker', 'pull', 'docker.io/swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-7738:latest']' returned non-zero exit status 130.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspaces/SWE-agent/sweagent/run/run_batch.py", line 358, in _run_instance
+    env.start()
+  File "/workspaces/SWE-agent/sweagent/environment/swe_env.py", line 111, in start
+    self._init_deployment()
+  File "/workspaces/SWE-agent/sweagent/environment/swe_env.py", line 183, in _init_deployment
+    asyncio.run(self.deployment.start())
+  File "/opt/conda/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 232, in start
+    self._pull_image()
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 148, in _pull_image
+    raise DockerPullError(msg) from e
+swerex.exceptions.DockerPullError: Failed to pull image docker.io/swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-7738:latest. Error: Output: latest: Pulling from swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-7738
+762bedf4b1b7: Already exists
+9e922f6570e0: Already exists
+51fe70848edc: Already exists
+f44bfaa346f0: Already exists
+8a23aac55853: Already exists
+2778ec4c4033: Already exists
+b0e6cd984b45: Pulling fs layer
+46a6eee26bd8: Pulling fs layer
+65daa445c6e4: Pulling fs layer
+ba24823afb19: Pulling fs layer
+d02f7e5e18a6: Pulling fs layer
+3d9796778777: Pulling fs layer
+945ced6ab10b: Pulling fs layer
+ba24823afb19: Waiting
+d02f7e5e18a6: Waiting
+3d9796778777: Waiting
+945ced6ab10b: Waiting
+46a6eee26bd8: Verifying Checksum
+46a6eee26bd8: Download complete
+b0e6cd984b45: Verifying Checksum
+b0e6cd984b45: Download complete
+ba24823afb19: Verifying Checksum
+ba24823afb19: Download complete
+d02f7e5e18a6: Verifying Checksum
+d02f7e5e18a6: Download complete
+3d9796778777: Verifying Checksum
+3d9796778777: Download complete
+b0e6cd984b45: Pull complete
+46a6eee26bd8: Pull complete
+65daa445c6e4: Verifying Checksum
+65daa445c6e4: Download complete
+945ced6ab10b: Verifying Checksum
+945ced6ab10b: Download complete
+
+
+2025-10-17 11:09:56,234 - INFO - swea-env-sphinx-doc__sphinx-7738 - Beginning environment shutdown...

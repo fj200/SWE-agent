@@ -1,0 +1,10 @@
+instances_by_exit_status:
+    Uncaught ClientConnectorError:
+    - scikit-learn__scikit-learn-11040
+    Uncaught DockerPullError:
+    - sphinx-doc__sphinx-7738
+    exit_error:
+    - pydata__xarray-4493
+    - pylint-dev__pylint-6506
+    - pytest-dev__pytest-6116
+total_cost: 0

@@ -1,0 +1,6 @@
+instances_by_exit_status:
+    submitted (exit_cost):
+    - pytest-dev__pytest-6116
+    - scikit-learn__scikit-learn-11040
+    - sphinx-doc__sphinx-7738
+total_cost: 3.0515590499999985

@@ -1,0 +1,416 @@
+diff --git a/reproduce_issue.py b/reproduce_issue.py
+new file mode 100644
+index 00000000..50d55ff6
+--- /dev/null
++++ b/reproduce_issue.py
+@@ -0,0 +1,41 @@
++#!/usr/bin/env python3
++
++import numpy as np
++import xarray as xr
++import dask.array as da
++
++print("Testing DataSet.update issue with chunked dask DataArray...")
++
++# Test case 1: From the PR description
++print("\n=== Test case 1: DataSet.update issue ===")
++foo = xr.DataArray(np.random.randn(3, 3), dims=("x", "y")).chunk()  # foo is chunked
++print(f"foo is chunked: {hasattr(foo.data, 'chunks')}")
++print(f"foo data type: {type(foo.data)}")
++
++ds = xr.Dataset({"foo": foo, "bar": ("x", [1, 2, 3])})  # foo is still chunked here
++print(f"ds.foo is chunked: {hasattr(ds.foo.data, 'chunks')}")
++print(f"ds.foo data type: {type(ds.foo.data)}")
++
++update_dict = {"foo": (("x", "y"), ds.foo[1:, :]), "bar": ("x", ds.bar[1:])}
++print(f"update_dict['foo'][1] is chunked: {hasattr(update_dict['foo'][1].data, 'chunks')}")
++print(f"update_dict['foo'][1] data type: {type(update_dict['foo'][1].data)}")
++
++ds.update(update_dict)
++print(f"After update - ds.foo is chunked: {hasattr(ds.foo.data, 'chunks')}")
++print(f"After update - ds.foo data type: {type(ds.foo.data)}")
++
++# Test case 2: Dataset constructor issue
++print("\n=== Test case 2: Dataset constructor issue ===")
++x = da.random.randint(1, 10, size=(100, 25))
++print(f"Original dask array type: {type(x)}")
++
++ds1 = xr.Dataset(dict(a=xr.DataArray(x, dims=('x', 'y'))))
++print(f"ds1.a data type: {type(ds1.a.data)}")
++print(f"ds1.a is chunked: {hasattr(ds1.a.data, 'chunks')}")
++
++# Recreate the dataset with the same array, but also redefine the dimensions
++ds2 = xr.Dataset(dict(a=(('x', 'y'), ds1.a)))
++print(f"ds2.a data type: {type(ds2.a.data)}")
++print(f"ds2.a is chunked: {hasattr(ds2.a.data, 'chunks')}")
++
++print("\nDone!")
+\ No newline at end of file
+diff --git a/test_comprehensive.py b/test_comprehensive.py
+new file mode 100644
+index 00000000..87e353ef
+--- /dev/null
++++ b/test_comprehensive.py
+@@ -0,0 +1,125 @@
++#!/usr/bin/env python3
++
++import numpy as np
++import xarray as xr
++import dask.array as da
++
++def test_dataset_update_preserves_dask():
++    """Test that Dataset.update preserves dask arrays."""
++    print("Testing Dataset.update with dask arrays...")
++    
++    # Create a chunked dask DataArray
++    foo = xr.DataArray(np.random.randn(3, 3), dims=("x", "y")).chunk()
++    ds = xr.Dataset({"foo": foo, "bar": ("x", [1, 2, 3])})
++    
++    # Verify initial state
++    assert hasattr(ds.foo.data, 'chunks'), "Initial foo should be chunked"
++    
++    # Update with a sliced dask array
++    update_dict = {"foo": (("x", "y"), ds.foo[1:, :]), "bar": ("x", ds.bar[1:])}
++    
++    # Verify the update data is still chunked
++    assert hasattr(update_dict["foo"][1].data, 'chunks'), "Update data should be chunked"
++    
++    # Perform the update
++    ds.update(update_dict)
++    
++    # Verify the result is still chunked
++    assert hasattr(ds.foo.data, 'chunks'), "Updated foo should still be chunked"
++    print("✓ Dataset.update preserves dask arrays")
++
++
++def test_dataset_constructor_preserves_dask():
++    """Test that Dataset constructor preserves dask arrays."""
++    print("Testing Dataset constructor with dask arrays...")
++    
++    # Create a dask array
++    x = da.random.randint(1, 10, size=(100, 25))
++    
++    # Create dataset with DataArray
++    ds1 = xr.Dataset(dict(a=xr.DataArray(x, dims=('x', 'y'))))
++    assert hasattr(ds1.a.data, 'chunks'), "ds1.a should be chunked"
++    
++    # Recreate dataset with tuple format (this was the problematic case)
++    ds2 = xr.Dataset(dict(a=(('x', 'y'), ds1.a)))
++    assert hasattr(ds2.a.data, 'chunks'), "ds2.a should still be chunked"
++    print("✓ Dataset constructor preserves dask arrays")
++
++
++def test_variable_creation_preserves_dask():
++    """Test that Variable creation preserves dask arrays."""
++    print("Testing Variable creation with dask arrays...")
++    
++    # Create a dask DataArray
++    dask_data = da.random.random((10, 5))
++    da_array = xr.DataArray(dask_data, dims=('x', 'y'))
++    
++    # Create Variable from DataArray (this should preserve dask)
++    from xarray.core.variable import as_variable
++    var = as_variable(da_array)
++    assert hasattr(var.data, 'chunks'), "Variable should preserve dask array"
++    
++    # Create Variable from tuple with DataArray (this was problematic)
++    var2 = as_variable((('x', 'y'), da_array))
++    assert hasattr(var2.data, 'chunks'), "Variable from tuple should preserve dask array"
++    print("✓ Variable creation preserves dask arrays")
++
++
++def test_as_compatible_data_preserves_dask():
++    """Test that as_compatible_data preserves dask arrays."""
++    print("Testing as_compatible_data with dask arrays...")
++    
++    from xarray.core.variable import as_compatible_data
++    
++    # Test with raw dask array
++    dask_data = da.random.random((10, 5))
++    result = as_compatible_data(dask_data)
++    assert hasattr(result, 'chunks'), "Raw dask array should be preserved"
++    
++    # Test with DataArray containing dask array
++    da_array = xr.DataArray(dask_data, dims=('x', 'y'))
++    result2 = as_compatible_data(da_array)
++    assert hasattr(result2, 'chunks'), "DataArray with dask should be preserved"
++    
++    # Test with Variable containing dask array
++    from xarray.core.variable import Variable
++    var = Variable(('x', 'y'), dask_data)
++    result3 = as_compatible_data(var)
++    assert hasattr(result3, 'chunks'), "Variable with dask should be preserved"
++    print("✓ as_compatible_data preserves dask arrays")
++
++
++def test_edge_cases():
++    """Test edge cases to ensure robustness."""
++    print("Testing edge cases...")
++    
++    # Test with numpy array (should still work)
++    numpy_data = np.random.random((10, 5))
++    da_array = xr.DataArray(numpy_data, dims=('x', 'y'))
++    ds = xr.Dataset(dict(a=(('x', 'y'), da_array)))
++    assert isinstance(ds.a.data, np.ndarray), "Numpy arrays should remain numpy arrays"
++    
++    # Test with mixed dask and numpy
++    dask_data = da.random.random((10, 5))
++    dask_array = xr.DataArray(dask_data, dims=('x', 'y'))
++    numpy_array = xr.DataArray(numpy_data, dims=('x', 'y'))
++    
++    ds = xr.Dataset({'dask_var': dask_array, 'numpy_var': numpy_array})
++    update_dict = {
++        'dask_var': (('x', 'y'), dask_array[1:, :]),
++        'numpy_var': (('x', 'y'), numpy_array[1:, :])
++    }
++    ds.update(update_dict)
++    
++    assert hasattr(ds.dask_var.data, 'chunks'), "Dask variable should remain chunked"
++    assert isinstance(ds.numpy_var.data, np.ndarray), "Numpy variable should remain numpy"
++    print("✓ Edge cases handled correctly")
++
++
++if __name__ == "__main__":
++    test_dataset_update_preserves_dask()
++    test_dataset_constructor_preserves_dask()
++    test_variable_creation_preserves_dask()
++    test_as_compatible_data_preserves_dask()
++    test_edge_cases()
++    print("\nAll tests passed! 🎉")
+\ No newline at end of file
+diff --git a/test_dask_preservation.py b/test_dask_preservation.py
+new file mode 100644
+index 00000000..beedbbec
+--- /dev/null
++++ b/test_dask_preservation.py
+@@ -0,0 +1,96 @@
++#!/usr/bin/env python3
++"""
++Test to ensure dask arrays are preserved in Dataset operations.
++This test can be added to the xarray test suite to prevent regression.
++"""
++
++import numpy as np
++import pytest
++
++import xarray as xr
++from xarray.core.pycompat import dask_array_type
++
++da = pytest.importorskip("dask.array")
++
++
++class TestDaskPreservation:
++    """Test that dask arrays are preserved in various Dataset operations."""
++
++    def test_dataset_update_preserves_dask(self):
++        """Test that Dataset.update preserves dask arrays (GH issue)."""
++        # Create a chunked dask DataArray
++        foo = xr.DataArray(np.random.randn(3, 3), dims=("x", "y")).chunk()
++        ds = xr.Dataset({"foo": foo, "bar": ("x", [1, 2, 3])})
++        
++        # Verify initial state
++        assert isinstance(ds.foo.data, dask_array_type)
++        
++        # Update with a sliced dask array
++        update_dict = {"foo": (("x", "y"), ds.foo[1:, :]), "bar": ("x", ds.bar[1:])}
++        
++        # Verify the update data is still chunked
++        assert isinstance(update_dict["foo"][1].data, dask_array_type)
++        
++        # Perform the update
++        ds.update(update_dict)
++        
++        # Verify the result is still chunked
++        assert isinstance(ds.foo.data, dask_array_type)
++
++    def test_dataset_constructor_preserves_dask(self):
++        """Test that Dataset constructor preserves dask arrays (GH issue)."""
++        # Create a dask array
++        x = da.random.randint(1, 10, size=(100, 25))
++        
++        # Create dataset with DataArray
++        ds1 = xr.Dataset(dict(a=xr.DataArray(x, dims=('x', 'y'))))
++        assert isinstance(ds1.a.data, dask_array_type)
++        
++        # Recreate dataset with tuple format (this was the problematic case)
++        ds2 = xr.Dataset(dict(a=(('x', 'y'), ds1.a)))
++        assert isinstance(ds2.a.data, dask_array_type)
++
++    def test_as_compatible_data_preserves_dask_dataarray(self):
++        """Test that as_compatible_data preserves dask arrays in DataArrays."""
++        from xarray.core.variable import as_compatible_data
++        
++        # Create a dask DataArray
++        dask_data = da.random.random((10, 5))
++        da_array = xr.DataArray(dask_data, dims=('x', 'y'))
++        
++        # Test as_compatible_data preserves dask
++        result = as_compatible_data(da_array)
++        assert isinstance(result, dask_array_type)
++
++    def test_mixed_dask_numpy_preservation(self):
++        """Test that mixed dask and numpy arrays are handled correctly."""
++        # Create mixed data
++        dask_data = da.random.random((10, 5))
++        numpy_data = np.random.random((10, 5))
++        
++        dask_array = xr.DataArray(dask_data, dims=('x', 'y'))
++        numpy_array = xr.DataArray(numpy_data, dims=('x', 'y'))
++        
++        # Test in Dataset constructor
++        ds = xr.Dataset({'dask_var': dask_array, 'numpy_var': numpy_array})
++        assert isinstance(ds.dask_var.data, dask_array_type)
++        assert isinstance(ds.numpy_var.data, np.ndarray)
++        
++        # Test in update
++        update_dict = {
++            'dask_var': (('x', 'y'), dask_array[1:, :]),
++            'numpy_var': (('x', 'y'), numpy_array[1:, :])
++        }
++        ds.update(update_dict)
++        
++        assert isinstance(ds.dask_var.data, dask_array_type)
++        assert isinstance(ds.numpy_var.data, np.ndarray)
++
++
++if __name__ == "__main__":
++    test = TestDaskPreservation()
++    test.test_dataset_update_preserves_dask()
++    test.test_dataset_constructor_preserves_dask()
++    test.test_as_compatible_data_preserves_dask_dataarray()
++    test.test_mixed_dask_numpy_preservation()
++    print("All dask preservation tests passed!")
+\ No newline at end of file
+diff --git a/test_edge_cases.py b/test_edge_cases.py
+new file mode 100644
+index 00000000..40143324
+--- /dev/null
++++ b/test_edge_cases.py
+@@ -0,0 +1,110 @@
++#!/usr/bin/env python3
++
++import numpy as np
++import xarray as xr
++import dask.array as da
++
++def test_circular_import():
++    """Test that our fix doesn't cause circular import issues."""
++    print("Testing circular import...")
++    
++    # This should work without issues
++    from xarray.core.variable import as_compatible_data
++    from xarray.core.dataarray import DataArray
++    
++    # Create a DataArray and test as_compatible_data
++    data = np.random.random((5, 5))
++    da_array = DataArray(data, dims=('x', 'y'))
++    result = as_compatible_data(da_array)
++    
++    assert isinstance(result, np.ndarray), "Should return numpy array for numpy data"
++    print("✓ No circular import issues")
++
++
++def test_dataarray_with_coords():
++    """Test DataArrays with coordinates."""
++    print("Testing DataArrays with coordinates...")
++    
++    # Create a DataArray with coordinates
++    data = da.random.random((5, 5))
++    coords = {'x': range(5), 'y': range(5)}
++    da_array = xr.DataArray(data, dims=('x', 'y'), coords=coords)
++    
++    # Test in Dataset constructor
++    ds = xr.Dataset({'var': (('x', 'y'), da_array)})
++    assert hasattr(ds['var'].data, 'chunks'), "Should preserve dask array with coords"
++    
++    # Test in update
++    ds2 = xr.Dataset({'other': (('x',), np.arange(5))})
++    ds2.update({'var': (('x', 'y'), da_array)})
++    assert hasattr(ds2['var'].data, 'chunks'), "Should preserve dask array in update with coords"
++    print("✓ DataArrays with coordinates work correctly")
++
++
++def test_different_dask_array_types():
++    """Test different types of dask arrays."""
++    print("Testing different dask array types...")
++    
++    # Test different dtypes
++    int_data = da.random.randint(0, 10, size=(5, 5))
++    float_data = da.random.random((5, 5))
++    
++    int_da = xr.DataArray(int_data, dims=('x', 'y'))
++    float_da = xr.DataArray(float_data, dims=('x', 'y'))
++    
++    ds = xr.Dataset({
++        'int_var': (('x', 'y'), int_da),
++        'float_var': (('x', 'y'), float_da)
++    })
++    
++    assert hasattr(ds['int_var'].data, 'chunks'), "Int dask array should be preserved"
++    assert hasattr(ds['float_var'].data, 'chunks'), "Float dask array should be preserved"
++    assert 'int' in str(ds['int_var'].dtype), "Int dtype should be preserved"
++    assert 'float' in str(ds['float_var'].dtype), "Float dtype should be preserved"
++    print("✓ Different dask array types work correctly")
++
++
++def test_nested_structures():
++    """Test nested data structures."""
++    print("Testing nested structures...")
++    
++    # Test with nested tuples (should still work)
++    data = da.random.random((3, 3))
++    da_array = xr.DataArray(data, dims=('x', 'y'))
++    
++    # This should work (tuple with DataArray)
++    from xarray.core.variable import as_compatible_data
++    result = as_compatible_data(da_array)
++    assert hasattr(result, 'chunks'), "Nested DataArray should preserve dask"
++    print("✓ Nested structures work correctly")
++
++
++def test_performance():
++    """Test that our fix doesn't significantly impact performance."""
++    print("Testing performance...")
++    
++    import time
++    
++    # Create a large dask array
++    large_data = da.random.random((1000, 1000), chunks=(100, 100))
++    da_array = xr.DataArray(large_data, dims=('x', 'y'))
++    
++    # Time the Dataset creation (should be fast, no computation)
++    start_time = time.time()
++    ds = xr.Dataset({'var': (('x', 'y'), da_array)})
++    end_time = time.time()
++    
++    # Should be very fast (< 1 second) since no computation should occur
++    elapsed = end_time - start_time
++    assert elapsed < 1.0, f"Dataset creation took too long: {elapsed:.3f}s"
++    assert hasattr(ds['var'].data, 'chunks'), "Large dask array should be preserved"
++    print(f"✓ Performance test passed ({elapsed:.3f}s)")
++
++
++if __name__ == "__main__":
++    test_circular_import()
++    test_dataarray_with_coords()
++    test_different_dask_array_types()
++    test_nested_structures()
++    test_performance()
++    print("\nAll edge case tests passed! 🎉")
+\ No newline at end of file
+diff --git a/xarray/core/variable.py b/xarray/core/variable.py
+index 64c1895d..1e74b783 100644
+--- a/xarray/core/variable.py
++++ b/xarray/core/variable.py
+@@ -204,6 +204,11 @@ def as_compatible_data(data, fastpath=False):
+     if isinstance(data, Variable):
+         return data.data
+ 
++    # Handle DataArray by extracting its variable's data to preserve dask arrays
++    from .dataarray import DataArray
++    if isinstance(data, DataArray):
++        return data.variable.data
++
+     if isinstance(data, NON_NUMPY_SUPPORTED_ARRAY_TYPES):
+         return _maybe_wrap_data(data)
+ 

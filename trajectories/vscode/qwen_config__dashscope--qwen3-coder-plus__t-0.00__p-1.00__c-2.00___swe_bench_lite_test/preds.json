@@ -1,0 +1,17 @@
+{
+    "pydata__xarray-4493": {
+        "model_name_or_path": "qwen_config__dashscope--qwen3-coder-plus__t-0.00__p-1.00__c-2.00___swe_bench_lite_test",
+        "instance_id": "pydata__xarray-4493",
+        "model_patch": ""
+    },
+    "pylint-dev__pylint-6506": {
+        "model_name_or_path": "qwen_config__dashscope--qwen3-coder-plus__t-0.00__p-1.00__c-2.00___swe_bench_lite_test",
+        "instance_id": "pylint-dev__pylint-6506",
+        "model_patch": ""
+    },
+    "pytest-dev__pytest-6116": {
+        "model_name_or_path": "qwen_config__dashscope--qwen3-coder-plus__t-0.00__p-1.00__c-2.00___swe_bench_lite_test",
+        "instance_id": "pytest-dev__pytest-6116",
+        "model_patch": ""
+    }
+}

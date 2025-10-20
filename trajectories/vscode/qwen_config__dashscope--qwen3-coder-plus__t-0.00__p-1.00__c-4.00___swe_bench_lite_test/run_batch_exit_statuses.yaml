@@ -1,0 +1,10 @@
+instances_by_exit_status:
+    exit_command:
+    - psf__requests-3362
+    exit_error:
+    - mwaskom__seaborn-3407
+    skipped (exit_error):
+    - django__django-17087
+    submitted (exit_cost):
+    - matplotlib__matplotlib-26020
+total_cost: 4.063037119999999

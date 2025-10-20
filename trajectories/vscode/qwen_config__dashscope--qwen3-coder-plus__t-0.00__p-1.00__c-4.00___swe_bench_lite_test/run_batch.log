@@ -1,0 +1,12 @@
+2025-10-17 09:11:55,661 - INFO - swea-run - Starting run. Find output files at /workspaces/SWE-agent/trajectories/vscode/qwen_config__dashscope--qwen3-coder-plus__t-0.00__p-1.00__c-4.00___swe_bench_lite_test
+2025-10-17 09:11:55,663 - INFO - swea-run - Running on instance astropy__astropy-14995
+2025-10-17 09:11:55,663 - INFO - swea-run - Running on instance django__django-17087
+2025-10-17 09:13:29,965 - INFO - swea-run - Running on instance matplotlib__matplotlib-26020
+2025-10-17 09:29:15,921 - INFO - swea-run - Received keyboard interrupt, waiting for running instances to finish, but cancelled everything else
+2025-10-17 09:36:27,875 - INFO - swea-run - Starting run. Find output files at /workspaces/SWE-agent/trajectories/vscode/qwen_config__dashscope--qwen3-coder-plus__t-0.00__p-1.00__c-4.00___swe_bench_lite_test
+2025-10-17 09:36:27,878 - INFO - swea-run - Running on instance django__django-17087
+2025-10-17 09:36:27,878 - INFO - swea-run - Running on instance matplotlib__matplotlib-26020
+2025-10-17 09:36:28,129 - INFO - swea-run - ⏭️ Skipping existing trajectory: /workspaces/SWE-agent/trajectories/vscode/qwen_config__dashscope--qwen3-coder-plus__t-0.00__p-1.00__c-4.00___swe_bench_lite_test/django__django-17087/django__django-17087.traj
+2025-10-17 09:36:28,149 - INFO - swea-run - Running on instance mwaskom__seaborn-3407
+2025-10-17 09:36:28,251 - WARNING - swea-run - Found existing trajectory with no exit status: /workspaces/SWE-agent/trajectories/vscode/qwen_config__dashscope--qwen3-coder-plus__t-0.00__p-1.00__c-4.00___swe_bench_lite_test/matplotlib__matplotlib-26020/matplotlib__matplotlib-26020.traj. Removing.
+2025-10-17 09:40:09,390 - INFO - swea-run - Running on instance psf__requests-3362

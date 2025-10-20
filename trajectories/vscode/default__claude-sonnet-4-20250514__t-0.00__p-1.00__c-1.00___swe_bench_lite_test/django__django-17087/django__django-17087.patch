@@ -1,0 +1,589 @@
+diff --git a/django/db/migrations/serializer.py b/django/db/migrations/serializer.py
+index d88cda6e20..06657ebaab 100644
+--- a/django/db/migrations/serializer.py
++++ b/django/db/migrations/serializer.py
+@@ -168,7 +168,7 @@ class FunctionTypeSerializer(BaseSerializer):
+         ):
+             klass = self.value.__self__
+             module = klass.__module__
+-            return "%s.%s.%s" % (module, klass.__name__, self.value.__name__), {
++            return "%s.%s.%s" % (module, klass.__qualname__, self.value.__name__), {
+                 "import %s" % module
+             }
+         # Further error checking
+diff --git a/reproduce_issue.py b/reproduce_issue.py
+new file mode 100644
+index 0000000000..ce60887ce7
+--- /dev/null
++++ b/reproduce_issue.py
+@@ -0,0 +1,97 @@
++#!/usr/bin/env python3
++
++import os
++import sys
++import django
++from django.conf import settings
++
++# Configure Django settings
++if not settings.configured:
++    settings.configure(
++        DEBUG=True,
++        DATABASES={
++            'default': {
++                'ENGINE': 'django.db.backends.sqlite3',
++                'NAME': ':memory:',
++            }
++        },
++        INSTALLED_APPS=[
++            'django.contrib.contenttypes',
++            'django.contrib.auth',
++        ],
++        USE_TZ=True,
++    )
++
++django.setup()
++
++from django.db import models
++from django.db.migrations.serializer import serializer_factory
++
++# Mock ArrayField for testing purposes
++class ArrayField(models.Field):
++    def __init__(self, base_field, **kwargs):
++        self.base_field = base_field
++        super().__init__(**kwargs)
++
++# Create the test model as described in the issue
++class Profile(models.Model):
++    class Capability(models.TextChoices):
++        BASIC = ("BASIC", "Basic")
++        PROFESSIONAL = ("PROFESSIONAL", "Professional")
++        
++        @classmethod
++        def default(cls) -> list[str]:
++            return [cls.BASIC]
++    
++    capabilities = ArrayField(
++        models.CharField(choices=Capability.choices, max_length=30, blank=True),
++        null=True,
++        default=Capability.default
++    )
++    
++    class Meta:
++        app_label = 'test'
++
++# Test the serialization of the default function
++print("Testing serialization of nested class method...")
++print("Method:", Profile.Capability.default)
++print("Method __self__:", Profile.Capability.default.__self__)
++print("Method __self__.__name__:", Profile.Capability.default.__self__.__name__)
++print("Method __self__.__qualname__:", Profile.Capability.default.__self__.__qualname__)
++print("Method __self__.__module__:", Profile.Capability.default.__self__.__module__)
++
++try:
++    serializer = serializer_factory(Profile.Capability.default)
++    result, imports = serializer.serialize()
++    print(f"Serialized result: {result}")
++    print(f"Imports: {imports}")
++except Exception as e:
++    print(f"Error during serialization: {e}")
++
++# Test if the serialized result would work
++print("\nTesting if the current serialization works...")
++try:
++    # This simulates what would happen in the migration
++    import __main__
++    __main__.Profile = Profile  # Make Profile available in main module
++    
++    # The current buggy serialization would produce something like:
++    buggy_result = "__main__.Capability.default"
++    print(f"Trying to evaluate buggy result: {buggy_result}")
++    try:
++        eval(buggy_result)
++        print("Buggy result works (unexpected)")
++    except Exception as e:
++        print(f"Buggy result fails as expected: {e}")
++    
++    # The correct serialization should be:
++    correct_result = "__main__.Profile.Capability.default"
++    print(f"Trying to evaluate correct result: {correct_result}")
++    try:
++        eval(correct_result)
++        print("Correct result works!")
++    except Exception as e:
++        print(f"Correct result fails: {e}")
++        
++except Exception as e:
++    print(f"Error in test: {e}")
+\ No newline at end of file
+diff --git a/test_comprehensive.py b/test_comprehensive.py
+new file mode 100644
+index 0000000000..55f5d22642
+--- /dev/null
++++ b/test_comprehensive.py
+@@ -0,0 +1,120 @@
++#!/usr/bin/env python3
++
++import os
++import sys
++import django
++from django.conf import settings
++
++# Configure Django settings
++if not settings.configured:
++    settings.configure(
++        DEBUG=True,
++        DATABASES={
++            'default': {
++                'ENGINE': 'django.db.backends.sqlite3',
++                'NAME': ':memory:',
++            }
++        },
++        INSTALLED_APPS=[
++            'django.contrib.contenttypes',
++            'django.contrib.auth',
++        ],
++        USE_TZ=True,
++    )
++
++django.setup()
++
++from django.db import models
++from django.db.migrations.serializer import serializer_factory
++
++# Test case 1: Nested class method (the original issue)
++class Profile(models.Model):
++    class Capability(models.TextChoices):
++        BASIC = ("BASIC", "Basic")
++        PROFESSIONAL = ("PROFESSIONAL", "Professional")
++        
++        @classmethod
++        def default(cls) -> list[str]:
++            return [cls.BASIC]
++    
++    class Meta:
++        app_label = 'test'
++
++# Test case 2: Deeply nested class method
++class OuterClass:
++    class MiddleClass:
++        class InnerClass:
++            @classmethod
++            def deep_method(cls):
++                return "deep"
++
++# Test case 3: Regular class method (not nested)
++class RegularClass:
++    @classmethod
++    def regular_method(cls):
++        return "regular"
++
++# Test case 4: Static method in nested class
++class Container:
++    class NestedClass:
++        @staticmethod
++        def static_method():
++            return "static"
++
++def test_serialization(name, method):
++    print(f"\n=== Testing {name} ===")
++    print(f"Method: {method}")
++    if hasattr(method, '__self__'):
++        print(f"Method __self__: {method.__self__}")
++        print(f"Method __self__.__name__: {method.__self__.__name__}")
++        print(f"Method __self__.__qualname__: {method.__self__.__qualname__}")
++        print(f"Method __self__.__module__: {method.__self__.__module__}")
++    
++    try:
++        serializer = serializer_factory(method)
++        result, imports = serializer.serialize()
++        print(f"Serialized result: {result}")
++        print(f"Imports: {imports}")
++        
++        # Test if the serialized result can be evaluated
++        try:
++            # Make classes available in main module for evaluation
++            import __main__
++            __main__.Profile = Profile
++            __main__.OuterClass = OuterClass
++            __main__.RegularClass = RegularClass
++            __main__.Container = Container
++            
++            evaluated = eval(result)
++            print(f"Evaluation successful: {evaluated}")
++            return True
++        except Exception as e:
++            print(f"Evaluation failed: {e}")
++            return False
++            
++    except Exception as e:
++        print(f"Serialization failed: {e}")
++        return False
++
++# Run tests
++print("Testing various class method serialization scenarios...")
++
++test_cases = [
++    ("Nested class method", Profile.Capability.default),
++    ("Deeply nested class method", OuterClass.MiddleClass.InnerClass.deep_method),
++    ("Regular class method", RegularClass.regular_method),
++    ("Static method in nested class", Container.NestedClass.static_method),
++]
++
++results = []
++for name, method in test_cases:
++    success = test_serialization(name, method)
++    results.append((name, success))
++
++print("\n=== Summary ===")
++for name, success in results:
++    status = "PASS" if success else "FAIL"
++    print(f"{name}: {status}")
++
++all_passed = all(success for _, success in results)
++print(f"\nOverall: {'ALL TESTS PASSED' if all_passed else 'SOME TESTS FAILED'}")
+\ No newline at end of file
+diff --git a/test_migration_scenario.py b/test_migration_scenario.py
+new file mode 100644
+index 0000000000..cf4064ff2b
+--- /dev/null
++++ b/test_migration_scenario.py
+@@ -0,0 +1,163 @@
++#!/usr/bin/env python3
++
++import os
++import sys
++import django
++from django.conf import settings
++
++# Configure Django settings
++if not settings.configured:
++    settings.configure(
++        DEBUG=True,
++        DATABASES={
++            'default': {
++                'ENGINE': 'django.db.backends.sqlite3',
++                'NAME': ':memory:',
++            }
++        },
++        INSTALLED_APPS=[
++            'django.contrib.contenttypes',
++            'django.contrib.auth',
++        ],
++        USE_TZ=True,
++    )
++
++django.setup()
++
++from django.db import models
++from django.db.migrations.writer import MigrationWriter
++
++# Mock ArrayField for testing purposes
++class ArrayField(models.Field):
++    def __init__(self, base_field, **kwargs):
++        self.base_field = base_field
++        super().__init__(**kwargs)
++    
++    def deconstruct(self):
++        name, path, args, kwargs = super().deconstruct()
++        args.insert(0, self.base_field)
++        return name, path, args, kwargs
++
++# Create the exact model from the PR description
++class Profile(models.Model):
++    class Capability(models.TextChoices):
++        BASIC = ("BASIC", "Basic")
++        PROFESSIONAL = ("PROFESSIONAL", "Professional")
++        
++        @classmethod
++        def default(cls) -> list[str]:
++            return [cls.BASIC]
++    
++    capabilities = ArrayField(
++        models.CharField(choices=Capability.choices, max_length=30, blank=True),
++        null=True,
++        default=Capability.default
++    )
++    
++    class Meta:
++        app_label = 'testapp'
++
++def test_migration_field_serialization():
++    """Test that the field with nested class method default serializes correctly."""
++    
++    print("Testing migration field serialization...")
++    
++    # Get the field
++    field = Profile._meta.get_field('capabilities')
++    
++    # Serialize the field (this is what happens during migration generation)
++    field_string, field_imports = MigrationWriter.serialize(field)
++    
++    print(f"Field serialization: {field_string}")
++    print(f"Field imports: {field_imports}")
++    
++    # The key part is that the default should be correctly serialized
++    # Extract the default part from the serialized field
++    if 'default=' in field_string:
++        # Find the default parameter
++        default_start = field_string.find('default=') + len('default=')
++        # Find the end of the default parameter (next comma or closing paren)
++        default_end = field_string.find(',', default_start)
++        if default_end == -1:
++            default_end = field_string.rfind(')')
++        
++        default_value = field_string[default_start:default_end].strip()
++        print(f"Extracted default value: {default_value}")
++        
++        # The default should be the full qualified name
++        expected_module = Profile.Capability.default.__self__.__module__
++        expected_qualname = Profile.Capability.default.__self__.__qualname__
++        expected_method_name = Profile.Capability.default.__name__
++        expected_default = f"{expected_module}.{expected_qualname}.{expected_method_name}"
++        
++        print(f"Expected default: {expected_default}")
++        
++        if default_value == expected_default:
++            print("✓ Default value is correctly serialized!")
++            return True
++        else:
++            print("✗ Default value is incorrectly serialized!")
++            return False
++    else:
++        print("✗ No default found in field serialization!")
++        return False
++
++def test_migration_generation():
++    """Test that a migration can be generated with the correct serialization."""
++    
++    print("\nTesting migration generation...")
++    
++    # Create a simple migration that adds the field
++    from django.db import migrations
++    
++    # This simulates what Django's migration autodetector would generate
++    migration_operations = [
++        migrations.AddField(
++            model_name='profile',
++            name='capabilities',
++            field=Profile._meta.get_field('capabilities'),
++        ),
++    ]
++    
++    # Create a migration
++    class TestMigration(migrations.Migration):
++        dependencies = []
++        operations = migration_operations
++    
++    migration = TestMigration('0001_initial', 'testapp')
++    
++    # Serialize the migration
++    writer = MigrationWriter(migration)
++    migration_string = writer.as_string()
++    
++    print("Generated migration:")
++    print(migration_string)
++    
++    # Check that the migration contains the correct default reference
++    expected_module = Profile.Capability.default.__self__.__module__
++    expected_qualname = Profile.Capability.default.__self__.__qualname__
++    expected_method_name = Profile.Capability.default.__name__
++    expected_default = f"{expected_module}.{expected_qualname}.{expected_method_name}"
++    
++    if expected_default in migration_string:
++        print(f"✓ Migration contains correct default reference: {expected_default}")
++        return True
++    else:
++        print(f"✗ Migration does not contain correct default reference: {expected_default}")
++        # Check what it actually contains
++        if 'default=' in migration_string:
++            lines = migration_string.split('\n')
++            for line in lines:
++                if 'default=' in line:
++                    print(f"Found default line: {line.strip()}")
++        return False
++
++if __name__ == '__main__':
++    # Make Profile available in main module for evaluation
++    import __main__
++    __main__.Profile = Profile
++    
++    success1 = test_migration_field_serialization()
++    success2 = test_migration_generation()
++    
++    print(f"\nOverall result: {'SUCCESS' if success1 and success2 else 'FAILURE'}")
+\ No newline at end of file
+diff --git a/test_nested_class_method_serialization.py b/test_nested_class_method_serialization.py
+new file mode 100644
+index 0000000000..f781b27b3d
+--- /dev/null
++++ b/test_nested_class_method_serialization.py
+@@ -0,0 +1,168 @@
++#!/usr/bin/env python3
++
++import os
++import sys
++import django
++from django.conf import settings
++
++# Configure Django settings
++if not settings.configured:
++    settings.configure(
++        DEBUG=True,
++        DATABASES={
++            'default': {
++                'ENGINE': 'django.db.backends.sqlite3',
++                'NAME': ':memory:',
++            }
++        },
++        INSTALLED_APPS=[
++            'django.contrib.contenttypes',
++            'django.contrib.auth',
++        ],
++        USE_TZ=True,
++    )
++
++django.setup()
++
++from django.db import models
++from django.db.migrations.writer import MigrationWriter
++from django.test import SimpleTestCase
++
++# Define test classes at module level to avoid <locals> in __qualname__
++class OuterClass:
++    class InnerClass:
++        @classmethod
++        def class_method(cls):
++            return "test"
++
++class Level1:
++    class Level2:
++        class Level3:
++            @classmethod
++            def deep_method(cls):
++                return "deep"
++
++class RegularClass:
++    @classmethod
++    def regular_method(cls):
++        return "regular"
++
++class Profile(models.Model):
++    class Capability(models.TextChoices):
++        BASIC = ("BASIC", "Basic")
++        PROFESSIONAL = ("PROFESSIONAL", "Professional")
++        
++        @classmethod
++        def default(cls):
++            return [cls.BASIC]
++    
++    class Meta:
++        app_label = 'test'
++
++class NestedClassMethodSerializationTest(SimpleTestCase):
++    """Test that class methods from nested classes are properly serialized."""
++    
++    def test_nested_class_method_serialization(self):
++        """Test serialization of a class method from a nested class."""
++        
++        # Test serialization
++        result, imports = MigrationWriter.serialize(OuterClass.InnerClass.class_method)
++        
++        # The result should include the full qualified name
++        expected_module = OuterClass.InnerClass.class_method.__self__.__module__
++        expected_qualname = OuterClass.InnerClass.class_method.__self__.__qualname__
++        expected_method_name = OuterClass.InnerClass.class_method.__name__
++        expected_result = f"{expected_module}.{expected_qualname}.{expected_method_name}"
++        
++        self.assertEqual(result, expected_result)
++        self.assertEqual(imports, {f"import {expected_module}"})
++        
++        # Test that the serialized result can be evaluated
++        # Make the class available in the current module for evaluation
++        import __main__
++        __main__.OuterClass = OuterClass
++        
++        try:
++            evaluated_method = eval(result)
++            self.assertEqual(evaluated_method, OuterClass.InnerClass.class_method)
++        except Exception as e:
++            self.fail(f"Failed to evaluate serialized result: {e}")
++    
++    def test_deeply_nested_class_method_serialization(self):
++        """Test serialization of a class method from a deeply nested class."""
++        
++        # Test serialization
++        result, imports = MigrationWriter.serialize(Level1.Level2.Level3.deep_method)
++        
++        # The result should include the full qualified name
++        expected_module = Level1.Level2.Level3.deep_method.__self__.__module__
++        expected_qualname = Level1.Level2.Level3.deep_method.__self__.__qualname__
++        expected_method_name = Level1.Level2.Level3.deep_method.__name__
++        expected_result = f"{expected_module}.{expected_qualname}.{expected_method_name}"
++        
++        self.assertEqual(result, expected_result)
++        self.assertEqual(imports, {f"import {expected_module}"})
++        
++        # Test that the serialized result can be evaluated
++        import __main__
++        __main__.Level1 = Level1
++        
++        try:
++            evaluated_method = eval(result)
++            self.assertEqual(evaluated_method, Level1.Level2.Level3.deep_method)
++        except Exception as e:
++            self.fail(f"Failed to evaluate serialized result: {e}")
++    
++    def test_regular_class_method_still_works(self):
++        """Test that regular (non-nested) class methods still work correctly."""
++        
++        # Test serialization
++        result, imports = MigrationWriter.serialize(RegularClass.regular_method)
++        
++        # The result should include the full qualified name (which is the same as __name__ for non-nested classes)
++        expected_module = RegularClass.regular_method.__self__.__module__
++        expected_qualname = RegularClass.regular_method.__self__.__qualname__
++        expected_method_name = RegularClass.regular_method.__name__
++        expected_result = f"{expected_module}.{expected_qualname}.{expected_method_name}"
++        
++        self.assertEqual(result, expected_result)
++        self.assertEqual(imports, {f"import {expected_module}"})
++        
++        # Test that the serialized result can be evaluated
++        import __main__
++        __main__.RegularClass = RegularClass
++        
++        try:
++            evaluated_method = eval(result)
++            self.assertEqual(evaluated_method, RegularClass.regular_method)
++        except Exception as e:
++            self.fail(f"Failed to evaluate serialized result: {e}")
++
++    def test_django_model_nested_class_method(self):
++        """Test the original issue: Django model with nested TextChoices class method."""
++        
++        # Test serialization
++        result, imports = MigrationWriter.serialize(Profile.Capability.default)
++        
++        # The result should include the full qualified name
++        expected_module = Profile.Capability.default.__self__.__module__
++        expected_qualname = Profile.Capability.default.__self__.__qualname__
++        expected_method_name = Profile.Capability.default.__name__
++        expected_result = f"{expected_module}.{expected_qualname}.{expected_method_name}"
++        
++        self.assertEqual(result, expected_result)
++        self.assertEqual(imports, {f"import {expected_module}"})
++        
++        # Test that the serialized result can be evaluated
++        import __main__
++        __main__.Profile = Profile
++        
++        try:
++            evaluated_method = eval(result)
++            self.assertEqual(evaluated_method, Profile.Capability.default)
++        except Exception as e:
++            self.fail(f"Failed to evaluate serialized result: {e}")
++
++if __name__ == '__main__':
++    import unittest
++    unittest.main()
+\ No newline at end of file

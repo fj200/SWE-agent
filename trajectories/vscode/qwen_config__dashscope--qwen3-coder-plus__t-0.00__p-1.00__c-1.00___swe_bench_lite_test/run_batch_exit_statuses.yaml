@@ -1,0 +1,7 @@
+instances_by_exit_status:
+    exit_cost:
+    - pydata__xarray-4493
+    - pylint-dev__pylint-6506
+    - pytest-dev__pytest-6116
+    - scikit-learn__scikit-learn-11040
+total_cost: 4.189966600000001

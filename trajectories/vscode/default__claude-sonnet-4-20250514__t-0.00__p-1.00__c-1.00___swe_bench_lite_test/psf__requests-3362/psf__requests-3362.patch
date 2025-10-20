@@ -1,0 +1,61 @@
+diff --git a/requests/utils.py b/requests/utils.py
+index 8d17b6b2..948f4c60 100644
+--- a/requests/utils.py
++++ b/requests/utils.py
+@@ -359,19 +359,44 @@ def get_encoding_from_headers(headers):
+ def stream_decode_response_unicode(iterator, r):
+     """Stream decodes a iterator."""
+ 
+-    if r.encoding is None:
+-        for item in iterator:
+-            yield item
+-        return
+-
+-    decoder = codecs.getincrementaldecoder(r.encoding)(errors='replace')
+-    for chunk in iterator:
+-        rv = decoder.decode(chunk)
++    # Determine encoding to use, with fallback logic similar to Response.text
++    encoding = r.encoding
++    if encoding is None:
++        # Only try to get apparent_encoding if content is already consumed
++        # to avoid consuming the stream prematurely
++        if r._content_consumed:
++            try:
++                encoding = r.apparent_encoding
++            except:
++                # If apparent_encoding fails, use utf-8 as fallback
++                encoding = 'utf-8'
++        else:
++            # For streaming case, use utf-8 as a reasonable default
++            # This matches common web content and is backward compatible
++            encoding = 'utf-8'
++
++    # If we still don't have an encoding, try utf-8 as fallback
++    if encoding is None:
++        encoding = 'utf-8'
++
++    try:
++        decoder = codecs.getincrementaldecoder(encoding)(errors='replace')
++        for chunk in iterator:
++            rv = decoder.decode(chunk)
++            if rv:
++                yield rv
++        rv = decoder.decode(b'', final=True)
+         if rv:
+             yield rv
+-    rv = decoder.decode(b'', final=True)
+-    if rv:
+-        yield rv
++    except (LookupError, TypeError):
++        # If the encoding is invalid, try to decode each chunk individually
++        # with error handling, similar to what Response.text does
++        for chunk in iterator:
++            try:
++                yield str(chunk, encoding, errors='replace')
++            except (LookupError, TypeError):
++                # Last resort: decode with default encoding and error replacement
++                yield str(chunk, errors='replace')
+ 
+ 
+ def iter_slices(string, slice_length):
+

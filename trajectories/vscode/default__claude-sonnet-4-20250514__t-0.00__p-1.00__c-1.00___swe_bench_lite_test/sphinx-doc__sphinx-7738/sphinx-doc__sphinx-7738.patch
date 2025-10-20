@@ -1,0 +1,716 @@
+diff --git a/reproduce_issue.py b/reproduce_issue.py
+new file mode 100644
+index 000000000..fea19d117
+--- /dev/null
++++ b/reproduce_issue.py
+@@ -0,0 +1,110 @@
++#!/usr/bin/env python3
++"""
++Script to reproduce the overescaped trailing underscore issue with Napoleon.
++"""
++
++import os
++import tempfile
++import shutil
++from pathlib import Path
++
++def create_test_files():
++    """Create test files to reproduce the issue."""
++    # Create temporary directory
++    test_dir = Path(tempfile.mkdtemp())
++    print(f"Created test directory: {test_dir}")
++    
++    # Create __init__.py
++    (test_dir / "__init__.py").write_text("")
++    
++    # Create a.py with the problematic class
++    a_py_content = '''class A:
++    """
++    Attributes
++    ----------
++    hello_: int
++        hi
++    """
++    pass
++'''
++    (test_dir / "a.py").write_text(a_py_content)
++    
++    # Create conf.py
++    conf_py_content = '''
++extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon']
++'''
++    (test_dir / "conf.py").write_text(conf_py_content)
++    
++    # Create index.rst
++    index_rst_content = '''Test
++====
++
++.. autoclass:: a.A
++   :members:
++'''
++    (test_dir / "index.rst").write_text(index_rst_content)
++    
++    return test_dir
++
++def test_napoleon_parsing():
++    """Test Napoleon parsing directly."""
++    from sphinx.ext.napoleon.docstring import GoogleDocstring, NumpyDocstring
++    from sphinx.ext.napoleon import Config
++    
++    # Test NumPy-style docstring (this is where the issue occurs)
++    numpy_docstring = """
++Attributes
++----------
++hello_: int
++    hi
++"""
++    
++    print("Testing NumPy-style docstring with napoleon_use_ivar=True:")
++    config = Config(napoleon_use_ivar=True)
++    parsed = NumpyDocstring(numpy_docstring, config)
++    result = str(parsed)
++    print("Napoleon parsed result:")
++    print(repr(result))
++    print(result)
++    print("=" * 50)
++    
++    # Test Google-style docstring for comparison
++    google_docstring = """
++    Attributes:
++        hello_: int
++            hi
++    """
++    
++    print("Testing Google-style docstring with napoleon_use_ivar=True:")
++    config = Config(napoleon_use_ivar=True)
++    parsed = GoogleDocstring(google_docstring, config)
++    result = str(parsed)
++    print("Napoleon parsed result:")
++    print(repr(result))
++    print(result)
++    print("=" * 50)
++    
++    # Test with napoleon_use_ivar=False (default)
++    print("Testing NumPy-style docstring with napoleon_use_ivar=False (default):")
++    config = Config(napoleon_use_ivar=False)
++    parsed = NumpyDocstring(numpy_docstring, config)
++    result = str(parsed)
++    print("Napoleon parsed result:")
++    print(repr(result))
++    print(result)
++    print("=" * 50)
++    
++    # Check if underscore is escaped
++    if "hello\\_" in result:
++        print("❌ ISSUE FOUND: Underscore is overescaped!")
++        return False
++    elif "hello_" in result:
++        print("✅ GOOD: Underscore is not overescaped")
++        return True
++    else:
++        print("⚠️  WARNING: Could not find hello_ in result")
++        return False
++
++if __name__ == "__main__":
++    print("Testing Napoleon underscore escaping...")
++    test_napoleon_parsing()
+\ No newline at end of file
+diff --git a/sphinx/ext/napoleon/docstring.py b/sphinx/ext/napoleon/docstring.py
+index 11409e6f6..2b42ddc4a 100644
+--- a/sphinx/ext/napoleon/docstring.py
++++ b/sphinx/ext/napoleon/docstring.py
+@@ -318,9 +318,6 @@ class GoogleDocstring:
+             return [line[min_indent:] for line in lines]
+ 
+     def _escape_args_and_kwargs(self, name: str) -> str:
+-        if name.endswith('_'):
+-            name = name[:-1] + r'\_'
+-
+         if name[:2] == '**':
+             return r'\*\*' + name[2:]
+         elif name[:1] == '*':
+@@ -328,6 +325,12 @@ class GoogleDocstring:
+         else:
+             return name
+ 
++    def _escape_trailing_underscore(self, name: str) -> str:
++        """Escape trailing underscore to prevent reStructuredText parsing issues."""
++        if name.endswith('_'):
++            return name[:-1] + r'\_'
++        return name
++
+     def _fix_field_desc(self, desc: List[str]) -> List[str]:
+         if self._is_list(desc):
+             desc = [''] + desc
+@@ -579,12 +582,16 @@ class GoogleDocstring:
+         lines = []
+         for _name, _type, _desc in self._consume_fields():
+             if self._config.napoleon_use_ivar:
++                # Escape trailing underscore only for field list syntax to prevent
++                # "Unknown target name" errors in reStructuredText
++                _name = self._escape_trailing_underscore(_name)
+                 _name = self._qualify_name(_name, self._obj)
+                 field = ':ivar %s: ' % _name
+                 lines.extend(self._format_block(field, _desc))
+                 if _type:
+                     lines.append(':vartype %s: %s' % (_name, _type))
+             else:
++                # No need to escape trailing underscore for directive syntax
+                 lines.append('.. attribute:: ' + _name)
+                 if self._opt and 'noindex' in self._opt:
+                     lines.append('   :noindex:')
+diff --git a/test_args_html.py b/test_args_html.py
+new file mode 100644
+index 000000000..b711f8635
+--- /dev/null
++++ b/test_args_html.py
+@@ -0,0 +1,83 @@
++#!/usr/bin/env python3
++"""
++Test HTML output for *args_ and **kwargs_ cases.
++"""
++
++import tempfile
++import os
++import shutil
++from pathlib import Path
++
++def test_args_html():
++    """Test HTML output for *args_ and **kwargs_ cases."""
++    
++    # Create temporary directory
++    test_dir = Path(tempfile.mkdtemp())
++    print(f"Created test directory: {test_dir}")
++    
++    # Create __init__.py
++    (test_dir / "__init__.py").write_text("")
++    
++    # Create a.py with args and kwargs
++    a_py_content = '''class A:
++    """
++    Attributes
++    ----------
++    *args_: tuple
++        positional arguments
++    **kwargs_: dict
++        keyword arguments
++    """
++    pass
++'''
++    (test_dir / "a.py").write_text(a_py_content)
++    
++    # Create conf.py
++    conf_py_content = '''
++extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon']
++napoleon_use_ivar = False  # Test with attribute directive
++'''
++    (test_dir / "conf.py").write_text(conf_py_content)
++    
++    # Create index.rst
++    index_rst_content = '''Test
++====
++
++.. autoclass:: a.A
++   :members:
++'''
++    (test_dir / "index.rst").write_text(index_rst_content)
++    
++    os.chdir(test_dir)
++    
++    # Run sphinx-build
++    build_dir = test_dir / "_build"
++    cmd = f"sphinx-build -b html -E . {build_dir}"
++    result = os.system(cmd)
++    
++    if result == 0:
++        html_file = build_dir / "index.html"
++        if html_file.exists():
++            content = html_file.read_text()
++            print("HTML content around args/kwargs:")
++            # Find lines with args or kwargs and print context
++            lines = content.split('\n')
++            for i, line in enumerate(lines):
++                if 'args' in line or 'kwargs' in line:
++                    start = max(0, i-2)
++                    end = min(len(lines), i+3)
++                    for j in range(start, end):
++                        marker = " >>> " if j == i else "     "
++                        print(f"{marker}{lines[j]}")
++                    print()
++        else:
++            print("HTML file not found")
++    else:
++        print(f"Sphinx build failed with code {result}")
++    
++    # Clean up
++    shutil.rmtree(test_dir)
++    print(f"Cleaned up {test_dir}")
++
++if __name__ == "__main__":
++    test_args_html()
+\ No newline at end of file
+diff --git a/test_directive_underscore.py b/test_directive_underscore.py
+new file mode 100644
+index 000000000..d3404a779
+--- /dev/null
++++ b/test_directive_underscore.py
+@@ -0,0 +1,53 @@
++#!/usr/bin/env python3
++"""
++Test if trailing underscores cause issues in different directive contexts.
++"""
++
++import tempfile
++import os
++from pathlib import Path
++from docutils.core import publish_doctree
++from docutils.utils import SystemMessage
++
++def test_directive_contexts():
++    """Test trailing underscores in different directive contexts."""
++    
++    # Create a temporary file with Sphinx extensions loaded
++    test_content = '''
++.. py:attribute:: hello_
++   :type: int
++
++   Some description
++
++:ivar hello_: Some description
++:vartype hello_: int
++
++.. attribute:: hello_
++   :type: int
++
++   Some description
++'''
++    
++    print("Testing directive contexts with trailing underscores:")
++    print(test_content)
++    
++    try:
++        # Try to parse with docutils
++        doctree = publish_doctree(test_content)
++        print("Doctree parsed successfully")
++        
++        # Look for system messages (errors/warnings)
++        system_messages = [node for node in doctree.traverse() 
++                         if node.tagname == 'system_message']
++        if system_messages:
++            print("System messages found:")
++            for msg in system_messages:
++                print(f"  {msg['level']}: {msg.astext()}")
++        else:
++            print("No system messages")
++            
++    except Exception as e:
++        print(f"Error: {e}")
++
++if __name__ == "__main__":
++    test_directive_contexts()
+\ No newline at end of file
+diff --git a/test_edge_cases.py b/test_edge_cases.py
+new file mode 100644
+index 000000000..b3dcf3d92
+--- /dev/null
++++ b/test_edge_cases.py
+@@ -0,0 +1,45 @@
++#!/usr/bin/env python3
++"""
++Test edge cases for underscore escaping.
++"""
++
++from sphinx.ext.napoleon.docstring import NumpyDocstring
++from sphinx.ext.napoleon import Config
++
++def test_edge_cases():
++    """Test edge cases for underscore escaping."""
++    
++    test_cases = [
++        ("hello__", "Multiple trailing underscores"),
++        ("hello_world", "Underscore in middle"),
++        ("_", "Only underscore"),
++        ("_hello", "Leading underscore"),
++        ("hello_world_", "Trailing underscore after middle underscore"),
++        ("*args_", "Args with trailing underscore"),
++        ("**kwargs_", "Kwargs with trailing underscore"),
++    ]
++    
++    for attr_name, description in test_cases:
++        numpy_docstring = f"""
++Attributes
++----------
++{attr_name}: int
++    description
++"""
++        
++        print(f"\n{description}: {attr_name}")
++        
++        # Test with napoleon_use_ivar=True (should escape)
++        config = Config(napoleon_use_ivar=True)
++        parsed = NumpyDocstring(numpy_docstring, config)
++        result_ivar = str(parsed)
++        print(f"  With ivar: {repr(result_ivar)}")
++        
++        # Test with napoleon_use_ivar=False (should not escape trailing underscore)
++        config = Config(napoleon_use_ivar=False)
++        parsed = NumpyDocstring(numpy_docstring, config)
++        result_attr = str(parsed)
++        print(f"  With attr: {repr(result_attr)}")
++
++if __name__ == "__main__":
++    test_edge_cases()
+\ No newline at end of file
+diff --git a/test_html_output.py b/test_html_output.py
+new file mode 100644
+index 000000000..1b6794ea6
+--- /dev/null
++++ b/test_html_output.py
+@@ -0,0 +1,87 @@
++#!/usr/bin/env python3
++"""
++Test HTML output with and without underscore escaping.
++"""
++
++import tempfile
++import os
++import shutil
++from pathlib import Path
++
++def create_sphinx_project():
++    """Create a minimal Sphinx project to test HTML output."""
++    
++    # Create temporary directory
++    test_dir = Path(tempfile.mkdtemp())
++    print(f"Created test directory: {test_dir}")
++    
++    # Create __init__.py
++    (test_dir / "__init__.py").write_text("")
++    
++    # Create a.py with the problematic class
++    a_py_content = '''class A:
++    """
++    Attributes
++    ----------
++    hello_: int
++        hi
++    """
++    pass
++'''
++    (test_dir / "a.py").write_text(a_py_content)
++    
++    # Create conf.py
++    conf_py_content = '''
++extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon']
++napoleon_use_ivar = True  # Test with ivar field list
++'''
++    (test_dir / "conf.py").write_text(conf_py_content)
++    
++    # Create index.rst
++    index_rst_content = '''Test
++====
++
++.. autoclass:: a.A
++   :members:
++'''
++    (test_dir / "index.rst").write_text(index_rst_content)
++    
++    return test_dir
++
++def build_html(test_dir):
++    """Build HTML documentation."""
++    os.chdir(test_dir)
++    
++    # Run sphinx-build
++    build_dir = test_dir / "_build"
++    cmd = f"sphinx-build -b html -E . {build_dir}"
++    result = os.system(cmd)
++    
++    if result == 0:
++        html_file = build_dir / "index.html"
++        if html_file.exists():
++            content = html_file.read_text()
++            print("HTML content around 'hello_':")
++            # Find the line with hello_ and print context
++            lines = content.split('\n')
++            for i, line in enumerate(lines):
++                if 'hello' in line:
++                    start = max(0, i-2)
++                    end = min(len(lines), i+3)
++                    for j in range(start, end):
++                        marker = " >>> " if j == i else "     "
++                        print(f"{marker}{lines[j]}")
++                    print()
++        else:
++            print("HTML file not found")
++    else:
++        print(f"Sphinx build failed with code {result}")
++
++if __name__ == "__main__":
++    test_dir = create_sphinx_project()
++    try:
++        build_html(test_dir)
++    finally:
++        # Clean up
++        shutil.rmtree(test_dir)
++        print(f"Cleaned up {test_dir}")
+\ No newline at end of file
+diff --git a/test_ivar_escaping.py b/test_ivar_escaping.py
+new file mode 100644
+index 000000000..c3c33e1b4
+--- /dev/null
++++ b/test_ivar_escaping.py
+@@ -0,0 +1,36 @@
++#!/usr/bin/env python3
++"""
++Test that escaping still works for ivar case.
++"""
++
++from sphinx.ext.napoleon.docstring import NumpyDocstring
++from sphinx.ext.napoleon import Config
++
++def test_ivar_escaping():
++    """Test that escaping still works for ivar case."""
++    
++    numpy_docstring = """
++Attributes
++----------
++hello_: int
++    hi
++"""
++    
++    print("Testing NumPy-style docstring with napoleon_use_ivar=True:")
++    config = Config(napoleon_use_ivar=True)
++    parsed = NumpyDocstring(numpy_docstring, config)
++    result = str(parsed)
++    print("Napoleon parsed result:")
++    print(repr(result))
++    print(result)
++    
++    # Check that escaping is still applied for ivar
++    if ":ivar hello\\_:" in result:
++        print("✅ GOOD: Escaping is still applied for :ivar: syntax")
++        return True
++    else:
++        print("❌ BAD: Escaping is not applied for :ivar: syntax")
++        return False
++
++if __name__ == "__main__":
++    test_ivar_escaping()
+\ No newline at end of file
+diff --git a/test_pr_fix.py b/test_pr_fix.py
+new file mode 100644
+index 000000000..e9fa7f48e
+--- /dev/null
++++ b/test_pr_fix.py
+@@ -0,0 +1,96 @@
++#!/usr/bin/env python3
++"""
++Test that the PR issue is fixed.
++"""
++
++import tempfile
++import os
++import shutil
++from pathlib import Path
++
++def test_pr_fix():
++    """Test that the PR issue is fixed."""
++    
++    print("Testing the original PR issue...")
++    
++    # Create temporary directory
++    test_dir = Path(tempfile.mkdtemp())
++    print(f"Created test directory: {test_dir}")
++    
++    # Create __init__.py (empty)
++    (test_dir / "__init__.py").write_text("")
++    
++    # Create a.py with the exact content from the PR
++    a_py_content = '''class A:
++    """
++    Attributes
++    ----------
++    hello_: int
++        hi
++    """
++    pass
++'''
++    (test_dir / "a.py").write_text(a_py_content)
++    
++    # Create conf.py with the exact extensions from the PR
++    conf_py_content = '''
++extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon']
++'''
++    (test_dir / "conf.py").write_text(conf_py_content)
++    
++    # Create index.rst with the exact content from the PR
++    index_rst_content = '''Test
++====
++
++.. autoclass:: a.A
++'''
++    (test_dir / "index.rst").write_text(index_rst_content)
++    
++    os.chdir(test_dir)
++    
++    # Run sphinx-build
++    build_dir = test_dir / "_build"
++    cmd = f"sphinx-build -b html -E . {build_dir}"
++    result = os.system(cmd)
++    
++    success = False
++    if result == 0:
++        html_file = build_dir / "index.html"
++        if html_file.exists():
++            content = html_file.read_text()
++            print("HTML content around 'hello_':")
++            # Find the line with hello_ and print context
++            lines = content.split('\n')
++            for i, line in enumerate(lines):
++                if 'hello' in line:
++                    start = max(0, i-2)
++                    end = min(len(lines), i+3)
++                    for j in range(start, end):
++                        marker = " >>> " if j == i else "     "
++                        print(f"{marker}{lines[j]}")
++                    print()
++                    
++                    # Check if the backslash is visible
++                    if 'hello\\_' in line or 'hello\\_' in content:
++                        print("❌ ISSUE STILL EXISTS: Backslash is visible in HTML")
++                        success = False
++                    elif 'hello_' in line:
++                        print("✅ ISSUE FIXED: No visible backslash in HTML")
++                        success = True
++                    break
++        else:
++            print("HTML file not found")
++    else:
++        print(f"Sphinx build failed with code {result}")
++    
++    # Clean up
++    shutil.rmtree(test_dir)
++    print(f"Cleaned up {test_dir}")
++    
++    return success
++
++if __name__ == "__main__":
++    if test_pr_fix():
++        print("\n🎉 SUCCESS: The PR issue has been fixed!")
++    else:
++        print("\n❌ FAILURE: The PR issue still exists!")
+\ No newline at end of file
+diff --git a/test_rst_alternatives.py b/test_rst_alternatives.py
+new file mode 100644
+index 000000000..825c3e0b1
+--- /dev/null
++++ b/test_rst_alternatives.py
+@@ -0,0 +1,56 @@
++#!/usr/bin/env python3
++"""
++Test alternative ways to handle trailing underscores in reStructuredText.
++"""
++
++from docutils.core import publish_doctree, publish_parts
++from docutils.utils import SystemMessage
++
++def test_rst_alternatives():
++    """Test different ways to handle trailing underscores."""
++    
++    test_cases = [
++        # Original problematic case
++        (":ivar hello_: some description", "Original (problematic)"),
++        
++        # Escaped version (current fix)
++        (":ivar hello\\_: some description", "Escaped (current fix)"),
++        
++        # Using literal markup
++        (":ivar ``hello_``: some description", "Literal markup"),
++        
++        # Using role
++        (":ivar :obj:`hello_`: some description", "Object role"),
++        
++        # Test with attribute directive
++        (".. attribute:: hello_\n   :type: int", "Attribute directive"),
++        
++        # Test with escaped attribute directive
++        (".. attribute:: hello\\_\n   :type: int", "Escaped attribute directive"),
++    ]
++    
++    for rst_content, description in test_cases:
++        print(f"\n{description}:")
++        print(f"RST: {rst_content}")
++        try:
++            # Parse to HTML to see the output
++            parts = publish_parts(rst_content, writer_name='html')
++            html_body = parts['body']
++            print(f"HTML: {html_body.strip()}")
++            
++            # Check for errors
++            doctree = publish_doctree(rst_content)
++            # Look for system messages (errors/warnings)
++            system_messages = [node for node in doctree.traverse() 
++                             if node.tagname == 'system_message']
++            if system_messages:
++                for msg in system_messages:
++                    print(f"Warning/Error: {msg.astext()}")
++            else:
++                print("No errors/warnings")
++                
++        except Exception as e:
++            print(f"Error: {e}")
++
++if __name__ == "__main__":
++    test_rst_alternatives()
+\ No newline at end of file
+diff --git a/test_rst_underscore.py b/test_rst_underscore.py
+new file mode 100644
+index 000000000..8b0048d06
+--- /dev/null
++++ b/test_rst_underscore.py
+@@ -0,0 +1,43 @@
++#!/usr/bin/env python3
++"""
++Test to see if trailing underscores in reStructuredText cause issues.
++"""
++
++import tempfile
++import os
++from pathlib import Path
++from docutils.core import publish_doctree
++from docutils.utils import SystemMessage
++
++def test_rst_underscore():
++    """Test if trailing underscores cause issues in reStructuredText."""
++    
++    # Test different reStructuredText constructs with trailing underscores
++    test_cases = [
++        # Case 1: :ivar: directive
++        ":ivar hello_: some description",
++        
++        # Case 2: .. attribute:: directive  
++        ".. attribute:: hello_\n   :type: int\n\n   some description",
++        
++        # Case 3: Plain text reference (this might cause issues)
++        "See hello_ for more info",
++        
++        # Case 4: Parameter in function signature
++        ":param hello_: some description",
++    ]
++    
++    for i, rst_content in enumerate(test_cases):
++        print(f"\nTest case {i+1}: {rst_content[:30]}...")
++        try:
++            # Try to parse the reStructuredText
++            doctree = publish_doctree(rst_content)
++            print("✅ Parsed successfully")
++            print(f"   Doctree: {doctree}")
++        except SystemMessage as e:
++            print(f"❌ SystemMessage error: {e}")
++        except Exception as e:
++            print(f"❌ Other error: {e}")
++
++if __name__ == "__main__":
++    test_rst_underscore()
+\ No newline at end of file

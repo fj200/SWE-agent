@@ -1,0 +1,178 @@
+2025-10-16 01:23:15,384 - INFO - swea-run - Starting run. Find output files at /workspaces/SWE-agent/trajectories/vscode/default__claude-sonnet-4-20250514__t-0.00__p-1.00__c-1.00___swe_bench_lite_test
+2025-10-16 01:23:15,387 - INFO - swea-run - Running on instance astropy__astropy-14995
+2025-10-16 01:23:15,387 - INFO - swea-run - Running on instance django__django-17087
+2025-10-16 01:27:23,122 - INFO - swea-run - Running on instance matplotlib__matplotlib-26020
+2025-10-16 01:28:19,379 - INFO - swea-run - Running on instance mwaskom__seaborn-3407
+2025-10-16 01:38:57,092 - INFO - swea-run - Running on instance psf__requests-3362
+2025-10-16 01:39:27,521 - INFO - swea-run - Running on instance pydata__xarray-4493
+2025-10-16 01:47:16,040 - INFO - swea-run - Running on instance pylint-dev__pylint-6506
+2025-10-16 01:49:14,828 - INFO - swea-run - Running on instance pytest-dev__pytest-6116
+2025-10-16 01:53:08,955 - INFO - swea-run - Running on instance scikit-learn__scikit-learn-11040
+2025-10-16 01:53:42,912 - ERROR - swea-run - Traceback (most recent call last):
+  File "/workspaces/SWE-agent/sweagent/run/run_batch.py", line 311, in run_instance
+    result = self._run_instance(instance)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/SWE-agent/sweagent/run/run_batch.py", line 360, in _run_instance
+    result = agent.run(
+             ^^^^^^^^^^
+  File "/workspaces/SWE-agent/sweagent/agent/agents.py", line 1286, in run
+    self.save_trajectory()
+  File "/workspaces/SWE-agent/sweagent/agent/agents.py", line 787, in save_trajectory
+    self.traj_path.write_text(json.dumps(data, indent=2))
+  File "/opt/conda/lib/python3.12/pathlib.py", line 1048, in write_text
+    return f.write(data)
+           ^^^^^^^^^^^^^
+OSError: [Errno 28] No space left on device
+
+2025-10-16 01:53:42,922 - ERROR - swea-run - ❌ Failed on pytest-dev__pytest-6116: [Errno 28] No space left on device
+2025-10-16 01:53:43,876 - INFO - swea-run - Running on instance sphinx-doc__sphinx-7738
+2025-10-16 01:54:09,880 - ERROR - swea-run - Traceback (most recent call last):
+  File "/workspaces/SWE-agent/sweagent/run/run_batch.py", line 311, in run_instance
+    result = self._run_instance(instance)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/SWE-agent/sweagent/run/run_batch.py", line 358, in _run_instance
+    env.start()
+  File "/workspaces/SWE-agent/sweagent/environment/swe_env.py", line 111, in start
+    self._init_deployment()
+  File "/workspaces/SWE-agent/sweagent/environment/swe_env.py", line 183, in _init_deployment
+    asyncio.run(self.deployment.start())
+  File "/opt/conda/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 234, in start
+    image_id = self._build_image()
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 218, in _build_image
+    subprocess.check_output(
+  File "/opt/conda/lib/python3.12/subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['docker', 'build', '-q', '--platform', 'linux/amd64', '--build-arg', 'BASE_IMAGE=docker.io/swebench/sweb.eval.x86_64.scikit-learn_1776_scikit-learn-11040:latest', '-']' returned non-zero exit status 102.
+
+2025-10-16 01:54:09,887 - ERROR - swea-run - ❌ Failed on scikit-learn__scikit-learn-11040: Command '['docker', 'build', '-q', '--platform', 'linux/amd64', '--build-arg', 'BASE_IMAGE=docker2025-10-16 21:43:10,259 - INFO - swea-run - Starting run. Find output files at /workspaces/SWE-agent/trajectories/vscode/default__claude-sonnet-4-20250514__t-0.00__p-1.00__c-1.00___swe_bench_lite_test
+2025-10-16 21:43:10,262 - INFO - swea-run - Running on instance pytest-dev__pytest-6116
+2025-10-16 21:43:10,262 - INFO - swea-run - Running on instance scikit-learn__scikit-learn-11040
+2025-10-16 21:43:10,381 - ERROR - swea-run - Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 143, in _pull_image
+    _pull_image(self._config.image, self._config.container_runtime)
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 42, in _pull_image
+    raise subprocess.CalledProcessError(e.returncode, e.cmd, e.output, e.stderr) from None
+subprocess.CalledProcessError: Command '['docker', 'pull', 'docker.io/swebench/sweb.eval.x86_64.scikit-learn_1776_scikit-learn-11040:latest']' returned non-zero exit status 1.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspaces/SWE-agent/sweagent/run/run_batch.py", line 311, in run_instance
+    result = self._run_instance(instance)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/SWE-agent/sweagent/run/run_batch.py", line 358, in _run_instance
+    env.start()
+  File "/workspaces/SWE-agent/sweagent/environment/swe_env.py", line 111, in start
+    self._init_deployment()
+  File "/workspaces/SWE-agent/sweagent/environment/swe_env.py", line 183, in _init_deployment
+    asyncio.run(self.deployment.start())
+  File "/opt/conda/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 232, in start
+    self._pull_image()
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 148, in _pull_image
+    raise DockerPullError(msg) from e
+swerex.exceptions.DockerPullError: Failed to pull image docker.io/swebench/sweb.eval.x86_64.scikit-learn_1776_scikit-learn-11040:latest. Error: permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.51/images/create?fromImage=docker.io%2Fswebench%2Fsweb.eval.x86_64.scikit-learn_1776_scikit-learn-11040&tag=latest": dial unix /var/run/docker.sock: connect: permission denied
+Output: 
+
+2025-10-16 21:43:10,388 - ERROR - swea-run - ❌ Failed on scikit-learn__scikit-learn-11040: Failed to pull image docker.io/swebench/sweb.eval.x86_64.scikit-learn_1776_scikit-learn-11040:latest. Error: permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.51/images/create?fromImage=docker.io%2Fswebench%2Fsweb.eval.x86_64.scikit-learn_1776_scikit-learn-11040&tag=latest": dial unix /var/run/docker.sock: connect: permission denied
+Output: 
+2025-10-16 21:43:10,392 - INFO - swea-run - Running on instance sphinx-doc__sphinx-7738
+2025-10-16 21:43:10,562 - ERROR - swea-run - Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 143, in _pull_image
+    _pull_image(self._config.image, self._config.container_runtime)
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 42, in _pull_image
+    raise subprocess.CalledProcessError(e.returncode, e.cmd, e.output, e.stderr) from None
+subprocess.CalledProcessError: Command '['docker', 'pull', 'docker.io/swebench/sweb.eval.x86_64.pytest-dev_1776_pytest-6116:latest']' returned non-zero exit status 1.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspaces/SWE-agent/sweagent/run/run_batch.py", line 311, in run_instance
+    result = self._run_instance(instance)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/SWE-agent/sweagent/run/run_batch.py", line 358, in _run_instance
+    env.start()
+  File "/workspaces/SWE-agent/sweagent/environment/swe_env.py", line 111, in start
+    self._init_deployment()
+  File "/workspaces/SWE-agent/sweagent/environment/swe_env.py", line 183, in _init_deployment
+    asyncio.run(self.deployment.start())
+  File "/opt/conda/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 232, in start
+    self._pull_image()
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 148, in _pull_image
+    raise DockerPullError(msg) from e
+swerex.exceptions.DockerPullError: Failed to pull image docker.io/swebench/sweb.eval.x86_64.pytest-dev_1776_pytest-6116:latest. Error: permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.51/images/create?fromImage=docker.io%2Fswebench%2Fsweb.eval.x86_64.pytest-dev_1776_pytest-6116&tag=latest": dial unix /var/run/docker.sock: connect: permission denied
+Output: 
+
+2025-10-16 21:43:10,568 - ERROR - swea-run - ❌ Failed on pytest-dev__pytest-6116: Failed to pull image docker.io/swebench/sweb.eval.x86_64.pytest-dev_1776_pytest-6116:latest. Error: permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.51/images/create?fromImage=docker.io%2Fswebench%2Fsweb.eval.x86_64.pytest-dev_1776_pytest-6116&tag=latest": dial unix /var/run/docker.sock: connect: permission denied
+Output: 
+2025-10-16 21:43:10,745 - ERROR - swea-run - Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 143, in _pull_image
+    _pull_image(self._config.image, self._config.container_runtime)
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 42, in _pull_image
+    raise subprocess.CalledProcessError(e.returncode, e.cmd, e.output, e.stderr) from None
+subprocess.CalledProcessError: Command '['docker', 'pull', 'docker.io/swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-7738:latest']' returned non-zero exit status 1.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspaces/SWE-agent/sweagent/run/run_batch.py", line 311, in run_instance
+    result = self._run_instance(instance)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/SWE-agent/sweagent/run/run_batch.py", line 358, in _run_instance
+    env.start()
+  File "/workspaces/SWE-agent/sweagent/environment/swe_env.py", line 111, in start
+    self._init_deployment()
+  File "/workspaces/SWE-agent/sweagent/environment/swe_env.py", line 183, in _init_deployment
+    asyncio.run(self.deployment.start())
+  File "/opt/conda/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 232, in start
+    self._pull_image()
+  File "/opt/conda/lib/python3.12/site-packages/swerex/deployment/docker.py", line 148, in _pull_image
+    raise DockerPullError(msg) from e
+swerex.exceptions.DockerPullError: Failed to pull image docker.io/swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-7738:latest. Error: permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.51/images/create?fromImage=docker.io%2Fswebench%2Fsweb.eval.x86_64.sphinx-doc_1776_sphinx-7738&tag=latest": dial unix /var/run/docker.sock: connect: permission denied
+Output: 
+
+2025-10-16 21:43:10,751 - ERROR - swea-run - ❌ Failed on sphinx-doc__sphinx-7738: Failed to pull image docker.io/swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-7738:latest. Error: permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.51/images/create?fromImage=docker.io%2Fswebench%2Fsweb.eval.x86_64.sphinx-doc_1776_sphinx-7738&tag=latest": dial unix /var/run/docker.sock: connect: permission denied
+Output: 
+2025-10-17 06:24:11,610 - INFO - swea-run - Starting run. Find output files at /workspaces/SWE-agent/trajectories/vscode/default__claude-sonnet-4-20250514__t-0.00__p-1.00__c-1.00___swe_bench_lite_test
+2025-10-17 06:24:11,614 - INFO - swea-run - Running on instance pytest-dev__pytest-6116
+2025-10-17 06:24:11,614 - INFO - swea-run - Running on instance scikit-learn__scikit-learn-11040
+2025-10-17 06:35:04,999 - INFO - swea-run - Running on instance sphinx-doc__sphinx-7738

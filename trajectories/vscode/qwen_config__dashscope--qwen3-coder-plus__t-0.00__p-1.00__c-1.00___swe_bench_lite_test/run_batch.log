@@ -1,0 +1,8 @@
+2025-10-17 10:10:31,212 - INFO - swea-run - Starting run. Find output files at /workspaces/SWE-agent/trajectories/vscode/qwen_config__dashscope--qwen3-coder-plus__t-0.00__p-1.00__c-1.00___swe_bench_lite_test
+2025-10-17 10:10:31,215 - INFO - swea-run - Running on instance django__django-17087
+2025-10-17 11:17:39,204 - INFO - swea-run - Starting run. Find output files at /workspaces/SWE-agent/trajectories/vscode/qwen_config__dashscope--qwen3-coder-plus__t-0.00__p-1.00__c-1.00___swe_bench_lite_test
+2025-10-17 11:17:39,207 - INFO - swea-run - Running on instance pydata__xarray-4493
+2025-10-17 11:17:39,208 - INFO - swea-run - Running on instance pylint-dev__pylint-6506
+2025-10-17 11:36:19,545 - INFO - swea-run - Running on instance pytest-dev__pytest-6116
+2025-10-17 11:37:29,016 - INFO - swea-run - Running on instance scikit-learn__scikit-learn-11040
+2025-10-17 11:53:50,821 - INFO - swea-run - Running on instance sphinx-doc__sphinx-7738
